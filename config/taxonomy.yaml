@@ -1,0 +1,1906 @@
+taxonomy:
+  id: edm_subgenre
+  version: 0.1.0
+  name: 'EDM Genre and Subgenre Taxonomy'
+  description: 'User-defined taxonomy for weak labeling, transfer learning, and library tagging.'
+  task: hierarchical_multi_label
+  source_order_is_stable: true
+
+labeling_policy:
+  prefer_most_specific_supported_label: true
+  allow_multiple_labels: true
+  recommended_max_leaf_labels: 2
+  allow_broad_parent_as_fallback: true
+  derive_parent_labels: true
+  allow_unlabeled_when_uncertain: true
+  classify_recording_not_artist: true
+  bpm_is_soft_evidence_only: true
+  notes:
+    - 'Do not assign a subgenre solely because the artist is commonly associated with it.'
+    - 'Do not force a specific child label when only the broad parent is supported.'
+    - 'Genre, mood, character, and energy are separate prediction targets.'
+
+boundary_rules:
+  - labels: [future_bass, melodic_dubstep]
+    guidance: 'Prefer Future Bass when supersaw stabs, vocal chops, bright melodies, and stuttered chords dominate; prefer Melodic Dubstep when emotional/cinematic writing is carried by a dubstep-oriented bass and drop structure. Multi-label is allowed when both are strongly supported.'
+  - labels: [progressive_house, melodic_house]
+    guidance: 'Prefer Progressive House for long evolving builds, layered melodies, and large emotional peaks; prefer Melodic House when the track is more groove-focused, song-like, warm, and melody-led.'
+  - labels: [melodic_house, melodic_techno]
+    guidance: 'Prefer Melodic House when house groove and song-like warmth dominate; prefer Melodic Techno when emotional melody sits over a more driving techno rhythmic framework.'
+  - labels: [future_house, bass_house]
+    guidance: 'Prefer Future House for bouncy metallic bass and UK-garage-influenced swing; prefer Bass House for aggressive bass-forward production and heavy mid-range growls.'
+  - labels: [liquid_dnb, atmospheric_dnb]
+    guidance: 'Prefer Liquid D&B for smooth pads, vocals, musical breakdowns, and rolling beats; prefer Atmospheric D&B when lush ambient/jazz-tinged texture and deep spaciousness dominate.'
+  - labels: [deep_dubstep, 140_deep_bass]
+    guidance: 'Both emphasize sub-bass and sparse half-time space. Prefer Deep Dubstep for the broader deep/minimal dubstep tradition; prefer 140 / Deep Bass for the modern UK-underground 140 framing when that distinction is supported by evidence.'
+  - labels: [uplifting_trance, progressive_trance]
+    guidance: 'Prefer Uplifting Trance for soaring melodies, large breakdowns, and euphoric drops; prefer Progressive Trance for gradual development, subtler evolution, and a deeper groove.'
+  - labels: [midtempo, midtempo_bass]
+    guidance: 'Use Midtempo as the broad parent/fallback; prefer Midtempo Bass when pulsing grooves, hypnotic kicks, and gritty mid-bass design are defining features.'
+
+genres:
+  - id: house
+    order: 0
+    label: 'House'
+    role: root
+    parent: null
+    bpm:
+      min: 115
+      max: 132
+    characteristics: 'Four-on-the-floor kick, synth basslines, soulful vocals, offbeat hi-hats'
+    aliases: []
+  - id: chicago_house
+    order: 1
+    label: 'Chicago House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 118
+      max: 128
+    characteristics: 'Drum machine patterns (TR-707, 909), Roland bass, disco DNA'
+    aliases: []
+  - id: deep_house
+    order: 2
+    label: 'Deep House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 118
+      max: 125
+    characteristics: 'Warm pads, jazzy chords, subdued vocals, atmospheric feel'
+    aliases: []
+  - id: tech_house
+    order: 3
+    label: 'Tech House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 124
+      max: 128
+    characteristics: 'Punchy percussion, rolling basslines, stripped-back arrangements'
+    aliases: []
+  - id: progressive_house
+    order: 4
+    label: 'Progressive House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 126
+      max: 132
+    characteristics: 'Long evolving builds, layered melodies, emotional peaks'
+    aliases: []
+  - id: acid_house
+    order: 5
+    label: 'Acid House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 120
+      max: 130
+    characteristics: 'Squelchy, resonant Roland TB-303 bass synthesizer'
+    aliases: []
+  - id: electro_house
+    order: 6
+    label: 'Electro House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 126
+      max: 132
+    characteristics: 'Big distorted basslines, aggressive synth leads, dramatic drops'
+    aliases: []
+  - id: funky_house
+    order: 7
+    label: 'Funky House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 122
+      max: 128
+    characteristics: 'Groovy basslines, filtered samples, uplifting energy'
+    aliases: []
+  - id: french_house
+    order: 8
+    label: 'French House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 118
+      max: 128
+    characteristics: 'Heavily filtered disco/funk samples, sidechain pumping, phaser sweeps'
+    aliases: []
+  - id: disco_house
+    order: 9
+    label: 'Disco House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 118
+      max: 126
+    characteristics: 'Disco loops, live instrumentation feel, strings, slap bass'
+    aliases: []
+  - id: soulful_house
+    order: 10
+    label: 'Soulful House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 120
+      max: 128
+    characteristics: 'Gospel-rooted vocals, jazzy keys, live-feel arrangements'
+    aliases: []
+  - id: garage_house
+    order: 11
+    label: 'Garage House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 122
+      max: 128
+    characteristics: 'Soulful gospel-tinged vocals over swung drums'
+    aliases: []
+  - id: future_house
+    order: 12
+    label: 'Future House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 124
+      max: 128
+    characteristics: 'Bouncy metallic-bass bridging UK garage swing and big-room drops'
+    aliases: []
+  - id: bass_house
+    order: 13
+    label: 'Bass House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 124
+      max: 130
+    characteristics: 'Aggressive bass-forward, heavy mid-range growls'
+    aliases: []
+  - id: g_house
+    order: 14
+    label: 'G-House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 124
+      max: 128
+    characteristics: 'Tech house with West Coast hip-hop samples and rap acapellas'
+    aliases:
+      - 'G House'
+  - id: big_room_house
+    order: 15
+    label: 'Big Room House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 126
+      max: 132
+    characteristics: 'Stripped-down festival house, massive kick-driven drops'
+    aliases: []
+  - id: tropical_house
+    order: 16
+    label: 'Tropical House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 100
+      max: 118
+    characteristics: 'Slow sun-soaked house, marimba/steel-drum leads, panflutes'
+    aliases: []
+  - id: slap_house
+    order: 17
+    label: 'Slap House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 110
+      max: 125
+    characteristics: 'Plucked slap-bass, downtempo trap-influenced energy'
+    aliases: []
+  - id: brazilian_bass
+    order: 18
+    label: 'Brazilian Bass'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 120
+      max: 128
+    characteristics: 'Deep house variant with slappy bass and minimal arrangement'
+    aliases: []
+  - id: microhouse
+    order: 19
+    label: 'Microhouse'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 120
+      max: 128
+    characteristics: 'Glitchy micro-sampled textures, click-house grooves'
+    aliases: []
+  - id: hard_house
+    order: 20
+    label: 'Hard House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Pumping kicks, hoover synths, crowd-rallying energy'
+    aliases: []
+  - id: italo_house
+    order: 21
+    label: 'Italo House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 118
+      max: 128
+    characteristics: 'Piano stabs, female diva vocals, synth strings'
+    aliases: []
+  - id: latin_house
+    order: 22
+    label: 'Latin House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 122
+      max: 128
+    characteristics: 'Congas, timbales, Latin/salsa percussion'
+    aliases: []
+  - id: ghetto_house
+    order: 23
+    label: 'Ghetto House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Raw, sexually explicit, stripped 808/909 patterns'
+    aliases: []
+  - id: jackin_house
+    order: 24
+    label: 'Jackin'' House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 124
+      max: 128
+    characteristics: 'Cut-up disco-loops, chopped vocal stabs, bouncy swung drums'
+    aliases: []
+  - id: outsider_house
+    order: 25
+    label: 'Outsider House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 115
+      max: 128
+    characteristics: 'Raw, lo-fi, tape hiss, DIY production aesthetics'
+    aliases: []
+  - id: lo_fi_house
+    order: 26
+    label: 'Lo-Fi House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 115
+      max: 125
+    characteristics: 'Tape-saturated, vintage samples, dusty drums'
+    aliases:
+      - 'Lo Fi House'
+  - id: afro_house
+    order: 27
+    label: 'Afro House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 120
+      max: 128
+    characteristics: 'African rhythms, percussion, polyrhythmic patterns'
+    aliases: []
+  - id: afro_tech
+    order: 28
+    label: 'Afro-Tech'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 122
+      max: 128
+    characteristics: 'Tech house with African percussion layers, log drums, organic textures'
+    aliases:
+      - 'Afro Tech'
+  - id: organic_house
+    order: 29
+    label: 'Organic House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 115
+      max: 124
+    characteristics: 'Layered percussive, melody-soft, warm subtle textures'
+    aliases: []
+  - id: melodic_house
+    order: 30
+    label: 'Melodic House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 118
+      max: 126
+    characteristics: 'Emotional, melody-led house, groove-focused and song-like'
+    aliases: []
+  - id: tribal_house
+    order: 31
+    label: 'Tribal House'
+    role: subgenre
+    parent: house
+    bpm:
+      min: 124
+      max: 130
+    characteristics: 'Percussion-heavy, global drums, congas, chant vocals'
+    aliases: []
+  - id: techno
+    order: 32
+    label: 'Techno'
+    role: root
+    parent: null
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Repetitive rhythms, mechanical feel, dark atmosphere, futuristic synths'
+    aliases: []
+  - id: detroit_techno
+    order: 33
+    label: 'Detroit Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 128
+      max: 140
+    characteristics: 'Melodic, soulful, influenced by funk and sci-fi'
+    aliases: []
+  - id: minimal_techno
+    order: 34
+    label: 'Minimal Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 125
+      max: 135
+    characteristics: 'Sparse arrangements, subtle percussion, hypnotic repetition'
+    aliases: []
+  - id: industrial_techno
+    order: 35
+    label: 'Industrial Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 135
+      max: 150
+    characteristics: 'Distorted kicks, metallic textures, relentless intensity'
+    aliases: []
+  - id: acid_techno
+    order: 36
+    label: 'Acid Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 130
+      max: 145
+    characteristics: 'Intense, psychedelic, squelchy TB-303 acid sound'
+    aliases: []
+  - id: dub_techno
+    order: 37
+    label: 'Dub Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 120
+      max: 135
+    characteristics: 'Heavy reverb, delay chains, meditative dubby chord stabs'
+    aliases: []
+  - id: hard_techno
+    order: 38
+    label: 'Hard Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 145
+      max: 160
+    characteristics: 'Pounding kicks, screeching synths, peak-time aggressive energy'
+    aliases: []
+  - id: schranz
+    order: 39
+    label: 'Schranz'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 145
+      max: 160
+    characteristics: 'Hammering distorted kicks, minimal melodic content'
+    aliases: []
+  - id: birmingham_techno
+    order: 40
+    label: 'Birmingham Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 130
+      max: 142
+    characteristics: 'Dark mechanical UK sound, dystopian repetition'
+    aliases: []
+  - id: peak_time_techno
+    order: 41
+    label: 'Peak Time Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 132
+      max: 140
+    characteristics: 'Festival-ready, driving, melodic enough for big rooms'
+    aliases: []
+  - id: raw_techno
+    order: 42
+    label: 'Raw Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 130
+      max: 142
+    characteristics: 'Stripped lo-fi techno with raw analog warmth'
+    aliases: []
+  - id: hypnotic_techno
+    order: 43
+    label: 'Hypnotic Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 130
+      max: 142
+    characteristics: 'Long, looping, trance-inducing evolution'
+    aliases: []
+  - id: bleep_techno
+    order: 44
+    label: 'Bleep Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 120
+      max: 130
+    characteristics: 'Sub-bass, melodic bleeps, Detroit influence'
+    aliases: []
+  - id: tribal_techno
+    order: 45
+    label: 'Tribal Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 130
+      max: 138
+    characteristics: 'Drum-heavy patterns with global tribal percussion'
+    aliases: []
+  - id: ambient_techno
+    order: 46
+    label: 'Ambient Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 100
+      max: 130
+    characteristics: 'Atmospheric, prioritizes texture and mood over drive'
+    aliases: []
+  - id: broken_techno
+    order: 47
+    label: 'Broken Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 125
+      max: 138
+    characteristics: 'Broken beats, irregular kick patterns, bass music crossover'
+    aliases: []
+  - id: melodic_techno
+    order: 48
+    label: 'Melodic Techno'
+    role: subgenre
+    parent: techno
+    bpm:
+      min: 122
+      max: 132
+    characteristics: 'Emotional melodies over driving techno rhythms'
+    aliases: []
+  - id: electro
+    order: 49
+    label: 'Electro'
+    role: root
+    parent: null
+    bpm:
+      min: 110
+      max: 135
+    characteristics: 'TR-808 syncopation, robotic vocals, funky breakbeats, sci-fi mood'
+    aliases: []
+  - id: electrofunk
+    order: 50
+    label: 'Electrofunk'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 110
+      max: 130
+    characteristics: 'Talking-box vocals, P-funk DNA, 808 bass'
+    aliases: []
+  - id: detroit_electro
+    order: 51
+    label: 'Detroit Electro'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 120
+      max: 135
+    characteristics: 'Sci-fi, aquatic, futurist electro'
+    aliases: []
+  - id: miami_bass
+    order: 52
+    label: 'Miami Bass'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 120
+      max: 145
+    characteristics: 'Sub-bass-heavy booty-shake party music'
+    aliases: []
+  - id: electroclash
+    order: 53
+    label: 'Electroclash'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 118
+      max: 130
+    characteristics: 'Retro-electro fusion, new wave vocals, analog synths'
+    aliases: []
+  - id: baile_funk
+    order: 54
+    label: 'Baile Funk'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Hip-hop-inflected club music descended from Miami bass'
+    aliases: []
+  - id: kuduro
+    order: 55
+    label: 'Kuduro'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'High-energy Angolan fusion of semba, zouk, and techno'
+    aliases: []
+  - id: skweee
+    order: 56
+    label: 'Skweee'
+    role: subgenre
+    parent: electro
+    bpm:
+      min: 80
+      max: 110
+    characteristics: 'Slow-tempo Scandinavian electro-funk on cheap synths'
+    aliases: []
+  - id: trance
+    order: 57
+    label: 'Trance'
+    role: root
+    parent: null
+    bpm:
+      min: 128
+      max: 150
+    characteristics: 'Euphoric melodies, extended builds, arpeggiated synths, emotional peaks'
+    aliases: []
+  - id: uplifting_trance
+    order: 58
+    label: 'Uplifting Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 136
+      max: 142
+    characteristics: 'Soaring melodies, big breakdowns, euphoric drops'
+    aliases: []
+  - id: progressive_trance
+    order: 59
+    label: 'Progressive Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 128
+      max: 136
+    characteristics: 'Gradual builds, subtle evolution, deeper groove'
+    aliases: []
+  - id: vocal_trance
+    order: 60
+    label: 'Vocal Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 132
+      max: 140
+    characteristics: 'Foregrounded vocal performances, pop crossover'
+    aliases: []
+  - id: tech_trance
+    order: 61
+    label: 'Tech Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 135
+      max: 145
+    characteristics: 'Trance melodies merged with driving percussive techno energy'
+    aliases: []
+  - id: hard_trance
+    order: 62
+    label: 'Hard Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Distorted hoover synths, pumping kicks, hard-rave energy'
+    aliases: []
+  - id: acid_trance
+    order: 63
+    label: 'Acid Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 135
+      max: 145
+    characteristics: 'Squelchy TB-303 lines weaving through trance arrangements'
+    aliases: []
+  - id: dream_trance
+    order: 64
+    label: 'Dream Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Dreamy piano leads, emotional progressions'
+    aliases: []
+  - id: balearic_trance
+    order: 65
+    label: 'Balearic Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 118
+      max: 128
+    characteristics: 'Sun-drenched, slower Ibiza sunset sound, eclectic and uplifting'
+    aliases: []
+  - id: orchestral_uplifting
+    order: 66
+    label: 'Orchestral Uplifting'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 138
+      max: 142
+    characteristics: 'Cinematic symphonic strings, choir layers, film-score builds'
+    aliases: []
+  - id: psytrance
+    order: 67
+    label: 'Psytrance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Driving basslines, layered textures, mind-bending sound design'
+    aliases: []
+  - id: goa_trance
+    order: 68
+    label: 'Goa Trance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Layered acid lines, organic textures, spiritual energy'
+    aliases: []
+  - id: full_on_psytrance
+    order: 69
+    label: 'Full-On Psytrance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 140
+      max: 148
+    characteristics: 'Melodic, energetic, festival-friendly face of psy'
+    aliases:
+      - 'Full On Psytrance'
+  - id: forest_dark_psytrance
+    order: 70
+    label: 'Forest/Dark Psytrance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 145
+      max: 160
+    characteristics: 'Dark woodland-mood, organic, rolling acid basslines'
+    aliases:
+      - 'Forest Psytrance'
+      - 'Dark Forest Psytrance'
+  - id: hi_tech_psytrance
+    order: 71
+    label: 'Hi-Tech Psytrance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 170
+      max: 220
+    characteristics: 'Ultra-fast, experimental, pushing tempo and sound design'
+    aliases: []
+  - id: twilight_psytrance
+    order: 72
+    label: 'Twilight Psytrance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 144
+      max: 156
+    characteristics: 'Mid-tempo, melodic-but-edgy, darker grooves'
+    aliases: []
+  - id: darkpsy
+    order: 73
+    label: 'Darkpsy'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 148
+      max: 160
+    characteristics: 'Relentless 4/4 kicks, rolling sub-bass, dense FM/acid textures'
+    aliases: []
+  - id: progressive_psytrance
+    order: 74
+    label: 'Progressive Psytrance'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Slower, hypnotic, focused on groove and gradual development'
+    aliases: []
+  - id: zenonesque
+    order: 75
+    label: 'Zenonesque'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 126
+      max: 140
+    characteristics: 'Cerebral, jazzy, left-field progressive psychedelia'
+    aliases: []
+  - id: nitzhonot
+    order: 76
+    label: 'Nitzhonot'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 145
+      max: 155
+    characteristics: 'Melody-forward, celebratory, anthem-driven Goa offshoot'
+    aliases: []
+  - id: suomisaundi
+    order: 77
+    label: 'Suomisaundi'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 140
+      max: 160
+    characteristics: 'Chaotic, irreverent, sample-collage freeform psy'
+    aliases: []
+  - id: psybreaks
+    order: 78
+    label: 'Psybreaks'
+    role: subgenre
+    parent: trance
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Psytrance hybridized with breakbeat drum patterns'
+    aliases: []
+  - id: drum_and_bass
+    order: 79
+    label: 'Drum & Bass'
+    role: root
+    parent: null
+    bpm:
+      min: 160
+      max: 180
+    characteristics: 'Fast breakbeats, heavy sub-bass, complex drum patterns, Amen break'
+    aliases:
+      - 'DnB'
+      - 'D&B'
+      - 'Drum and Bass'
+  - id: jungle
+    order: 80
+    label: 'Jungle'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 160
+      max: 180
+    characteristics: 'Chopped breakbeats, Jamaican sound system DNA, ragga samples'
+    aliases: []
+  - id: liquid_dnb
+    order: 81
+    label: 'Liquid D&B'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 178
+    characteristics: 'Smooth pads, vocals, musical breakdowns over rolling beats'
+    aliases:
+      - 'Liquid DnB'
+      - 'Liquid Drum & Bass'
+      - 'Liquid Drum and Bass'
+  - id: atmospheric_dnb
+    order: 82
+    label: 'Atmospheric D&B'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 165
+      max: 175
+    characteristics: 'Jazz-tinged pads, deep bass, lush ambient vibes'
+    aliases: []
+  - id: neurofunk
+    order: 83
+    label: 'Neurofunk'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 178
+    characteristics: 'Intricate sound design, technical, glitchy bass, precise engineering'
+    aliases: []
+  - id: techstep
+    order: 84
+    label: 'Techstep'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 168
+      max: 178
+    characteristics: 'Dark, mechanical D&B, foundation for neurofunk'
+    aliases: []
+  - id: jump_up
+    order: 85
+    label: 'Jump Up'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 178
+    characteristics: 'Wobbly basslines, simple high-energy crowd-oriented arrangements'
+    aliases: []
+  - id: darkstep
+    order: 86
+    label: 'Darkstep'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 180
+    characteristics: 'Aggressive horror-tinged, distorted basslines, brutal drops'
+    aliases: []
+  - id: crossbreed
+    order: 87
+    label: 'Crossbreed'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 175
+      max: 200
+    characteristics: 'Fast tempo, distorted hardcore kicks with D&B patterns'
+    aliases: []
+  - id: halftime
+    order: 88
+    label: 'Halftime'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 180
+    characteristics: 'Halftime drum patterns, feels like 85 BPM hip-hop'
+    aliases: []
+  - id: drumfunk
+    order: 89
+    label: 'Drumfunk'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 178
+    characteristics: 'Edit-heavy broken D&B prioritizing chopped breakbeats'
+    aliases: []
+  - id: minimal_dnb
+    order: 90
+    label: 'Minimal D&B'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 168
+      max: 176
+    characteristics: 'Reduced, sparse arrangements, atmospheric'
+    aliases: []
+  - id: ragga_jungle
+    order: 91
+    label: 'Ragga Jungle'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 160
+      max: 180
+    characteristics: 'Heavy Jamaican ragga vocals, dub influence'
+    aliases: []
+  - id: drumstep
+    order: 92
+    label: 'Drumstep'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'D&B drum patterns executed at dubstep tempo'
+    aliases: []
+  - id: deep_dnb
+    order: 93
+    label: 'Deep DnB'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 168
+      max: 176
+    characteristics: 'Moody minimalist, weighty sub-bass, immersive atmospheres'
+    aliases:
+      - 'Deep D&B'
+      - 'Deep Drum & Bass'
+      - 'Deep Drum and Bass'
+  - id: autonomic
+    order: 94
+    label: 'Autonomic'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 160
+      max: 172
+    characteristics: 'Emotionally charged, spacious, sci-fi, 170 BPM ''speed limit'''
+    aliases: []
+  - id: sambass
+    order: 95
+    label: 'Sambass'
+    role: subgenre
+    parent: drum_and_bass
+    bpm:
+      min: 170
+      max: 180
+    characteristics: 'Blended with samba percussion and bossa nova feel'
+    aliases: []
+  - id: footwork
+    order: 96
+    label: 'Footwork'
+    role: root
+    parent: null
+    bpm:
+      min: 155
+      max: 165
+    characteristics: 'Triplet kicks, chopped vocals, Chicago origin, dance-battle music'
+    aliases: []
+  - id: juke
+    order: 97
+    label: 'Juke'
+    role: subgenre
+    parent: footwork
+    bpm:
+      min: 155
+      max: 165
+    characteristics: 'Stripped 808 patterns, direct ancestor of footwork'
+    aliases: []
+  - id: dubstep
+    order: 98
+    label: 'Dubstep'
+    role: root
+    parent: null
+    bpm:
+      min: 138
+      max: 142
+    characteristics: 'Wobble bass, half-time feel, syncopated rhythms, sub-bass emphasis'
+    aliases: []
+  - id: deep_dubstep
+    order: 99
+    label: 'Deep Dubstep'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 138
+      max: 142
+    characteristics: 'Deep sub-bass, minimal percussion, dark spacious atmospheres'
+    aliases: []
+  - id: brostep
+    order: 100
+    label: 'Brostep'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Aggressive mid-range focused, heavy drops, complex sound design'
+    aliases: []
+  - id: riddim
+    order: 101
+    label: 'Riddim'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Minimalist repetitive wobble patterns, triplet rhythms'
+    aliases: []
+  - id: melodic_dubstep
+    order: 102
+    label: 'Melodic Dubstep'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 138
+      max: 150
+    characteristics: 'Emotional melodies, vocals, and cinematic production'
+    aliases: []
+  - id: tearout_dubstep
+    order: 103
+    label: 'Tearout Dubstep'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Brutal mid-range bass, aggressive UK-style energy'
+    aliases: []
+  - id: 140_deep_bass
+    order: 104
+    label: '140 / Deep Bass'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 138
+      max: 142
+    characteristics: 'Half-time, sub-bass driven, minimal modern UK underground'
+    aliases:
+      - '140 Deep Bass'
+  - id: future_garage
+    order: 105
+    label: 'Future Garage'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Atmospheric, vocal-chopped, late-night rain-soaked'
+    aliases: []
+  - id: post_dubstep
+    order: 106
+    label: 'Post-Dubstep'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Introspective, dropped wobble bass for songcraft'
+    aliases: []
+  - id: wonky
+    order: 107
+    label: 'Wonky'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Off-grid syncopated bass, pitch-bent synths, drunken-feel'
+    aliases: []
+  - id: chillstep
+    order: 108
+    label: 'Chillstep'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 138
+      max: 142
+    characteristics: 'Calm, ambient-toned, soft pads, gentle bass'
+    aliases: []
+  - id: grime
+    order: 109
+    label: 'Grime'
+    role: subgenre
+    parent: dubstep
+    bpm:
+      min: 135
+      max: 145
+    characteristics: 'London MC-driven 140 BPM bass music'
+    aliases: []
+  - id: future_bass
+    order: 110
+    label: 'Future Bass'
+    role: root
+    parent: null
+    bpm:
+      min: 130
+      max: 160
+    characteristics: 'Supersaw stabs, vocal chops, bright melodies, stuttered chords'
+    aliases: []
+  - id: kawaii_future_bass
+    order: 111
+    label: 'Kawaii Future Bass'
+    role: subgenre
+    parent: future_bass
+    bpm:
+      min: 140
+      max: 160
+    characteristics: 'Anime-styled, pixel-pop melodies, sugary vocal chops'
+    aliases: []
+  - id: color_bass
+    order: 112
+    label: 'Color Bass'
+    role: subgenre
+    parent: future_bass
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Overlapping chord stacks, harmonically dense'
+    aliases: []
+  - id: glitch_hop
+    order: 113
+    label: 'Glitch Hop'
+    role: subgenre
+    parent: future_bass
+    bpm:
+      min: 100
+      max: 115
+    characteristics: '110 BPM swing, funky drums, talkbox vocals, heavy glitch processing'
+    aliases: []
+  - id: trap_edm
+    order: 114
+    label: 'Trap (EDM)'
+    role: root
+    parent: null
+    bpm:
+      min: 130
+      max: 150
+    characteristics: '808 sub-bass, snare rolls, 140 BPM, festival-built'
+    aliases:
+      - 'EDM Trap'
+  - id: hard_trap
+    order: 115
+    label: 'Hard Trap'
+    role: subgenre
+    parent: trap_edm
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Hard-hitting festival trap, aggressive sound design'
+    aliases: []
+  - id: festival_trap
+    order: 116
+    label: 'Festival Trap'
+    role: subgenre
+    parent: trap_edm
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Big-room oriented trap built for mainstage moments'
+    aliases: []
+  - id: hybrid_trap
+    order: 117
+    label: 'Hybrid Trap'
+    role: subgenre
+    parent: trap_edm
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Fused with dubstep/riddim sound design, heavy mid-range'
+    aliases: []
+  - id: hyperpop
+    order: 118
+    label: 'Hyperpop'
+    role: subgenre
+    parent: trap_edm
+    bpm:
+      min: 140
+      max: 200
+    characteristics: 'Pitch-shifted vocals, glitch production, maximalist plastic synths'
+    aliases: []
+  - id: digicore
+    order: 119
+    label: 'Digicore'
+    role: subgenre
+    parent: trap_edm
+    bpm:
+      min: 130
+      max: 180
+    characteristics: 'Heavy autotune over sharp 808s and frantic hi-hats'
+    aliases: []
+  - id: trapwave
+    order: 120
+    label: 'Trapwave'
+    role: subgenre
+    parent: trap_edm
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Vaporwave aesthetics, distorted 808s, retro pads, melancholic'
+    aliases: []
+  - id: phonk
+    order: 121
+    label: 'Phonk'
+    role: root
+    parent: null
+    bpm:
+      min: 110
+      max: 150
+    characteristics: 'Distorted 808, cowbells, Memphis samples, cassette grain'
+    aliases: []
+  - id: drift_phonk
+    order: 122
+    label: 'Drift Phonk'
+    role: subgenre
+    parent: phonk
+    bpm:
+      min: 140
+      max: 165
+    characteristics: 'Aggressive variant tied to Japanese drift-car culture'
+    aliases: []
+  - id: memphis_phonk
+    order: 123
+    label: 'Memphis Phonk'
+    role: subgenre
+    parent: phonk
+    bpm:
+      min: 70
+      max: 90
+    characteristics: 'Lo-fi cassette aesthetic, DJ Screw chops, original 90s sound'
+    aliases: []
+  - id: house_phonk
+    order: 124
+    label: 'House Phonk'
+    role: subgenre
+    parent: phonk
+    bpm:
+      min: 130
+      max: 145
+    characteristics: 'Fused with house tempos and four-on-the-floor kicks'
+    aliases: []
+  - id: brazilian_phonk
+    order: 125
+    label: 'Brazilian Phonk'
+    role: subgenre
+    parent: phonk
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Funk-carioca DNA crossed with drift phonk'
+    aliases: []
+  - id: midtempo
+    order: 126
+    label: 'Midtempo'
+    role: root
+    parent: null
+    bpm:
+      min: 100
+      max: 126
+    characteristics: 'Bouncy basslines, dark disco/indie dance, deep resonant low end'
+    aliases: []
+  - id: midtempo_bass
+    order: 127
+    label: 'Midtempo Bass'
+    role: subgenre
+    parent: midtempo
+    bpm:
+      min: 100
+      max: 115
+    characteristics: 'Pulsing grooves, hypnotic kicks, gritty mid-bass design'
+    aliases: []
+  - id: bouncy_midtempo
+    order: 128
+    label: 'Bouncy Midtempo'
+    role: subgenre
+    parent: midtempo
+    bpm:
+      min: 110
+      max: 126
+    characteristics: 'Deep basslines, offbeat percussion, playful vocals, slow-tech energy'
+    aliases: []
+  - id: cinematic_midtempo
+    order: 129
+    label: 'Cinematic Midtempo'
+    role: subgenre
+    parent: midtempo
+    bpm:
+      min: 90
+      max: 110
+    characteristics: 'Orchestral, trailer-music-inspired, epic builds and risers'
+    aliases: []
+  - id: industrial_midtempo
+    order: 130
+    label: 'Industrial Midtempo'
+    role: subgenre
+    parent: midtempo
+    bpm:
+      min: 100
+      max: 115
+    characteristics: 'Mechanical, dystopian, industrial sound design'
+    aliases: []
+  - id: phonkstep
+    order: 131
+    label: 'Phonkstep'
+    role: subgenre
+    parent: midtempo
+    bpm:
+      min: 100
+      max: 115
+    characteristics: 'Distorted 808s, cowbells, slow hypnotic grooves'
+    aliases: []
+  - id: wave
+    order: 132
+    label: 'Wave'
+    role: subgenre
+    parent: midtempo
+    bpm:
+      min: 70
+      max: 90
+    characteristics: 'Atmospheric, emotive synth-heavy bass music'
+    aliases: []
+  - id: breakbeat
+    order: 133
+    label: 'Breakbeat'
+    role: root
+    parent: null
+    bpm:
+      min: 120
+      max: 140
+    characteristics: 'Broken beats, syncopated patterns, funky grooves, sample-heavy'
+    aliases: []
+  - id: big_beat
+    order: 134
+    label: 'Big Beat'
+    role: subgenre
+    parent: breakbeat
+    bpm:
+      min: 110
+      max: 140
+    characteristics: 'Heavy drums, big riffs, rock-band attitude'
+    aliases: []
+  - id: florida_breaks
+    order: 135
+    label: 'Florida Breaks'
+    role: subgenre
+    parent: breakbeat
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Bass-heavy Miami breakbeat with Miami Bass DNA'
+    aliases: []
+  - id: nu_skool_breaks
+    order: 136
+    label: 'Nu-Skool Breaks'
+    role: subgenre
+    parent: breakbeat
+    bpm:
+      min: 125
+      max: 135
+    characteristics: 'Cleaner production, electro-influenced, UK funky breaks'
+    aliases:
+      - 'Nu Skool Breaks'
+      - 'Nu-School Breaks'
+  - id: dariacore
+    order: 137
+    label: 'Dariacore'
+    role: subgenre
+    parent: breakbeat
+    bpm:
+      min: 150
+      max: 180
+    characteristics: 'Frenetic cut-ups of pop hooks and anime over breakbeats'
+    aliases: []
+  - id: progressive_breaks
+    order: 138
+    label: 'Progressive Breaks'
+    role: subgenre
+    parent: breakbeat
+    bpm:
+      min: 128
+      max: 138
+    characteristics: 'Progressive trance/house structures over breakbeat drums'
+    aliases: []
+  - id: uk_garage
+    order: 139
+    label: 'UK Garage'
+    role: root
+    parent: null
+    bpm:
+      min: 128
+      max: 135
+    characteristics: 'Shuffled beats, pitched vocals, swinging groove, 2-step rhythm'
+    aliases:
+      - 'UKG'
+  - id: 2_step_garage
+    order: 140
+    label: '2-Step Garage'
+    role: subgenre
+    parent: uk_garage
+    bpm:
+      min: 128
+      max: 135
+    characteristics: 'Snare on the 2 and 4 only, creating the signature shuffle'
+    aliases:
+      - '2 Step Garage'
+      - '2step Garage'
+  - id: speed_garage
+    order: 141
+    label: 'Speed Garage'
+    role: subgenre
+    parent: uk_garage
+    bpm:
+      min: 130
+      max: 140
+    characteristics: 'Faster UK garage with reggae-influenced sub-bass'
+    aliases: []
+  - id: bassline_niche
+    order: 142
+    label: 'Bassline / Niche'
+    role: subgenre
+    parent: uk_garage
+    bpm:
+      min: 134
+      max: 142
+    characteristics: '4/4 kicks, aggressive basslines, Northern UK heritage'
+    aliases:
+      - 'Bassline Niche'
+  - id: uk_funky
+    order: 143
+    label: 'UK Funky'
+    role: subgenre
+    parent: uk_garage
+    bpm:
+      min: 128
+      max: 135
+    characteristics: 'House/garage hybrid with broken Afro-Caribbean drums'
+    aliases: []
+  - id: hardcore
+    order: 144
+    label: 'Hardcore'
+    role: root
+    parent: null
+    bpm:
+      min: 160
+      max: 200
+    characteristics: 'Distorted kicks, rapid tempo, aggressive energy, gabber influence'
+    aliases: []
+  - id: gabber
+    order: 145
+    label: 'Gabber'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 160
+      max: 200
+    characteristics: 'Severely distorted overdriven 909 kicks'
+    aliases: []
+  - id: early_hardcore
+    order: 146
+    label: 'Early Hardcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 150
+      max: 165
+    characteristics: 'Pre-gabber breakbeat-driven Rotterdam sound'
+    aliases: []
+  - id: happy_hardcore
+    order: 147
+    label: 'Happy Hardcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 160
+      max: 180
+    characteristics: 'Bouncy, melodic, often piano-driven'
+    aliases: []
+  - id: uk_hardcore
+    order: 148
+    label: 'UK Hardcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 170
+      max: 185
+    characteristics: 'Modern happy-hardcore evolution with cleaner production'
+    aliases: []
+  - id: frenchcore
+    order: 149
+    label: 'Frenchcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 200
+      max: 220
+    characteristics: 'Fast-rolling with a punchy distorted kick on every quarter'
+    aliases: []
+  - id: speedcore
+    order: 150
+    label: 'Speedcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 250
+      max: 350
+    characteristics: 'Extreme hardcore, distorted kicks blurring into noise walls'
+    aliases: []
+  - id: terrorcore
+    order: 151
+    label: 'Terrorcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 200
+      max: 300
+    characteristics: 'Horror-themed extreme hardcore, movie samples, dystopian themes'
+    aliases: []
+  - id: breakcore
+    order: 152
+    label: 'Breakcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 160
+      max: 220
+    characteristics: 'Edit-heavy chaotic breakbeat hardcore'
+    aliases: []
+  - id: industrial_hardcore
+    order: 153
+    label: 'Industrial Hardcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 175
+      max: 200
+    characteristics: 'Dark, mechanical hardcore with industrial atmospheres'
+    aliases: []
+  - id: mainstream_hardcore
+    order: 154
+    label: 'Mainstream Hardcore'
+    role: subgenre
+    parent: hardcore
+    bpm:
+      min: 150
+      max: 180
+    characteristics: 'Festival-friendly hardcore mainstage sound'
+    aliases: []
+  - id: hardstyle
+    order: 155
+    label: 'Hardstyle'
+    role: root
+    parent: null
+    bpm:
+      min: 150
+      max: 160
+    characteristics: 'Reverse bass, euphoric melodies, hard kicks, festival anthems'
+    aliases: []
+  - id: euphoric_hardstyle
+    order: 156
+    label: 'Euphoric Hardstyle'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 150
+      max: 155
+    characteristics: 'Soaring leads, uplifting breakdowns, mainstage energy'
+    aliases: []
+  - id: rawstyle
+    order: 157
+    label: 'Rawstyle'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 150
+      max: 160
+    characteristics: 'Raw kicks, screech leads, aggressive production, minimal melody'
+    aliases: []
+  - id: xtra_raw
+    order: 158
+    label: 'Xtra Raw'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 150
+      max: 165
+    characteristics: 'Screechy reese-style kicks, aggressive distortion'
+    aliases: []
+  - id: reverse_bass
+    order: 159
+    label: 'Reverse Bass'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 150
+      max: 155
+    characteristics: 'Classic hardstyle built around the signature reverse bass kick'
+    aliases: []
+  - id: nu_style_hardstyle
+    order: 160
+    label: 'Nu-Style Hardstyle'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Melodic, screech-led, more song-structured'
+    aliases: []
+  - id: dubstyle
+    order: 161
+    label: 'Dubstyle'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 140
+      max: 150
+    characteristics: 'Dubstep wobble bass over hardstyle drum patterns'
+    aliases: []
+  - id: psystyle
+    order: 162
+    label: 'Psystyle'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 140
+      max: 155
+    characteristics: 'Hardstyle anthems crossed with psytrance rolling bass/acid leads'
+    aliases: []
+  - id: uptempo_hardcore
+    order: 163
+    label: 'Uptempo Hardcore'
+    role: subgenre
+    parent: hardstyle
+    bpm:
+      min: 165
+      max: 200
+    characteristics: 'Faster-than-hardstyle, slower-than-speedcore'
+    aliases: []
+  - id: moombahton
+    order: 164
+    label: 'Moombahton'
+    role: root
+    parent: null
+    bpm:
+      min: 100
+      max: 115
+    characteristics: 'Dembow rhythm, 108 BPM, reggaeton DNA, house origin'
+    aliases: []
+  - id: reggaeton
+    order: 165
+    label: 'Reggaeton'
+    role: subgenre
+    parent: moombahton
+    bpm:
+      min: 85
+      max: 100
+    characteristics: 'Latin urban music built on the dembow rhythm'
+    aliases: []
+  - id: dembow
+    order: 166
+    label: 'Dembow'
+    role: subgenre
+    parent: moombahton
+    bpm:
+      min: 110
+      max: 130
+    characteristics: 'Faster, rawer Dominican cousin, heavy percussion'
+    aliases: []
+  - id: moombahcore
+    order: 167
+    label: 'Moombahcore'
+    role: subgenre
+    parent: moombahton
+    bpm:
+      min: 110
+      max: 130
+    characteristics: 'Heavier, dubstep-influenced moombahton with bigger drops'
+    aliases: []
+  - id: amapiano
+    order: 168
+    label: 'Amapiano'
+    role: root
+    parent: null
+    bpm:
+      min: 108
+      max: 118
+    characteristics: 'Log drum bass, jazzy keys, slow groove, South African origin'
+    aliases: []
+  - id: afrobeats
+    order: 169
+    label: 'Afrobeats'
+    role: subgenre
+    parent: amapiano
+    bpm:
+      min: 100
+      max: 115
+    characteristics: 'Blends hip-hop, R&B, dancehall, and indigenous African rhythms'
+    aliases: []
+  - id: kwaito
+    order: 170
+    label: 'Kwaito'
+    role: subgenre
+    parent: amapiano
+    bpm:
+      min: 95
+      max: 112
+    characteristics: 'Slowed-down South African house with chanted vocals'
+    aliases: []
+  - id: gqom
+    order: 171
+    label: 'Gqom'
+    role: subgenre
+    parent: amapiano
+    bpm:
+      min: 120
+      max: 130
+    characteristics: 'Dark, minimalist South African house with broken rhythms'
+    aliases: []
+  - id: nu_disco
+    order: 172
+    label: 'Nu-Disco'
+    role: root
+    parent: null
+    bpm:
+      min: 100
+      max: 125
+    characteristics: 'Live bass feel, disco strings, house tempo, modern revival'
+    aliases:
+      - 'Nu Disco'
+  - id: italo_disco
+    order: 173
+    label: 'Italo Disco'
+    role: subgenre
+    parent: nu_disco
+    bpm:
+      min: 110
+      max: 130
+    characteristics: 'Synth basslines, vocoders, futuristic vibes'
+    aliases: []
+  - id: hi_nrg
+    order: 174
+    label: 'Hi-NRG'
+    role: subgenre
+    parent: nu_disco
+    bpm:
+      min: 130
+      max: 150
+    characteristics: 'Pumping octave basslines, big claps, faster gay-club disco'
+    aliases:
+      - 'Hi NRG'
+  - id: disco
+    order: 175
+    label: 'Disco'
+    role: subgenre
+    parent: nu_disco
+    bpm:
+      min: 100
+      max: 130
+    characteristics: 'Live drums, strings, four-on-the-floor, soulful vocals'
+    aliases: []
+  - id: eurodance
+    order: 176
+    label: 'Eurodance'
+    role: subgenre
+    parent: nu_disco
+    bpm:
+      min: 130
+      max: 145
+    characteristics: '90s pop-dance crossover with female vocals + male rap formula'
+    aliases: []
+  - id: boogie
+    order: 177
+    label: 'Boogie'
+    role: subgenre
+    parent: nu_disco
+    bpm:
+      min: 105
+      max: 120
+    characteristics: 'Synth bass, accented 2-and-4 groove, post-disco electro-funk'
+    aliases: []
+  - id: future_funk
+    order: 178
+    label: 'Future Funk'
+    role: subgenre
+    parent: nu_disco
+    bpm:
+      min: 110
+      max: 130
+    characteristics: 'Re-edits of 70s/80s Japanese city pop, chopped vocal hooks'
+    aliases: []
+  - id: synthwave
+    order: 179
+    label: 'Synthwave'
+    role: root
+    parent: null
+    bpm:
+      min: 80
+      max: 115
+    characteristics: '80s synths, gated reverb drums, neon nostalgia, drive aesthetic'
+    aliases: []
+  - id: outrun
+    order: 180
+    label: 'Outrun'
+    role: subgenre
+    parent: synthwave
+    bpm:
+      min: 80
+      max: 115
+    characteristics: 'Soundtrack-feel arpeggios, arena-rock drums, highway themes'
+    aliases: []
+  - id: darksynth
+    order: 181
+    label: 'Darksynth'
+    role: subgenre
+    parent: synthwave
+    bpm:
+      min: 90
+      max: 130
+    characteristics: 'Aggressive horror-tinged synthwave, John Carpenter DNA'
+    aliases: []
+  - id: vaporwave
+    order: 182
+    label: 'Vaporwave'
+    role: subgenre
+    parent: synthwave
+    bpm:
+      min: 60
+      max: 90
+    characteristics: 'Slowed/chopped 80s/90s smooth-jazz/lounge samples'
+    aliases: []
+  - id: chillwave
+    order: 183
+    label: 'Chillwave'
+    role: subgenre
+    parent: synthwave
+    bpm:
+      min: 80
+      max: 110
+    characteristics: 'Hazy, dreamy late-2000s indie-electronic'
+    aliases: []

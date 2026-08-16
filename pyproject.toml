@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ytm-converter"
+version = "0.1.0"
+description = "Convert YouTube Music playlist videos to song versions."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["youtube", "youtube-music", "playlist", "music"]
+dependencies = [
+    "ytmusicapi==1.12.2",
+    "typer",
+    "rich",
+    "rapidfuzz",
+    "platformdirs",
+    "google-api-python-client",
+    "google-auth",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+ytm-converter = "ytm_converter.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]

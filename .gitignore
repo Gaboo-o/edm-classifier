@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.egg-info/
+
+data/evidence/*
+data/labels/*
+data/review/*
+data/embeddings/*
+
+models/pretrained/*
+models/trained/*
+
+.env
