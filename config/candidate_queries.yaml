@@ -1,0 +1,30 @@
+# Optional extra Last.fm tag queries for labels that do not reach coverage
+# using the canonical taxonomy label and its built-in aliases.
+#
+# The collector always tries:
+#   1. the taxonomy label
+#   2. taxonomy aliases
+#   3. any additional queries listed here
+#
+# Start small. Run discovery, inspect coverage.json, and add entries only for
+# labels with shortfalls.
+queries:
+  forest_dark_psytrance:
+    - Dark Psytrance
+    - Forest Psy
+  hi_tech_psytrance:
+    - Hi Tech Psytrance
+    - Hitech Psytrance
+  liquid_dnb:
+    - Liquid Drum and Bass
+  atmospheric_dnb:
+    - Atmospheric Drum and Bass
+  140_deep_bass:
+    - 140 Bass
+    - Deep 140
+  trap_edm:
+    - Festival Trap
+    - EDM Trap
+  bassline_niche:
+    - Bassline
+    - Niche

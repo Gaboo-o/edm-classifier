@@ -1,13 +1,48 @@
-.venv/
+# Python
 __pycache__/
+*.py[cod]
 *.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
 
-data/evidence/*
-data/labels/*
-data/review/*
-data/embeddings/*
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
 
-models/pretrained/*
-models/trained/*
-
+# Secrets
 .env
+.env.*
+!.env.example
+
+# Downloaded audio
+data/audio/
+*.webm
+*.m4a
+*.mp3
+*.opus
+*.wav
+*.flac
+
+# Downloaded pretrained models
+data/models/
+
+# Generated embeddings
+data/embeddings/
+*.npy
+*.npz
+
+# Generated datasets / intermediate artifacts
+data/candidates/
+data/label_job/
+data/audio_resolution/
+data/training/
+data/validation/
+data/splits/
+
+# Temporary/cache files
+*.part
+*.ytdl
+*.info.json
