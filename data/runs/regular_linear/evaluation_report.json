@@ -1,0 +1,50 @@
+{
+  "run_name": "regular_linear",
+  "split": "regular",
+  "model": "linear",
+  "device": "cpu",
+  "checkpoint_epoch": 80,
+  "active_class_count": 150,
+  "validation_samples": 1276,
+  "test_samples": 1313,
+  "threshold_policy": {
+    "type": "single_global_threshold",
+    "selected_on": "validation_macro_f1",
+    "selected_threshold": 0.59,
+    "search_min": 0.1,
+    "search_max": 0.9,
+    "search_step": 0.01
+  },
+  "validation": {
+    "macro_precision": 0.39277390968507236,
+    "macro_recall": 0.4337002330520041,
+    "macro_f1": 0.393890682766367,
+    "micro_precision": 0.4425870101397643,
+    "micro_recall": 0.5532716683795821,
+    "micro_f1": 0.49177831912302067,
+    "subset_accuracy": 0.1042319749216301,
+    "hamming_loss": 0.017439916405433648
+  },
+  "test": {
+    "macro_precision": 0.41015602689301056,
+    "macro_recall": 0.4750792512211073,
+    "macro_f1": 0.4227986619567705,
+    "micro_precision": 0.4426812585499316,
+    "micro_recall": 0.6235067437379576,
+    "micro_f1": 0.51776,
+    "subset_accuracy": 0.12871287128712872,
+    "hamming_loss": 0.015303376491495303
+  },
+  "test_classes_with_zero_support": [
+    "outsider_house",
+    "ambient_techno",
+    "halftime",
+    "post_dubstep",
+    "dembow",
+    "darksynth"
+  ],
+  "outputs": {
+    "threshold_search": "data/runs/regular_linear/threshold_search.csv",
+    "test_per_class": "data/runs/regular_linear/test_per_class.csv"
+  }
+}

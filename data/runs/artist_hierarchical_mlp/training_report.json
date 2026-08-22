@@ -1,0 +1,24 @@
+{
+  "run_name": "artist_hierarchical_mlp",
+  "split": "artist",
+  "model": "hierarchical_mlp",
+  "device": "cpu",
+  "seed": 1337,
+  "input_dimension": 1280,
+  "active_class_count": 150,
+  "parent_class_count": 19,
+  "leaf_class_count": 131,
+  "hierarchy_edges": 131,
+  "hierarchy_lambda": 0.1,
+  "train_samples": 4657,
+  "validation_samples": 1526,
+  "best_epoch": 13,
+  "best_validation_macro_f1_at_0_5": 0.3540008068084717,
+  "epochs_completed": 25,
+  "elapsed_seconds": 9.04,
+  "outputs": {
+    "checkpoint": "data/runs/artist_hierarchical_mlp/model.pt",
+    "normalization": "data/runs/artist_hierarchical_mlp/normalization.npz",
+    "history": "data/runs/artist_hierarchical_mlp/history.csv"
+  }
+}

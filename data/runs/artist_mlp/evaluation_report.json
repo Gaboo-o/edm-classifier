@@ -1,0 +1,45 @@
+{
+  "run_name": "artist_mlp",
+  "split": "artist",
+  "model": "mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 21,
+  "active_class_count": 150,
+  "validation_samples": 1526,
+  "test_samples": 1467,
+  "threshold_policy": {
+    "type": "single_global_threshold",
+    "selected_on": "validation_macro_f1",
+    "selected_threshold": 0.5,
+    "search_min": 0.1,
+    "search_max": 0.9,
+    "search_step": 0.01
+  },
+  "validation": {
+    "macro_precision": 0.38045953410641864,
+    "macro_recall": 0.39753231072727657,
+    "macro_f1": 0.3622896866705531,
+    "micro_precision": 0.4924078091106291,
+    "micro_recall": 0.5428766655278442,
+    "micro_f1": 0.5164120896977575,
+    "subset_accuracy": 0.16775884665792923,
+    "hamming_loss": 0.013001310615989515
+  },
+  "test": {
+    "macro_precision": 0.385252731389398,
+    "macro_recall": 0.39438907354966235,
+    "macro_f1": 0.3622037627840641,
+    "micro_precision": 0.4965562479501476,
+    "micro_recall": 0.5391737891737892,
+    "micro_f1": 0.5169882192248592,
+    "subset_accuracy": 0.1608725289706885,
+    "hamming_loss": 0.01285616905248807
+  },
+  "test_classes_with_zero_support": [
+    "detroit_electro"
+  ],
+  "outputs": {
+    "threshold_search": "data/runs/artist_mlp/threshold_search.csv",
+    "test_per_class": "data/runs/artist_mlp/test_per_class.csv"
+  }
+}

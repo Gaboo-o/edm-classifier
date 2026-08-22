@@ -1,0 +1,151 @@
+index,id,label,parent,is_leaf,support,predicted_positive,precision,recall,f1,tp,fp,fn,tn
+0,house,House,,False,277,351,0.632479,0.801444,0.707006,222,129,55,1061
+1,chicago_house,Chicago House,house,True,9,3,0.333333,0.111111,0.166667,1,2,8,1456
+2,deep_house,Deep House,house,True,15,12,0.083333,0.066667,0.074074,1,11,14,1441
+3,tech_house,Tech House,house,True,7,21,0.0,0.0,0.0,0,21,7,1439
+4,progressive_house,Progressive House,house,True,7,13,0.0,0.0,0.0,0,13,7,1447
+5,acid_house,Acid House,house,True,6,6,0.166667,0.166667,0.166667,1,5,5,1456
+6,electro_house,Electro House,house,True,16,9,0.444444,0.25,0.32,4,5,12,1446
+7,funky_house,Funky House,house,True,11,9,0.111111,0.090909,0.1,1,8,10,1448
+8,french_house,French House,house,True,5,15,0.0,0.0,0.0,0,15,5,1447
+9,disco_house,Disco House,house,True,5,8,0.125,0.2,0.153846,1,7,4,1455
+10,soulful_house,Soulful House,house,True,4,5,0.6,0.75,0.666667,3,2,1,1461
+11,garage_house,Garage House,house,True,9,33,0.151515,0.555556,0.238095,5,28,4,1430
+12,future_house,Future House,house,True,10,28,0.071429,0.2,0.105263,2,26,8,1431
+13,bass_house,Bass House,house,True,15,19,0.315789,0.4,0.352941,6,13,9,1439
+14,g_house,G-House,house,True,16,25,0.32,0.5,0.390244,8,17,8,1434
+15,big_room_house,Big Room House,house,True,6,17,0.352941,1.0,0.521739,6,11,0,1450
+16,tropical_house,Tropical House,house,True,16,21,0.619048,0.8125,0.702703,13,8,3,1443
+17,slap_house,Slap House,house,True,15,20,0.25,0.333333,0.285714,5,15,10,1437
+18,brazilian_bass,Brazilian Bass,house,True,19,38,0.263158,0.526316,0.350877,10,28,9,1420
+19,microhouse,Microhouse,house,True,6,12,0.166667,0.333333,0.222222,2,10,4,1451
+20,hard_house,Hard House,house,True,5,9,0.0,0.0,0.0,0,9,5,1453
+21,italo_house,Italo House,house,True,8,9,0.333333,0.375,0.352941,3,6,5,1453
+22,latin_house,Latin House,house,True,6,11,0.363636,0.666667,0.470588,4,7,2,1454
+23,ghetto_house,Ghetto House,house,True,6,12,0.083333,0.166667,0.111111,1,11,5,1450
+24,outsider_house,Outsider House,house,True,13,24,0.041667,0.076923,0.054054,1,23,12,1431
+25,lo_fi_house,Lo-Fi House,house,True,9,9,0.444444,0.444444,0.444444,4,5,5,1453
+26,afro_house,Afro House,house,True,5,8,0.25,0.4,0.307692,2,6,3,1456
+27,organic_house,Organic House,house,True,8,11,0.090909,0.125,0.105263,1,10,7,1449
+28,melodic_house,Melodic House,house,True,11,24,0.166667,0.363636,0.228571,4,20,7,1436
+29,tribal_house,Tribal House,house,True,6,5,0.0,0.0,0.0,0,5,6,1456
+30,techno,Techno,,False,153,185,0.562162,0.679739,0.615385,104,81,49,1233
+31,detroit_techno,Detroit Techno,techno,True,7,14,0.285714,0.571429,0.380952,4,10,3,1450
+32,minimal_techno,Minimal Techno,techno,True,9,7,0.571429,0.444444,0.5,4,3,5,1455
+33,industrial_techno,Industrial Techno,techno,True,20,11,0.0,0.0,0.0,0,11,20,1436
+34,acid_techno,Acid Techno,techno,True,11,20,0.1,0.181818,0.129032,2,18,9,1438
+35,dub_techno,Dub Techno,techno,True,10,18,0.5,0.9,0.642857,9,9,1,1448
+36,hard_techno,Hard Techno,techno,True,14,29,0.137931,0.285714,0.186047,4,25,10,1428
+37,schranz,Schranz,techno,True,8,17,0.117647,0.25,0.16,2,15,6,1444
+38,peak_time_techno,Peak Time Techno,techno,True,13,9,0.333333,0.230769,0.272727,3,6,10,1448
+39,tribal_techno,Tribal Techno,techno,True,4,3,0.0,0.0,0.0,0,3,4,1460
+40,ambient_techno,Ambient Techno,techno,True,16,15,0.266667,0.25,0.258065,4,11,12,1440
+41,broken_techno,Broken Techno,techno,True,5,4,0.25,0.2,0.222222,1,3,4,1459
+42,melodic_techno,Melodic Techno,techno,True,12,23,0.434783,0.833333,0.571429,10,13,2,1442
+43,electro,Electro,,False,69,154,0.279221,0.623188,0.38565,43,111,26,1287
+44,electrofunk,Electrofunk,electro,True,8,6,0.166667,0.125,0.142857,1,5,7,1454
+45,detroit_electro,Detroit Electro,electro,True,0,17,0.0,0.0,0.0,0,17,0,1450
+46,miami_bass,Miami Bass,electro,True,13,27,0.296296,0.615385,0.4,8,19,5,1435
+47,electroclash,Electroclash,electro,True,16,8,0.125,0.0625,0.083333,1,7,15,1444
+48,baile_funk,Baile Funk,electro,True,6,23,0.0,0.0,0.0,0,23,6,1438
+49,kuduro,Kuduro,electro,True,8,11,0.363636,0.5,0.421053,4,7,4,1452
+50,skweee,Skweee,electro,True,5,8,0.25,0.4,0.307692,2,6,3,1456
+51,trance,Trance,,False,115,153,0.614379,0.817391,0.701493,94,59,21,1293
+52,uplifting_trance,Uplifting Trance,trance,True,5,4,0.75,0.6,0.666667,3,1,2,1461
+53,progressive_trance,Progressive Trance,trance,True,7,3,0.0,0.0,0.0,0,3,7,1457
+54,vocal_trance,Vocal Trance,trance,True,10,9,0.333333,0.3,0.315789,3,6,7,1451
+55,tech_trance,Tech Trance,trance,True,8,13,0.153846,0.25,0.190476,2,11,6,1448
+56,hard_trance,Hard Trance,trance,True,6,9,0.333333,0.5,0.4,3,6,3,1455
+57,acid_trance,Acid Trance,trance,True,5,12,0.083333,0.2,0.117647,1,11,4,1451
+58,dream_trance,Dream Trance,trance,True,6,5,0.0,0.0,0.0,0,5,6,1456
+59,balearic_trance,Balearic Trance,trance,True,4,7,0.285714,0.5,0.363636,2,5,2,1458
+60,psytrance,Psytrance,trance,True,9,8,0.0,0.0,0.0,0,8,9,1450
+61,goa_trance,Goa Trance,trance,True,4,13,0.230769,0.75,0.352941,3,10,1,1453
+62,full_on_psytrance,Full-On Psytrance,trance,True,8,20,0.35,0.875,0.5,7,13,1,1446
+63,forest_dark_psytrance,Forest/Dark Psytrance,trance,True,5,11,0.181818,0.4,0.25,2,9,3,1453
+64,darkpsy,Darkpsy,trance,True,5,13,0.153846,0.4,0.222222,2,11,3,1451
+65,progressive_psytrance,Progressive Psytrance,trance,True,8,8,0.375,0.375,0.375,3,5,5,1454
+66,drum_and_bass,Drum & Bass,,False,149,213,0.600939,0.85906,0.707182,128,85,21,1233
+67,jungle,Jungle,drum_and_bass,True,9,20,0.1,0.222222,0.137931,2,18,7,1440
+68,liquid_dnb,Liquid D&B,drum_and_bass,True,7,12,0.333333,0.571429,0.421053,4,8,3,1452
+69,atmospheric_dnb,Atmospheric D&B,drum_and_bass,True,12,10,0.0,0.0,0.0,0,10,12,1445
+70,neurofunk,Neurofunk,drum_and_bass,True,3,9,0.222222,0.666667,0.333333,2,7,1,1457
+71,techstep,Techstep,drum_and_bass,True,12,22,0.227273,0.416667,0.294118,5,17,7,1438
+72,jump_up,Jump Up,drum_and_bass,True,9,7,0.285714,0.222222,0.25,2,5,7,1453
+73,darkstep,Darkstep,drum_and_bass,True,2,19,0.052632,0.5,0.095238,1,18,1,1447
+74,crossbreed,Crossbreed,drum_and_bass,True,10,26,0.230769,0.6,0.333333,6,20,4,1437
+75,halftime,Halftime,drum_and_bass,True,18,18,0.555556,0.555556,0.555556,10,8,8,1441
+76,drumfunk,Drumfunk,drum_and_bass,True,3,18,0.055556,0.333333,0.095238,1,17,2,1447
+77,ragga_jungle,Ragga Jungle,drum_and_bass,True,10,15,0.666667,1.0,0.8,10,5,0,1452
+78,drumstep,Drumstep,drum_and_bass,True,11,19,0.315789,0.545455,0.4,6,13,5,1443
+79,deep_dnb,Deep DnB,drum_and_bass,True,5,19,0.263158,1.0,0.416667,5,14,0,1448
+80,autonomic,Autonomic,drum_and_bass,True,8,17,0.352941,0.75,0.48,6,11,2,1448
+81,footwork,Footwork,,False,21,33,0.242424,0.380952,0.296296,8,25,13,1421
+82,juke,Juke,footwork,True,7,8,0.375,0.428571,0.4,3,5,4,1455
+83,dubstep,Dubstep,,False,143,212,0.433962,0.643357,0.51831,92,120,51,1204
+84,deep_dubstep,Deep Dubstep,dubstep,True,9,12,0.333333,0.444444,0.380952,4,8,5,1450
+85,brostep,Brostep,dubstep,True,13,30,0.233333,0.538462,0.325581,7,23,6,1431
+86,riddim,Riddim,dubstep,True,9,36,0.194444,0.777778,0.311111,7,29,2,1429
+87,melodic_dubstep,Melodic Dubstep,dubstep,True,15,23,0.304348,0.466667,0.368421,7,16,8,1436
+88,future_garage,Future Garage,dubstep,True,14,15,0.066667,0.071429,0.068966,1,14,13,1439
+89,post_dubstep,Post-Dubstep,dubstep,True,16,16,0.25,0.25,0.25,4,12,12,1439
+90,wonky,Wonky,dubstep,True,18,17,0.117647,0.111111,0.114286,2,15,16,1434
+91,chillstep,Chillstep,dubstep,True,7,17,0.176471,0.428571,0.25,3,14,4,1446
+92,grime,Grime,dubstep,True,19,15,0.733333,0.578947,0.647059,11,4,8,1444
+93,future_bass,Future Bass,,False,40,58,0.189655,0.275,0.22449,11,47,29,1380
+94,kawaii_future_bass,Kawaii Future Bass,future_bass,True,12,19,0.210526,0.333333,0.258065,4,15,8,1440
+95,glitch_hop,Glitch Hop,future_bass,True,8,9,0.0,0.0,0.0,0,9,8,1450
+96,trap_edm,Trap (EDM),,False,68,117,0.333333,0.573529,0.421622,39,78,29,1321
+97,hard_trap,Hard Trap,trap_edm,True,5,1,0.0,0.0,0.0,0,1,5,1461
+98,hybrid_trap,Hybrid Trap,trap_edm,True,13,25,0.24,0.461538,0.315789,6,19,7,1435
+99,hyperpop,Hyperpop,trap_edm,True,19,9,0.333333,0.157895,0.214286,3,6,16,1442
+100,digicore,Digicore,trap_edm,True,12,10,0.4,0.333333,0.363636,4,6,8,1449
+101,phonk,Phonk,,False,22,61,0.278689,0.772727,0.409639,17,44,5,1401
+102,drift_phonk,Drift Phonk,phonk,True,12,17,0.294118,0.416667,0.344828,5,12,7,1443
+103,brazilian_phonk,Brazilian Phonk,phonk,True,4,10,0.4,1.0,0.571429,4,6,0,1457
+104,midtempo,Midtempo,,False,32,87,0.206897,0.5625,0.302521,18,69,14,1366
+105,midtempo_bass,Midtempo Bass,midtempo,True,11,26,0.269231,0.636364,0.378378,7,19,4,1437
+106,wave,Wave,midtempo,True,15,10,0.4,0.266667,0.32,4,6,11,1446
+107,breakbeat,Breakbeat,,False,56,104,0.317308,0.589286,0.4125,33,71,23,1340
+108,big_beat,Big Beat,breakbeat,True,9,13,0.384615,0.555556,0.454545,5,8,4,1450
+109,nu_skool_breaks,Nu-Skool Breaks,breakbeat,True,6,21,0.142857,0.5,0.222222,3,18,3,1443
+110,dariacore,Dariacore,breakbeat,True,7,23,0.26087,0.857143,0.4,6,17,1,1443
+111,progressive_breaks,Progressive Breaks,breakbeat,True,8,8,0.125,0.125,0.125,1,7,7,1452
+112,uk_garage,UK Garage,,False,62,105,0.219048,0.370968,0.275449,23,82,39,1323
+113,2_step_garage,2-Step Garage,uk_garage,True,10,13,0.153846,0.2,0.173913,2,11,8,1446
+114,speed_garage,Speed Garage,uk_garage,True,7,7,0.428571,0.428571,0.428571,3,4,4,1456
+115,bassline_niche,Bassline / Niche,uk_garage,True,12,9,0.111111,0.083333,0.095238,1,8,11,1447
+116,uk_funky,UK Funky,uk_garage,True,16,6,0.333333,0.125,0.181818,2,4,14,1447
+117,hardcore,Hardcore,,False,96,140,0.535714,0.78125,0.635593,75,65,21,1306
+118,gabber,Gabber,hardcore,True,9,14,0.357143,0.555556,0.434783,5,9,4,1449
+119,early_hardcore,Early Hardcore,hardcore,True,5,12,0.25,0.6,0.352941,3,9,2,1453
+120,happy_hardcore,Happy Hardcore,hardcore,True,4,4,0.0,0.0,0.0,0,4,4,1459
+121,uk_hardcore,UK Hardcore,hardcore,True,8,15,0.266667,0.5,0.347826,4,11,4,1448
+122,frenchcore,Frenchcore,hardcore,True,10,18,0.222222,0.4,0.285714,4,14,6,1443
+123,speedcore,Speedcore,hardcore,True,18,30,0.4,0.666667,0.5,12,18,6,1431
+124,breakcore,Breakcore,hardcore,True,15,20,0.3,0.4,0.342857,6,14,9,1438
+125,industrial_hardcore,Industrial Hardcore,hardcore,True,9,15,0.133333,0.222222,0.166667,2,13,7,1445
+126,mainstream_hardcore,Mainstream Hardcore,hardcore,True,7,12,0.166667,0.285714,0.210526,2,10,5,1450
+127,hardstyle,Hardstyle,,False,63,88,0.625,0.873016,0.728477,55,33,8,1371
+128,euphoric_hardstyle,Euphoric Hardstyle,hardstyle,True,5,8,0.5,0.8,0.615385,4,4,1,1458
+129,rawstyle,Rawstyle,hardstyle,True,18,22,0.409091,0.5,0.45,9,13,9,1436
+130,moombahton,Moombahton,,False,40,84,0.392857,0.825,0.532258,33,51,7,1376
+131,reggaeton,Reggaeton,moombahton,True,11,6,0.666667,0.363636,0.470588,4,2,7,1454
+132,dembow,Dembow,moombahton,True,12,20,0.35,0.583333,0.4375,7,13,5,1442
+133,moombahcore,Moombahcore,moombahton,True,9,22,0.318182,0.777778,0.451613,7,15,2,1443
+134,amapiano,Amapiano,,False,46,73,0.506849,0.804348,0.621849,37,36,9,1385
+135,afrobeats,Afrobeats,amapiano,True,20,15,0.466667,0.35,0.4,7,8,13,1439
+136,kwaito,Kwaito,amapiano,True,5,4,0.75,0.6,0.666667,3,1,2,1461
+137,gqom,Gqom,amapiano,True,10,12,0.166667,0.2,0.181818,2,10,8,1447
+138,nu_disco,Nu-Disco,,False,56,81,0.54321,0.785714,0.642336,44,37,12,1374
+139,italo_disco,Italo Disco,nu_disco,True,5,4,0.5,0.4,0.444444,2,2,3,1460
+140,hi_nrg,Hi-NRG,nu_disco,True,8,14,0.285714,0.5,0.363636,4,10,4,1449
+141,disco,Disco,nu_disco,True,5,0,0.0,0.0,0.0,0,0,5,1462
+142,eurodance,Eurodance,nu_disco,True,5,7,0.714286,1.0,0.833333,5,2,0,1460
+143,boogie,Boogie,nu_disco,True,11,14,0.285714,0.363636,0.32,4,10,7,1446
+144,future_funk,Future Funk,nu_disco,True,11,11,0.727273,0.727273,0.727273,8,3,3,1453
+145,synthwave,Synthwave,,False,60,72,0.555556,0.666667,0.606061,40,32,20,1375
+146,outrun,Outrun,synthwave,True,4,16,0.1875,0.75,0.3,3,13,1,1450
+147,darksynth,Darksynth,synthwave,True,13,17,0.352941,0.461538,0.4,6,11,7,1443
+148,vaporwave,Vaporwave,synthwave,True,12,5,0.8,0.333333,0.470588,4,1,8,1454
+149,chillwave,Chillwave,synthwave,True,10,18,0.277778,0.5,0.357143,5,13,5,1444

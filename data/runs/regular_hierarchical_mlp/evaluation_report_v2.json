@@ -1,0 +1,213 @@
+{
+  "run_name": "regular_hierarchical_mlp",
+  "split": "regular",
+  "model": "hierarchical_mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 12,
+  "active_class_count": 150,
+  "active_ancestor_pairs": 131,
+  "validation_samples": 1276,
+  "test_samples": 1313,
+  "hierarchy_diagnostics_before_projection": {
+    "validation": {
+      "pair_violation_rate": 0.08493862021106033,
+      "sample_violation_rate": 1.0,
+      "mean_violation_magnitude": 0.007750794011687538
+    },
+    "test": {
+      "pair_violation_rate": 0.08602175543449823,
+      "sample_violation_rate": 0.9992383853769993,
+      "mean_violation_magnitude": 0.007578997486962705
+    }
+  },
+  "results": {
+    "raw": {
+      "threshold": 0.48,
+      "validation": {
+        "macro_all": {
+          "class_count": 150,
+          "precision": 0.4575016467660894,
+          "recall": 0.47487842911043343,
+          "f1": 0.44546370938084767
+        },
+        "macro_supported": {
+          "class_count": 150,
+          "precision": 0.4575016467660894,
+          "recall": 0.47487842911043343,
+          "f1": 0.44546370938084767
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5523648200392666,
+          "recall": 0.6940287208603345,
+          "f1": 0.6118043071416897
+        },
+        "macro_leaf": {
+          "class_count": 131,
+          "precision": 0.4437428659096744,
+          "recall": 0.4430932722917456,
+          "f1": 0.42133797382774846
+        },
+        "macro_supported_leaf": {
+          "class_count": 131,
+          "precision": 0.4437428659096744,
+          "recall": 0.4430932722917456,
+          "f1": 0.42133797382774846
+        },
+        "micro": {
+          "precision": 0.5042016806722689,
+          "recall": 0.5960945529290853,
+          "f1": 0.5463108320251178
+        },
+        "subset_accuracy": 0.15203761755485892,
+        "hamming_loss": 0.01509926854754441,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 150,
+          "precision": 0.45697862544811535,
+          "recall": 0.5208245263710961,
+          "f1": 0.4628503549569075
+        },
+        "macro_supported": {
+          "class_count": 144,
+          "precision": 0.4760194015084536,
+          "recall": 0.5425255483032251,
+          "f1": 0.4821357864134453
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.516045874054327,
+          "recall": 0.7427401470551714,
+          "f1": 0.6019979941199677
+        },
+        "macro_leaf": {
+          "class_count": 125,
+          "precision": 0.4699353776814808,
+          "recall": 0.5120929292929293,
+          "f1": 0.4639167308420539
+        },
+        "macro_supported_leaf": {
+          "class_count": 125,
+          "precision": 0.4699353776814808,
+          "recall": 0.5120929292929293,
+          "f1": 0.4639167308420539
+        },
+        "micro": {
+          "precision": 0.48010089686098656,
+          "recall": 0.6601156069364161,
+          "f1": 0.5558981015739088
+        },
+        "subset_accuracy": 0.16298552932216298,
+        "hamming_loss": 0.013896928154353897,
+        "zero_support_classes": [
+          "outsider_house",
+          "ambient_techno",
+          "halftime",
+          "post_dubstep",
+          "dembow",
+          "darksynth"
+        ]
+      },
+      "outputs": {
+        "threshold_search": "data/runs/regular_hierarchical_mlp/threshold_search_raw.csv",
+        "test_per_class": "data/runs/regular_hierarchical_mlp/test_per_class_raw.csv"
+      }
+    },
+    "hierarchical": {
+      "threshold": 0.48,
+      "validation": {
+        "macro_all": {
+          "class_count": 150,
+          "precision": 0.45607326142656934,
+          "recall": 0.4763027061020348,
+          "f1": 0.44511383235758417
+        },
+        "macro_supported": {
+          "class_count": 150,
+          "precision": 0.45607326142656934,
+          "recall": 0.4763027061020348,
+          "f1": 0.44511383235758417
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5410880936746353,
+          "recall": 0.7052730128992915,
+          "f1": 0.6090421201159252
+        },
+        "macro_leaf": {
+          "class_count": 131,
+          "precision": 0.4437428659096744,
+          "recall": 0.4430932722917456,
+          "f1": 0.42133797382774846
+        },
+        "macro_supported_leaf": {
+          "class_count": 131,
+          "precision": 0.4437428659096744,
+          "recall": 0.4430932722917456,
+          "f1": 0.42133797382774846
+        },
+        "micro": {
+          "precision": 0.4990093405038211,
+          "recall": 0.6039739636861939,
+          "f1": 0.5464972101673901
+        },
+        "subset_accuracy": 0.15282131661442006,
+        "hamming_loss": 0.01528735632183908,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 150,
+          "precision": 0.4557122491508427,
+          "recall": 0.5220557325228029,
+          "f1": 0.46236430821118263
+        },
+        "macro_supported": {
+          "class_count": 144,
+          "precision": 0.4747002595321278,
+          "recall": 0.543808054711253,
+          "f1": 0.481629487719982
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5060481664442791,
+          "recall": 0.7524601956212775,
+          "f1": 0.5981607829695085
+        },
+        "macro_leaf": {
+          "class_count": 125,
+          "precision": 0.4699353776814808,
+          "recall": 0.5120929292929293,
+          "f1": 0.4639167308420539
+        },
+        "macro_supported_leaf": {
+          "class_count": 125,
+          "precision": 0.4699353776814808,
+          "recall": 0.5120929292929293,
+          "f1": 0.4639167308420539
+        },
+        "micro": {
+          "precision": 0.4745065789473684,
+          "recall": 0.6670520231213873,
+          "f1": 0.5545410860163382
+        },
+        "subset_accuracy": 0.16527037319116528,
+        "hamming_loss": 0.01412033511043412,
+        "zero_support_classes": [
+          "outsider_house",
+          "ambient_techno",
+          "halftime",
+          "post_dubstep",
+          "dembow",
+          "darksynth"
+        ]
+      },
+      "outputs": {
+        "threshold_search": "data/runs/regular_hierarchical_mlp/threshold_search_hierarchical.csv",
+        "test_per_class": "data/runs/regular_hierarchical_mlp/test_per_class_hierarchical.csv"
+      }
+    }
+  }
+}

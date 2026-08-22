@@ -1,0 +1,50 @@
+{
+  "run_name": "regular_mlp",
+  "split": "regular",
+  "model": "mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 8,
+  "active_class_count": 150,
+  "validation_samples": 1276,
+  "test_samples": 1313,
+  "threshold_policy": {
+    "type": "single_global_threshold",
+    "selected_on": "validation_macro_f1",
+    "selected_threshold": 0.53,
+    "search_min": 0.1,
+    "search_max": 0.9,
+    "search_step": 0.01
+  },
+  "validation": {
+    "macro_precision": 0.4187939650738405,
+    "macro_recall": 0.5092645220509918,
+    "macro_f1": 0.4396322122529161,
+    "micro_precision": 0.46984860148832436,
+    "micro_recall": 0.6272696128811237,
+    "micro_f1": 0.5372652582159625,
+    "subset_accuracy": 0.11050156739811912,
+    "hamming_loss": 0.016478578892371996
+  },
+  "test": {
+    "macro_precision": 0.41840522804285113,
+    "macro_recall": 0.5605985784443315,
+    "macro_f1": 0.4592927461012234,
+    "micro_precision": 0.4457470690945373,
+    "micro_recall": 0.6886319845857418,
+    "micro_f1": 0.5411871592973955,
+    "subset_accuracy": 0.12185833968012186,
+    "hamming_loss": 0.015384615384615385
+  },
+  "test_classes_with_zero_support": [
+    "outsider_house",
+    "ambient_techno",
+    "halftime",
+    "post_dubstep",
+    "dembow",
+    "darksynth"
+  ],
+  "outputs": {
+    "threshold_search": "data/runs/regular_mlp/threshold_search.csv",
+    "test_per_class": "data/runs/regular_mlp/test_per_class.csv"
+  }
+}

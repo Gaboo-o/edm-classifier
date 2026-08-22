@@ -1,0 +1,19 @@
+{
+  "model": "hierarchical_mlp",
+  "inference_mode": "hierarchical",
+  "common_supported": {
+    "class_count": 143,
+    "regular_macro_f1": 0.48080174825174826,
+    "artist_macro_f1": 0.37544034265734266
+  },
+  "common_supported_parent": {
+    "class_count": 19,
+    "regular_macro_f1": 0.5981608421052631,
+    "artist_macro_f1": 0.5427557368421053
+  },
+  "common_supported_leaf": {
+    "class_count": 124,
+    "regular_macro_f1": 0.4628193064516129,
+    "artist_macro_f1": 0.3498033064516129
+  }
+}

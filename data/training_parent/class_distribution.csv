@@ -1,0 +1,20 @@
+index,id,label,regular_train,regular_validation,regular_test,artist_train,artist_validation,artist_test
+0,house,House,963,282,270,947,291,277
+1,techno,Techno,455,130,115,421,126,153
+2,electro,Electro,252,84,68,275,60,69
+3,trance,Trance,413,136,121,454,101,115
+4,drum_and_bass,Drum & Bass,546,135,139,511,160,149
+5,footwork,Footwork,49,21,22,59,12,21
+6,dubstep,Dubstep,405,118,89,327,142,143
+7,future_bass,Future Bass,103,40,36,86,53,40
+8,trap_edm,Trap (EDM),206,58,42,139,99,68
+9,phonk,Phonk,72,30,27,88,19,22
+10,midtempo,Midtempo,111,35,33,118,29,32
+11,breakbeat,Breakbeat,145,56,52,150,47,56
+12,uk_garage,UK Garage,151,53,56,147,51,62
+13,hardcore,Hardcore,340,93,87,302,122,96
+14,hardstyle,Hardstyle,159,49,49,113,81,63
+15,moombahton,Moombahton,153,44,21,111,67,40
+16,amapiano,Amapiano,123,43,42,127,35,46
+17,nu_disco,Nu-Disco,202,67,56,217,52,56
+18,synthwave,Synthwave,213,57,33,170,73,60

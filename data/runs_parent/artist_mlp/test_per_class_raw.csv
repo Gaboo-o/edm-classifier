@@ -1,0 +1,20 @@
+index,id,label,parent,is_leaf,support,predicted_positive,precision,recall,f1,tp,fp,fn,tn
+0,house,House,,False,277,291,0.721649,0.758123,0.739437,210,81,67,1109
+1,techno,Techno,,False,153,108,0.759259,0.535948,0.628352,82,26,71,1288
+2,electro,Electro,,False,69,70,0.471429,0.478261,0.47482,33,37,36,1361
+3,trance,Trance,,False,115,116,0.793103,0.8,0.796537,92,24,23,1328
+4,drum_and_bass,Drum & Bass,,False,149,169,0.757396,0.85906,0.805031,128,41,21,1277
+5,footwork,Footwork,,False,21,22,0.318182,0.333333,0.325581,7,15,14,1431
+6,dubstep,Dubstep,,False,143,139,0.618705,0.601399,0.609929,86,53,57,1271
+7,future_bass,Future Bass,,False,40,13,0.538462,0.175,0.264151,7,6,33,1421
+8,trap_edm,Trap (EDM),,False,68,75,0.48,0.529412,0.503497,36,39,32,1360
+9,phonk,Phonk,,False,22,33,0.454545,0.681818,0.545455,15,18,7,1427
+10,midtempo,Midtempo,,False,32,35,0.371429,0.40625,0.38806,13,22,19,1413
+11,breakbeat,Breakbeat,,False,56,48,0.520833,0.446429,0.480769,25,23,31,1388
+12,uk_garage,UK Garage,,False,62,57,0.368421,0.33871,0.352941,21,36,41,1369
+13,hardcore,Hardcore,,False,96,111,0.630631,0.729167,0.676329,70,41,26,1330
+14,hardstyle,Hardstyle,,False,63,60,0.783333,0.746032,0.764228,47,13,16,1391
+15,moombahton,Moombahton,,False,40,47,0.617021,0.725,0.666667,29,18,11,1409
+16,amapiano,Amapiano,,False,46,43,0.744186,0.695652,0.719101,32,11,14,1410
+17,nu_disco,Nu-Disco,,False,56,62,0.709677,0.785714,0.745763,44,18,12,1393
+18,synthwave,Synthwave,,False,60,37,0.891892,0.55,0.680412,33,4,27,1403

@@ -1,0 +1,185 @@
+id,label,parent,depth,is_leaf,regular_train_direct,artist_train_direct,regular_train_expanded,artist_train_expanded,minimum_expanded_train,active_v1
+house,House,,0,False,170,136,963,947,947,True
+chicago_house,Chicago House,house,1,True,18,17,18,17,17,True
+deep_house,Deep House,house,1,True,27,25,27,25,25,True
+tech_house,Tech House,house,1,True,28,35,28,35,28,True
+progressive_house,Progressive House,house,1,True,27,34,27,34,27,True
+acid_house,Acid House,house,1,True,19,26,19,26,19,True
+electro_house,Electro House,house,1,True,29,22,29,22,22,True
+funky_house,Funky House,house,1,True,24,25,24,25,24,True
+french_house,French House,house,1,True,26,39,26,39,26,True
+disco_house,Disco House,house,1,True,27,40,27,40,27,True
+soulful_house,Soulful House,house,1,True,19,28,19,28,19,True
+garage_house,Garage House,house,1,True,32,34,32,34,32,True
+future_house,Future House,house,1,True,37,33,37,33,33,True
+bass_house,Bass House,house,1,True,31,21,31,21,21,True
+g_house,G-House,house,1,True,25,25,25,25,25,True
+big_room_house,Big Room House,house,1,True,27,24,27,24,24,True
+tropical_house,Tropical House,house,1,True,26,22,26,22,22,True
+slap_house,Slap House,house,1,True,35,35,35,35,35,True
+brazilian_bass,Brazilian Bass,house,1,True,32,29,32,29,29,True
+microhouse,Microhouse,house,1,True,23,30,23,30,23,True
+hard_house,Hard House,house,1,True,19,26,19,26,19,True
+italo_house,Italo House,house,1,True,21,26,21,26,21,True
+latin_house,Latin House,house,1,True,29,24,29,24,24,True
+ghetto_house,Ghetto House,house,1,True,19,24,19,24,19,True
+jackin_house,Jackin' House,house,1,True,2,0,2,0,0,False
+outsider_house,Outsider House,house,1,True,50,38,50,38,38,True
+lo_fi_house,Lo-Fi House,house,1,True,30,40,30,40,30,True
+afro_house,Afro House,house,1,True,28,37,28,37,28,True
+afro_tech,Afro-Tech,house,1,True,3,3,3,3,3,False
+organic_house,Organic House,house,1,True,27,35,27,35,27,True
+melodic_house,Melodic House,house,1,True,34,33,34,33,33,True
+tribal_house,Tribal House,house,1,True,19,26,19,26,19,True
+techno,Techno,,0,False,90,77,455,421,421,True
+detroit_techno,Detroit Techno,techno,1,True,23,32,23,32,23,True
+minimal_techno,Minimal Techno,techno,1,True,24,28,24,28,24,True
+industrial_techno,Industrial Techno,techno,1,True,34,21,34,21,21,True
+acid_techno,Acid Techno,techno,1,True,28,34,28,34,28,True
+dub_techno,Dub Techno,techno,1,True,30,32,30,32,30,True
+hard_techno,Hard Techno,techno,1,True,36,32,36,32,32,True
+schranz,Schranz,techno,1,True,19,20,19,20,19,True
+birmingham_techno,Birmingham Techno,techno,1,True,2,0,2,0,0,False
+peak_time_techno,Peak Time Techno,techno,1,True,23,19,23,19,19,True
+raw_techno,Raw Techno,techno,1,True,14,12,14,12,12,False
+hypnotic_techno,Hypnotic Techno,techno,1,True,11,13,11,13,11,False
+bleep_techno,Bleep Techno,techno,1,True,0,0,0,0,0,False
+tribal_techno,Tribal Techno,techno,1,True,20,27,20,27,20,True
+ambient_techno,Ambient Techno,techno,1,True,49,33,49,33,33,True
+broken_techno,Broken Techno,techno,1,True,15,16,15,16,15,True
+melodic_techno,Melodic Techno,techno,1,True,37,38,37,38,37,True
+electro,Electro,,0,False,63,54,252,275,252,True
+electrofunk,Electrofunk,electro,1,True,24,33,24,33,24,True
+detroit_electro,Detroit Electro,electro,1,True,35,57,35,57,35,True
+miami_bass,Miami Bass,electro,1,True,34,29,34,29,29,True
+electroclash,Electroclash,electro,1,True,33,26,33,26,26,True
+baile_funk,Baile Funk,electro,1,True,29,38,29,38,29,True
+kuduro,Kuduro,electro,1,True,18,20,18,20,18,True
+skweee,Skweee,electro,1,True,16,18,16,18,16,True
+trance,Trance,,0,False,84,72,413,454,413,True
+uplifting_trance,Uplifting Trance,trance,1,True,16,18,16,18,16,True
+progressive_trance,Progressive Trance,trance,1,True,18,20,18,20,18,True
+vocal_trance,Vocal Trance,trance,1,True,19,19,19,19,19,True
+tech_trance,Tech Trance,trance,1,True,23,28,23,28,23,True
+hard_trance,Hard Trance,trance,1,True,19,23,19,23,19,True
+acid_trance,Acid Trance,trance,1,True,19,26,19,26,19,True
+dream_trance,Dream Trance,trance,1,True,17,21,17,21,17,True
+balearic_trance,Balearic Trance,trance,1,True,16,19,16,19,16,True
+orchestral_uplifting,Orchestral Uplifting,trance,1,True,0,0,0,0,0,False
+psytrance,Psytrance,trance,1,True,24,27,24,27,24,True
+goa_trance,Goa Trance,trance,1,True,22,29,22,29,22,True
+full_on_psytrance,Full-On Psytrance,trance,1,True,30,41,30,41,30,True
+forest_dark_psytrance,Forest/Dark Psytrance,trance,1,True,19,24,19,24,19,True
+hi_tech_psytrance,Hi-Tech Psytrance,trance,1,True,4,2,4,2,2,False
+twilight_psytrance,Twilight Psytrance,trance,1,True,5,4,5,4,4,False
+darkpsy,Darkpsy,trance,1,True,16,20,16,20,16,True
+progressive_psytrance,Progressive Psytrance,trance,1,True,23,27,23,27,23,True
+zenonesque,Zenonesque,trance,1,True,5,7,5,7,5,False
+nitzhonot,Nitzhonot,trance,1,True,11,10,11,10,10,False
+suomisaundi,Suomisaundi,trance,1,True,13,16,13,16,13,False
+psybreaks,Psybreaks,trance,1,True,10,10,10,10,10,False
+drum_and_bass,Drum & Bass,,0,False,132,89,546,511,511,True
+jungle,Jungle,drum_and_bass,1,True,28,33,28,33,28,True
+liquid_dnb,Liquid D&B,drum_and_bass,1,True,25,32,25,32,25,True
+atmospheric_dnb,Atmospheric D&B,drum_and_bass,1,True,31,31,31,31,31,True
+neurofunk,Neurofunk,drum_and_bass,1,True,33,15,33,15,15,True
+techstep,Techstep,drum_and_bass,1,True,33,32,33,32,32,True
+jump_up,Jump Up,drum_and_bass,1,True,32,44,32,44,32,True
+darkstep,Darkstep,drum_and_bass,1,True,30,36,30,36,30,True
+crossbreed,Crossbreed,drum_and_bass,1,True,21,21,21,21,21,True
+halftime,Halftime,drum_and_bass,1,True,52,26,52,26,26,True
+drumfunk,Drumfunk,drum_and_bass,1,True,24,41,24,41,24,True
+minimal_dnb,Minimal D&B,drum_and_bass,1,True,0,0,0,0,0,False
+ragga_jungle,Ragga Jungle,drum_and_bass,1,True,17,19,17,19,17,True
+drumstep,Drumstep,drum_and_bass,1,True,28,25,28,25,25,True
+deep_dnb,Deep DnB,drum_and_bass,1,True,25,37,25,37,25,True
+autonomic,Autonomic,drum_and_bass,1,True,25,31,25,31,25,True
+sambass,Sambass,drum_and_bass,1,True,10,11,10,11,10,False
+footwork,Footwork,,0,False,25,28,49,59,49,True
+juke,Juke,footwork,1,True,24,31,24,31,24,True
+dubstep,Dubstep,,0,False,95,68,405,327,327,True
+deep_dubstep,Deep Dubstep,dubstep,1,True,27,36,27,36,27,True
+brostep,Brostep,dubstep,1,True,30,26,30,26,26,True
+riddim,Riddim,dubstep,1,True,35,38,35,38,35,True
+melodic_dubstep,Melodic Dubstep,dubstep,1,True,24,22,24,22,22,True
+tearout_dubstep,Tearout Dubstep,dubstep,1,True,7,5,7,5,5,False
+140_deep_bass,140 / Deep Bass,dubstep,1,True,0,0,0,0,0,False
+future_garage,Future Garage,dubstep,1,True,35,29,35,29,29,True
+post_dubstep,Post-Dubstep,dubstep,1,True,50,31,50,31,31,True
+wonky,Wonky,dubstep,1,True,39,23,39,23,23,True
+chillstep,Chillstep,dubstep,1,True,29,24,29,24,24,True
+grime,Grime,dubstep,1,True,34,29,34,29,29,True
+future_bass,Future Bass,,0,False,32,25,103,86,86,True
+kawaii_future_bass,Kawaii Future Bass,future_bass,1,True,24,29,24,29,24,True
+color_bass,Color Bass,future_bass,1,True,11,10,11,10,10,False
+glitch_hop,Glitch Hop,future_bass,1,True,36,22,36,22,22,True
+trap_edm,Trap (EDM),,0,False,63,42,206,139,139,True
+hard_trap,Hard Trap,trap_edm,1,True,19,25,19,25,19,True
+festival_trap,Festival Trap,trap_edm,1,True,6,5,6,5,5,False
+hybrid_trap,Hybrid Trap,trap_edm,1,True,34,27,34,27,27,True
+hyperpop,Hyperpop,trap_edm,1,True,33,15,33,15,15,True
+digicore,Digicore,trap_edm,1,True,46,24,46,24,24,True
+trapwave,Trapwave,trap_edm,1,True,5,5,5,5,5,False
+phonk,Phonk,,0,False,25,35,72,88,72,True
+drift_phonk,Drift Phonk,phonk,1,True,31,32,31,32,31,True
+memphis_phonk,Memphis Phonk,phonk,1,True,0,0,0,0,0,False
+house_phonk,House Phonk,phonk,1,True,0,0,0,0,0,False
+brazilian_phonk,Brazilian Phonk,phonk,1,True,16,22,16,22,16,True
+midtempo,Midtempo,,0,False,37,42,111,118,111,True
+midtempo_bass,Midtempo Bass,midtempo,1,True,42,49,42,49,42,True
+bouncy_midtempo,Bouncy Midtempo,midtempo,1,True,0,0,0,0,0,False
+cinematic_midtempo,Cinematic Midtempo,midtempo,1,True,0,0,0,0,0,False
+industrial_midtempo,Industrial Midtempo,midtempo,1,True,0,0,0,0,0,False
+phonkstep,Phonkstep,midtempo,1,True,0,0,0,0,0,False
+wave,Wave,midtempo,1,True,32,27,32,27,27,True
+breakbeat,Breakbeat,,0,False,50,35,145,150,145,True
+big_beat,Big Beat,breakbeat,1,True,22,24,22,24,22,True
+florida_breaks,Florida Breaks,breakbeat,1,True,2,1,2,1,1,False
+nu_skool_breaks,Nu-Skool Breaks,breakbeat,1,True,21,28,21,28,21,True
+dariacore,Dariacore,breakbeat,1,True,24,31,24,31,24,True
+progressive_breaks,Progressive Breaks,breakbeat,1,True,26,31,26,31,26,True
+uk_garage,UK Garage,,0,False,41,35,151,147,147,True
+2_step_garage,2-Step Garage,uk_garage,1,True,28,29,28,29,28,True
+speed_garage,Speed Garage,uk_garage,1,True,30,35,30,35,30,True
+bassline_niche,Bassline / Niche,uk_garage,1,True,27,27,27,27,27,True
+uk_funky,UK Funky,uk_garage,1,True,25,22,25,22,22,True
+hardcore,Hardcore,,0,False,91,81,340,302,302,True
+gabber,Gabber,hardcore,1,True,21,22,21,22,21,True
+early_hardcore,Early Hardcore,hardcore,1,True,16,18,16,18,16,True
+happy_hardcore,Happy Hardcore,hardcore,1,True,20,27,20,27,20,True
+uk_hardcore,UK Hardcore,hardcore,1,True,30,26,30,26,26,True
+frenchcore,Frenchcore,hardcore,1,True,27,32,27,32,27,True
+speedcore,Speedcore,hardcore,1,True,25,22,25,22,22,True
+terrorcore,Terrorcore,hardcore,1,True,11,11,11,11,11,False
+breakcore,Breakcore,hardcore,1,True,46,27,46,27,27,True
+industrial_hardcore,Industrial Hardcore,hardcore,1,True,21,23,21,23,21,True
+mainstream_hardcore,Mainstream Hardcore,hardcore,1,True,32,24,32,24,24,True
+hardstyle,Hardstyle,,0,False,45,36,159,113,113,True
+euphoric_hardstyle,Euphoric Hardstyle,hardstyle,1,True,21,20,21,20,20,True
+rawstyle,Rawstyle,hardstyle,1,True,33,20,33,20,20,True
+xtra_raw,Xtra Raw,hardstyle,1,True,7,7,7,7,7,False
+reverse_bass,Reverse Bass,hardstyle,1,True,5,3,5,3,3,False
+nu_style_hardstyle,Nu-Style Hardstyle,hardstyle,1,True,0,0,0,0,0,False
+dubstyle,Dubstyle,hardstyle,1,True,7,8,7,8,7,False
+psystyle,Psystyle,hardstyle,1,True,9,6,9,6,6,False
+uptempo_hardcore,Uptempo Hardcore,hardstyle,1,True,32,14,32,14,14,False
+moombahton,Moombahton,,0,False,53,39,153,111,111,True
+reggaeton,Reggaeton,moombahton,1,True,23,18,23,18,18,True
+dembow,Dembow,moombahton,1,True,49,22,49,22,22,True
+moombahcore,Moombahcore,moombahton,1,True,28,32,28,32,28,True
+amapiano,Amapiano,,0,False,39,38,123,127,123,True
+afrobeats,Afrobeats,amapiano,1,True,35,31,35,31,31,True
+kwaito,Kwaito,amapiano,1,True,23,32,23,32,23,True
+gqom,Gqom,amapiano,1,True,26,27,26,27,26,True
+nu_disco,Nu-Disco,,0,False,73,60,202,217,202,True
+italo_disco,Italo Disco,nu_disco,1,True,16,19,16,19,16,True
+hi_nrg,Hi-NRG,nu_disco,1,True,24,31,24,31,24,True
+disco,Disco,nu_disco,1,True,16,17,16,17,16,True
+eurodance,Eurodance,nu_disco,1,True,23,34,23,34,23,True
+boogie,Boogie,nu_disco,1,True,24,29,24,29,24,True
+future_funk,Future Funk,nu_disco,1,True,26,27,26,27,26,True
+synthwave,Synthwave,,0,False,69,41,213,170,170,True
+outrun,Outrun,synthwave,1,True,30,40,30,40,30,True
+darksynth,Darksynth,synthwave,1,True,53,32,53,32,32,True
+vaporwave,Vaporwave,synthwave,1,True,28,25,28,25,25,True
+chillwave,Chillwave,synthwave,1,True,33,34,33,34,33,True
