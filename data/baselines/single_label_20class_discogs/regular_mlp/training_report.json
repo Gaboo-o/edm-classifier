@@ -1,0 +1,32 @@
+{
+  "run_name": "regular_mlp",
+  "task": "single_label_parent_genre",
+  "encoder": "discogs-effnet-bs64-1",
+  "pooling": "mean",
+  "split": "regular",
+  "model": "mlp",
+  "device": "cpu",
+  "class_count": 20,
+  "other_index": 19,
+  "embedding_dim": 1280,
+  "train_samples": 12833,
+  "validation_samples": 3278,
+  "best_epoch": 4,
+  "best_validation_macro_f1_excluding_other": 0.5767471286620196,
+  "elapsed_seconds": 32.9,
+  "optimization": {
+    "loss": "CrossEntropyLoss",
+    "class_weight": "sqrt_balanced",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 128,
+    "hidden_dim": 512,
+    "dropout": 0.2,
+    "seed": 1337
+  },
+  "outputs": {
+    "checkpoint": "data/runs/single_label/discogs/regular_mlp/model.pt",
+    "normalization": "data/runs/single_label/discogs/regular_mlp/normalization.npz",
+    "history": "data/runs/single_label/discogs/regular_mlp/history.csv"
+  }
+}

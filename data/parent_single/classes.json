@@ -2,7 +2,7 @@
   "task": "single_label_parent_genre",
   "loss": "cross_entropy",
   "prediction": "softmax_argmax",
-  "class_count": 20,
+  "class_count": 19,
   "classes": [
     {
       "index": 0,
@@ -117,18 +117,12 @@
       "id": "synthwave",
       "label": "Synthwave",
       "source": "retained_parent"
-    },
-    {
-      "index": 19,
-      "id": "other",
-      "label": "Other",
-      "source": "catch_all"
     }
   ],
-  "selection_file": "data/runs/parent_analysis/retention_selection.json",
+  "selection_file": "config/parent_selection.json",
   "policies": {
-    "ambiguous": "other",
-    "excluded_parent": "other",
-    "zero_parent": "other"
+    "ambiguous": "drop",
+    "excluded_parent": "drop",
+    "zero_parent": "drop"
   }
 }

@@ -19,8 +19,7 @@
     "moombahton",
     "amapiano",
     "nu_disco",
-    "synthwave",
-    "other"
+    "synthwave"
   ],
   "retained_parent_classes": [
     "house",
@@ -43,20 +42,20 @@
     "nu_disco",
     "synthwave"
   ],
-  "other_class": "other",
+  "other_class": null,
   "policies": {
-    "ambiguous": "other",
-    "excluded_parent": "other",
-    "zero_parent": "other"
+    "ambiguous": "drop",
+    "excluded_parent": "drop",
+    "zero_parent": "drop"
   },
   "splits": {
     "regular": {
       "train": {
         "input_samples": 12833,
-        "output_samples": 12833,
-        "dropped_samples": 0,
+        "output_samples": 12830,
+        "dropped_samples": 3,
         "reason_counts": {
-          "other_multi_parent": 3,
+          "dropped_multi_parent": 3,
           "retained_parent": 12830
         },
         "class_support": {
@@ -78,8 +77,7 @@
           "moombahton": 296,
           "amapiano": 251,
           "nu_disco": 718,
-          "synthwave": 336,
-          "other": 3
+          "synthwave": 336
         },
         "source_parent_support": {
           "amapiano": 251,
@@ -106,10 +104,10 @@
       },
       "validation": {
         "input_samples": 3278,
-        "output_samples": 3278,
-        "dropped_samples": 0,
+        "output_samples": 2855,
+        "dropped_samples": 423,
         "reason_counts": {
-          "other_multi_parent": 423,
+          "dropped_multi_parent": 423,
           "retained_parent": 2855
         },
         "class_support": {
@@ -131,8 +129,7 @@
           "moombahton": 86,
           "amapiano": 79,
           "nu_disco": 151,
-          "synthwave": 119,
-          "other": 423
+          "synthwave": 119
         },
         "source_parent_support": {
           "amapiano": 90,
@@ -159,10 +156,10 @@
       },
       "test": {
         "input_samples": 3212,
-        "output_samples": 3212,
-        "dropped_samples": 0,
+        "output_samples": 3189,
+        "dropped_samples": 23,
         "reason_counts": {
-          "other_multi_parent": 23,
+          "dropped_multi_parent": 23,
           "retained_parent": 3189
         },
         "class_support": {
@@ -184,8 +181,7 @@
           "moombahton": 74,
           "amapiano": 91,
           "nu_disco": 78,
-          "synthwave": 139,
-          "other": 23
+          "synthwave": 139
         },
         "source_parent_support": {
           "amapiano": 91,
@@ -214,10 +210,10 @@
     "artist": {
       "train": {
         "input_samples": 11349,
-        "output_samples": 11349,
-        "dropped_samples": 0,
+        "output_samples": 11233,
+        "dropped_samples": 116,
         "reason_counts": {
-          "other_multi_parent": 116,
+          "dropped_multi_parent": 116,
           "retained_parent": 11233
         },
         "class_support": {
@@ -239,8 +235,7 @@
           "moombahton": 212,
           "amapiano": 254,
           "nu_disco": 715,
-          "synthwave": 345,
-          "other": 116
+          "synthwave": 345
         },
         "source_parent_support": {
           "amapiano": 256,
@@ -267,10 +262,10 @@
       },
       "validation": {
         "input_samples": 3952,
-        "output_samples": 3952,
-        "dropped_samples": 0,
+        "output_samples": 3780,
+        "dropped_samples": 172,
         "reason_counts": {
-          "other_multi_parent": 172,
+          "dropped_multi_parent": 172,
           "retained_parent": 3780
         },
         "class_support": {
@@ -292,8 +287,7 @@
           "moombahton": 87,
           "amapiano": 86,
           "nu_disco": 112,
-          "synthwave": 123,
-          "other": 172
+          "synthwave": 123
         },
         "source_parent_support": {
           "amapiano": 92,
@@ -320,10 +314,10 @@
       },
       "test": {
         "input_samples": 4022,
-        "output_samples": 4022,
-        "dropped_samples": 0,
+        "output_samples": 3861,
+        "dropped_samples": 161,
         "reason_counts": {
-          "other_multi_parent": 161,
+          "dropped_multi_parent": 161,
           "retained_parent": 3861
         },
         "class_support": {
@@ -345,8 +339,7 @@
           "moombahton": 157,
           "amapiano": 81,
           "nu_disco": 120,
-          "synthwave": 126,
-          "other": 161
+          "synthwave": 126
         },
         "source_parent_support": {
           "amapiano": 84,

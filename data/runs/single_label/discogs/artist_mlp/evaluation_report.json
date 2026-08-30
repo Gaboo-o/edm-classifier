@@ -1,0 +1,34 @@
+{
+  "run_name": "artist_mlp",
+  "task": "single_label_parent_genre",
+  "encoder": "discogs-effnet-bs64-1",
+  "pooling": "mean",
+  "split": "artist",
+  "model": "mlp",
+  "checkpoint_epoch": 3,
+  "class_weight_mode": "sqrt_balanced",
+  "class_count": 19,
+  "test": {
+    "accuracy": 0.6671846671846672,
+    "macro_f1": 0.5759294500756637,
+    "macro_f1_excluding_other": 0.5759294500756637,
+    "weighted_f1": 0.6673306751370409,
+    "samples": 3861,
+    "correct": 2576,
+    "supported_classes": 19,
+    "retained_supported_classes": 19
+  },
+  "confidence": {
+    "mean_max_probability": 0.7044497728347778,
+    "median_max_probability": 0.7589755058288574,
+    "correct_mean_max_probability": 0.795574426651001,
+    "incorrect_mean_max_probability": 0.5217751264572144
+  },
+  "outputs": {
+    "per_class": "data/runs/single_label/discogs/artist_mlp/test_per_class.csv",
+    "confusion_counts": "data/runs/single_label/discogs/artist_mlp/confusion_counts.csv",
+    "confusion_normalized": "data/runs/single_label/discogs/artist_mlp/confusion_row_normalized.csv",
+    "top_confusions": "data/runs/single_label/discogs/artist_mlp/top_confusions.csv",
+    "heatmap": "data/runs/single_label/discogs/artist_mlp/confusion_heatmap.png"
+  }
+}

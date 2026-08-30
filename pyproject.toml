@@ -3,7 +3,7 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ytm-converter"
+name = "edm-classifier"
 version = "0.1.0"
 description = "Convert YouTube Music playlist videos to song versions."
 readme = "README.md"

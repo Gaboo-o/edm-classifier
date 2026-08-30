@@ -1,0 +1,34 @@
+{
+  "run_name": "regular_mlp",
+  "task": "single_label_parent_genre",
+  "encoder": "discogs-effnet-bs64-1",
+  "pooling": "mean",
+  "split": "regular",
+  "model": "mlp",
+  "checkpoint_epoch": 4,
+  "class_weight_mode": "sqrt_balanced",
+  "class_count": 20,
+  "test": {
+    "accuracy": 0.6581569115815691,
+    "macro_f1": 0.5507594528591464,
+    "macro_f1_excluding_other": 0.579746792483312,
+    "weighted_f1": 0.652687964707707,
+    "samples": 3212,
+    "correct": 2114,
+    "supported_classes": 20,
+    "retained_supported_classes": 19
+  },
+  "confidence": {
+    "mean_max_probability": 0.7389843463897705,
+    "median_max_probability": 0.8044043779373169,
+    "correct_mean_max_probability": 0.8201724290847778,
+    "incorrect_mean_max_probability": 0.5826714038848877
+  },
+  "outputs": {
+    "per_class": "data/runs/single_label/discogs/regular_mlp/test_per_class.csv",
+    "confusion_counts": "data/runs/single_label/discogs/regular_mlp/confusion_counts.csv",
+    "confusion_normalized": "data/runs/single_label/discogs/regular_mlp/confusion_row_normalized.csv",
+    "top_confusions": "data/runs/single_label/discogs/regular_mlp/top_confusions.csv",
+    "heatmap": "data/runs/single_label/discogs/regular_mlp/confusion_heatmap.png"
+  }
+}

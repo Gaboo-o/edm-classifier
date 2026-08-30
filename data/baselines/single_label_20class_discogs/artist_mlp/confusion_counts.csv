@@ -1,0 +1,21 @@
+true_id,true_label,house,techno,electro,trance,drum_and_bass,footwork,dubstep,future_bass,trap_edm,phonk,midtempo,breakbeat,uk_garage,hardcore,hardstyle,moombahton,amapiano,nu_disco,synthwave,other
+house,House,508,53,18,34,4,5,16,2,7,6,1,8,9,1,3,10,6,18,10,9
+techno,Techno,36,193,7,24,6,0,5,0,2,1,1,2,2,10,4,0,1,1,2,0
+electro,Electro,34,13,78,2,1,4,7,0,10,2,0,2,2,1,0,4,7,5,3,1
+trance,Trance,21,21,5,355,6,0,4,0,4,0,1,11,1,5,0,2,0,1,3,0
+drum_and_bass,Drum & Bass,6,2,0,2,408,1,29,1,2,2,3,6,3,14,0,3,2,1,0,4
+footwork,Footwork,3,0,1,1,1,9,4,0,1,0,0,0,1,0,0,1,0,0,0,0
+dubstep,Dubstep,13,8,7,2,11,3,196,1,27,1,1,4,6,3,1,2,2,1,7,0
+future_bass,Future Bass,3,0,3,0,0,1,17,8,11,2,2,0,1,2,0,4,0,0,0,0
+trap_edm,Trap (EDM),6,0,6,1,5,0,30,1,77,2,4,2,0,4,0,0,1,0,4,2
+phonk,Phonk,11,0,0,0,0,0,1,0,5,29,4,0,0,1,0,0,0,0,0,0
+midtempo,Midtempo,10,1,3,5,9,0,15,1,19,0,27,2,0,0,2,3,0,0,4,0
+breakbeat,Breakbeat,13,2,1,5,10,0,9,0,2,1,1,49,5,2,0,1,2,2,4,0
+uk_garage,UK Garage,18,6,1,0,4,0,12,0,0,0,0,2,35,0,0,1,6,1,4,0
+hardcore,Hardcore,1,9,3,8,19,0,2,1,3,0,0,1,0,213,2,0,0,1,1,3
+hardstyle,Hardstyle,4,2,0,1,3,0,2,0,1,0,0,0,0,18,77,0,0,0,0,4
+moombahton,Moombahton,9,8,11,3,4,1,8,0,1,2,0,0,1,0,0,104,5,0,0,0
+amapiano,Amapiano,7,1,3,1,1,0,7,0,2,0,0,0,1,0,0,3,54,1,0,0
+nu_disco,Nu-Disco,28,0,3,5,0,0,2,0,2,0,0,1,0,0,0,1,0,68,8,2
+synthwave,Synthwave,10,8,0,8,3,0,7,1,6,2,4,3,0,0,0,0,0,4,70,0
+other,Other,31,13,14,5,11,1,22,2,10,2,0,11,7,11,7,6,3,3,2,0

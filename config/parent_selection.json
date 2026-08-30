@@ -1,0 +1,145 @@
+{
+  "selection_version": 1,
+  "purpose": "single_label_parent_class_selection",
+  "instructions": "Set keep=false for parent genres to map into 'other'. Do not decide from F1 alone; consider relevance, support, and confusion pattern.",
+  "other": {
+    "enabled": false,
+    "id": "other",
+    "label": "Other"
+  },
+  "classes": [
+    {
+      "id": "house",
+      "label": "House",
+      "keep": true,
+      "artist_test_support": 785,
+      "artist_test_f1_existing_multilabel": 0.715561
+    },
+    {
+      "id": "techno",
+      "label": "Techno",
+      "keep": true,
+      "artist_test_support": 338,
+      "artist_test_f1_existing_multilabel": 0.627507
+    },
+    {
+      "id": "electro",
+      "label": "Electro",
+      "keep": true,
+      "artist_test_support": 188,
+      "artist_test_f1_existing_multilabel": 0.476636
+    },
+    {
+      "id": "trance",
+      "label": "Trance",
+      "keep": true,
+      "artist_test_support": 459,
+      "artist_test_f1_existing_multilabel": 0.800436
+    },
+    {
+      "id": "drum_and_bass",
+      "label": "Drum & Bass",
+      "keep": true,
+      "artist_test_support": 508,
+      "artist_test_f1_existing_multilabel": 0.820365
+    },
+    {
+      "id": "footwork",
+      "label": "Footwork",
+      "keep": true,
+      "artist_test_support": 25,
+      "artist_test_f1_existing_multilabel": 0.384615
+    },
+    {
+      "id": "dubstep",
+      "label": "Dubstep",
+      "keep": true,
+      "artist_test_support": 334,
+      "artist_test_f1_existing_multilabel": 0.607287
+    },
+    {
+      "id": "future_bass",
+      "label": "Future Bass",
+      "keep": true,
+      "artist_test_support": 71,
+      "artist_test_f1_existing_multilabel": 0.231579
+    },
+    {
+      "id": "trap_edm",
+      "label": "Trap (EDM)",
+      "keep": true,
+      "artist_test_support": 163,
+      "artist_test_f1_existing_multilabel": 0.477454
+    },
+    {
+      "id": "phonk",
+      "label": "Phonk",
+      "keep": true,
+      "artist_test_support": 54,
+      "artist_test_f1_existing_multilabel": 0.598291
+    },
+    {
+      "id": "midtempo",
+      "label": "Midtempo",
+      "keep": true,
+      "artist_test_support": 103,
+      "artist_test_f1_existing_multilabel": 0.392638
+    },
+    {
+      "id": "breakbeat",
+      "label": "Breakbeat",
+      "keep": true,
+      "artist_test_support": 130,
+      "artist_test_f1_existing_multilabel": 0.481928
+    },
+    {
+      "id": "uk_garage",
+      "label": "UK Garage",
+      "keep": true,
+      "artist_test_support": 110,
+      "artist_test_f1_existing_multilabel": 0.446602
+    },
+    {
+      "id": "hardcore",
+      "label": "Hardcore",
+      "keep": true,
+      "artist_test_support": 290,
+      "artist_test_f1_existing_multilabel": 0.766323
+    },
+    {
+      "id": "hardstyle",
+      "label": "Hardstyle",
+      "keep": true,
+      "artist_test_support": 128,
+      "artist_test_f1_existing_multilabel": 0.724138
+    },
+    {
+      "id": "moombahton",
+      "label": "Moombahton",
+      "keep": true,
+      "artist_test_support": 163,
+      "artist_test_f1_existing_multilabel": 0.707792
+    },
+    {
+      "id": "amapiano",
+      "label": "Amapiano",
+      "keep": true,
+      "artist_test_support": 84,
+      "artist_test_f1_existing_multilabel": 0.593407
+    },
+    {
+      "id": "nu_disco",
+      "label": "Nu-Disco",
+      "keep": true,
+      "artist_test_support": 123,
+      "artist_test_f1_existing_multilabel": 0.598485
+    },
+    {
+      "id": "synthwave",
+      "label": "Synthwave",
+      "keep": true,
+      "artist_test_support": 127,
+      "artist_test_f1_existing_multilabel": 0.54918
+    }
+  ]
+}
