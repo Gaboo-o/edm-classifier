@@ -1,282 +1,471 @@
-"""Build one self-contained LLM labeling job from all candidate tracks.
+"""Build the V2 LLM labeling job.
 
-The output Markdown file contains the weak-labeling rules, complete taxonomy,
-output contract, and every compact candidate record. It is intended to be
-uploaded to a capable long-context LLM in one conversation. The model should
-write the results to a JSONL file rather than echoing thousands of lines into
-chat.
+This stage does not call a new retrieval source or alter the candidate set.
+It converts V2 candidates into compact, evidence-aware labeling records.
+
+Inputs:
+    config/taxonomy.yaml
+    data/v2/candidates/candidate_tracks.jsonl
+    data/v2/candidates/coverage_after_rescue.json
+    data/splits/samples.jsonl
+
+Outputs:
+    data/v2/label_job/
+      label_input.jsonl
+      prelabel_class_viability.csv
+      label_job_report.json
+
+The actual LLM runner can consume label_input.jsonl with
+config/label_prompt_v2.md and validate outputs against
+config/label_output_v2.schema.json.
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
+import csv
 import json
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 
-DEFAULT_CANDIDATES = Path("data/candidates/candidate_tracks.jsonl")
 DEFAULT_TAXONOMY = Path("config/taxonomy.yaml")
-DEFAULT_RULES = Path("config/label_prompt.md")
-DEFAULT_OUTPUT = Path("data/label_job/labeling_job.md")
-DEFAULT_MANIFEST = Path("data/label_job/manifest.json")
+DEFAULT_CANDIDATES = Path("data/v2/candidates/candidate_tracks.jsonl")
+DEFAULT_COVERAGE = Path("data/v2/candidates/coverage_after_rescue.json")
+DEFAULT_V1_SAMPLES = Path("data/splits/samples.jsonl")
+DEFAULT_OUTPUT = Path("data/v2/label_job")
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    records: list[dict[str, Any]] = []
-    seen_ids: set[str] = set()
+    rows = []
     with path.open("r", encoding="utf-8") as handle:
-        for line_number, raw in enumerate(handle, start=1):
+        for line_number, raw in enumerate(handle, 1):
             line = raw.strip()
             if not line:
                 continue
             try:
-                record = json.loads(line)
+                value = json.loads(line)
             except json.JSONDecodeError as exc:
                 raise ValueError(f"{path}:{line_number}: invalid JSON: {exc}") from exc
-            if not isinstance(record, dict):
+            if not isinstance(value, dict):
                 raise ValueError(f"{path}:{line_number}: expected object")
-            for field in ("candidate_id", "artist", "title"):
-                if not isinstance(record.get(field), str) or not record[field].strip():
-                    raise ValueError(f"{path}:{line_number}: invalid {field}")
-            cid = record["candidate_id"]
-            if cid in seen_ids:
-                raise ValueError(f"{path}:{line_number}: duplicate candidate_id {cid!r}")
-            seen_ids.add(cid)
-            records.append(record)
-    if not records:
-        raise ValueError(f"No records in {path}")
-    return records
+            rows.append(value)
+    return rows
 
 
-def deterministic_mix(records: list[dict[str, Any]], seed: str) -> list[dict[str, Any]]:
-    def key(record: dict[str, Any]) -> str:
-        return hashlib.sha256(f"{seed}\0{record['candidate_id']}".encode()).hexdigest()
-    return sorted(records, key=key)
+def load_taxonomy(path: Path) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    genres = raw.get("genres") if isinstance(raw, dict) else None
+    if not isinstance(genres, list):
+        raise ValueError(f"{path}: expected genres list")
+
+    ordered = []
+    by_id = {}
+    for position, row in enumerate(genres):
+        if not isinstance(row, dict) or not isinstance(row.get("id"), str):
+            raise ValueError(f"{path}: invalid genre at position {position}")
+        item = dict(row)
+        item["_position"] = position
+        ordered.append(item)
+        by_id[item["id"]] = item
+
+    return ordered, by_id
 
 
-def simplify_discoveries(items: Any, max_items: int) -> list[dict[str, Any]]:
-    if not isinstance(items, list):
-        return []
-    out: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        label_id = str(item.get("label_id") or "").strip()
-        if not label_id or label_id in seen:
-            continue
-        seen.add(label_id)
-        compact: dict[str, Any] = {"label_id": label_id}
-        if item.get("label"):
-            compact["label"] = str(item["label"])
-        if isinstance(item.get("rank"), int):
-            compact["rank"] = item["rank"]
-        if item.get("query"):
-            compact["query"] = str(item["query"])
-        out.append(compact)
-        if len(out) >= max_items:
-            break
-    return out
-
-
-def simplify_tags(items: Any, max_items: int) -> list[dict[str, Any]]:
-    if not isinstance(items, list):
-        return []
-    out: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        name = str(item.get("name") or "").strip()
-        if not name or name.casefold() in seen:
-            continue
-        seen.add(name.casefold())
-        compact: dict[str, Any] = {"name": name}
-        try:
-            compact["count"] = int(item.get("count"))
-        except (TypeError, ValueError):
-            pass
-        out.append(compact)
-        if len(out) >= max_items:
-            break
-    return out
-
-
-def compact_candidate(record: dict[str, Any], top_tags: int, discoveries: int) -> dict[str, Any]:
-    out: dict[str, Any] = {
-        "candidate_id": record["candidate_id"],
-        "artist": record["artist"],
-        "title": record["title"],
+def load_coverage(path: Path) -> dict[str, dict[str, Any]]:
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    genres = raw.get("genres") if isinstance(raw, dict) else None
+    if not isinstance(genres, dict):
+        raise ValueError(f"{path}: expected genres object")
+    return {
+        key: value
+        for key, value in genres.items()
+        if isinstance(key, str) and isinstance(value, dict)
     }
-    if isinstance(record.get("mbid"), str) and record["mbid"].strip():
-        out["mbid"] = record["mbid"].strip()
-    ds = simplify_discoveries(record.get("discovered_for"), discoveries)
-    if ds:
-        out["discovered_for"] = ds
-    tags = simplify_tags(record.get("top_tags"), top_tags)
-    if tags:
-        out["top_tags"] = tags
-    if record.get("top_tags_error"):
-        out["top_tags_unavailable"] = True
+
+
+def direct_labels(row: dict[str, Any]) -> set[str]:
+    raw = row.get("labels")
+    if not isinstance(raw, list):
+        return set()
+    return {x for x in raw if isinstance(x, str) and x}
+
+
+def compact_top_tags(value: Any, maximum: int = 12) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+
+    out = []
+    for item in value:
+        if isinstance(item, str):
+            out.append({"name": item})
+        elif isinstance(item, dict) and isinstance(item.get("name"), str):
+            entry = {"name": item["name"]}
+            if isinstance(item.get("count"), (int, float)):
+                entry["count"] = item["count"]
+            out.append(entry)
+
+        if len(out) >= maximum:
+            break
+
     return out
 
 
-def taxonomy_summary(taxonomy: dict[str, Any]) -> str:
-    meta = taxonomy.get("taxonomy") or {}
-    policy = taxonomy.get("labeling_policy") or {}
-    boundaries = taxonomy.get("boundary_rules") or []
-    genres: list[dict[str, Any]] = []
-    for genre in taxonomy["genres"]:
-        item: dict[str, Any] = {
-            "id": genre["id"],
-            "label": genre["label"],
-            "role": genre.get("role"),
+def children_map(taxonomy: dict[str, dict[str, Any]]) -> dict[str, list[str]]:
+    children: dict[str, list[str]] = defaultdict(list)
+    for genre_id, row in taxonomy.items():
+        parent = row.get("parent")
+        if isinstance(parent, str) and parent:
+            children[parent].append(genre_id)
+
+    for parent in children:
+        children[parent].sort(key=lambda gid: taxonomy[gid].get("_position", 0))
+
+    return children
+
+
+def evidence_for_candidate(
+    candidate: dict[str, Any],
+    taxonomy: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    discovered = candidate.get("discovered_for")
+    if not isinstance(discovered, list):
+        discovered = []
+
+    raw_evidence = candidate.get("retrieval_evidence")
+    by_genre: dict[str, list[dict[str, Any]]] = defaultdict(list)
+
+    if isinstance(raw_evidence, list):
+        for item in raw_evidence:
+            if not isinstance(item, dict):
+                continue
+            genre_id = item.get("genre_id")
+            if isinstance(genre_id, str):
+                by_genre[genre_id].append(item)
+
+    result = []
+
+    for genre_id in discovered:
+        if not isinstance(genre_id, str) or genre_id not in taxonomy:
+            continue
+
+        if by_genre.get(genre_id):
+            for item in by_genre[genre_id]:
+                result.append(
+                    {
+                        "genre_id": genre_id,
+                        "genre_label": taxonomy[genre_id].get("label", genre_id),
+                        "retrieval_type": item.get("type", "unknown"),
+                        "strength": item.get("strength", "weak"),
+                        "query": item.get("query"),
+                    }
+                )
+        else:
+            # Stage-1 candidates came directly from the leaf tag itself.
+            result.append(
+                {
+                    "genre_id": genre_id,
+                    "genre_label": taxonomy[genre_id].get("label", genre_id),
+                    "retrieval_type": "exact_leaf_tag",
+                    "strength": "strong",
+                    "query": taxonomy[genre_id].get("label", genre_id),
+                }
+            )
+
+    return result
+
+
+def relevant_options(
+    evidence: list[dict[str, Any]],
+    taxonomy: dict[str, dict[str, Any]],
+    children: dict[str, list[str]],
+) -> list[dict[str, Any]]:
+    option_ids: set[str] = set()
+
+    for item in evidence:
+        genre_id = item["genre_id"]
+        genre = taxonomy[genre_id]
+        parent = genre.get("parent")
+
+        if isinstance(parent, str) and parent in taxonomy:
+            option_ids.add(parent)
+            option_ids.update(children.get(parent, []))
+        else:
+            option_ids.add(genre_id)
+            option_ids.update(children.get(genre_id, []))
+
+    ordered_ids = sorted(
+        option_ids,
+        key=lambda gid: taxonomy[gid].get("_position", 0),
+    )
+
+    result = []
+    for genre_id in ordered_ids:
+        row = taxonomy[genre_id]
+        entry: dict[str, Any] = {
+            "id": genre_id,
+            "label": row.get("label", genre_id),
+            "parent": row.get("parent"),
         }
-        if genre.get("parent"):
-            item["parent"] = genre["parent"]
-        if genre.get("bpm"):
-            item["bpm"] = genre["bpm"]
-        if genre.get("characteristics"):
-            item["characteristics"] = genre["characteristics"]
-        if genre.get("aliases"):
-            item["aliases"] = genre["aliases"]
-        genres.append(item)
-    return "\n".join([
-        "## Taxonomy metadata",
-        "",
-        f"- ID: `{meta.get('id', '')}`",
-        f"- Version: `{meta.get('version', '')}`",
-        f"- Task: `{meta.get('task', '')}`",
-        "",
-        "## Taxonomy policy",
-        "",
-        "```yaml",
-        yaml.safe_dump(policy, sort_keys=False, allow_unicode=True).rstrip(),
-        "```",
-        "",
-        "## Boundary rules",
-        "",
-        "```yaml",
-        yaml.safe_dump(boundaries, sort_keys=False, allow_unicode=True).rstrip(),
-        "```",
-        "",
-        "## Allowed labels",
-        "",
-        "```yaml",
-        yaml.safe_dump(genres, sort_keys=False, allow_unicode=True).rstrip(),
-        "```",
-    ])
+
+        aliases = row.get("aliases")
+        if isinstance(aliases, list):
+            cleaned = [x for x in aliases if isinstance(x, str) and x.strip()]
+            if cleaned:
+                entry["aliases"] = cleaned
+
+        characteristics = row.get("characteristics")
+        if characteristics:
+            entry["characteristics"] = characteristics
+
+        result.append(entry)
+
+    return result
 
 
-def output_contract() -> str:
-    return r'''## Required output
+def evidence_strength_counts(
+    candidates: list[dict[str, Any]],
+    taxonomy: dict[str, dict[str, Any]],
+) -> tuple[Counter[str], Counter[str], Counter[str]]:
+    strong: Counter[str] = Counter()
+    medium: Counter[str] = Counter()
+    weak: Counter[str] = Counter()
 
-Process every candidate in this file.
+    for candidate in candidates:
+        seen_strength: set[tuple[str, str]] = set()
 
-Create a file named `labeled_tracks.jsonl`. Do **not** paste thousands of result lines into conversational prose if file creation is available.
+        for evidence in evidence_for_candidate(candidate, taxonomy):
+            genre_id = evidence["genre_id"]
+            strength = str(evidence.get("strength", "weak")).lower()
+            marker = (genre_id, strength)
+            if marker in seen_strength:
+                continue
+            seen_strength.add(marker)
 
-The file must contain exactly one JSON object per input candidate, one object per line, with no Markdown fences and no surrounding JSON array.
+            if strength == "strong":
+                strong[genre_id] += 1
+            elif strength == "medium":
+                medium[genre_id] += 1
+            else:
+                weak[genre_id] += 1
 
-Each line must have this shape:
-
-{"candidate_id":"lastfm:...","status":"labeled","labels":[{"id":"future_bass","confidence":0.94}],"candidates":[],"reason":"exact_tag_support"}
-
-Allowed status values:
-- `labeled`
-- `uncertain`
-- `out_of_scope`
-
-Rules:
-- Copy `candidate_id` exactly.
-- `labels`: 0-2 accepted taxonomy labels, confidence 0.85-1.00.
-- `candidates`: 0-3 plausible labels, confidence 0.50-0.84.
-- `reason`: one of `exact_tag_support`, `cross_tag_support`, `broad_family_only`, `boundary_ambiguous`, `conflicting_evidence`, `insufficient_evidence`, `out_of_scope`.
-- For `uncertain` and `out_of_scope`, `labels` must be empty.
-- Never emit a child plus its derived parent for the same classification fact.
-- Every input candidate must appear exactly once in the output file.
-
-After creating the result file, report only a short summary containing total records, labeled, uncertain, and out_of_scope counts.'''
+    return strong, medium, weak
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Build one full weak-labeling job for an LLM.")
-    p.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
-    p.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
-    p.add_argument("--rules", type=Path, default=DEFAULT_RULES)
-    p.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    p.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    p.add_argument("--top-tags", type=int, default=10)
-    p.add_argument("--discoveries", type=int, default=5)
-    p.add_argument("--mix-seed", default="edm-classifier-v0.2")
-    p.add_argument("--preserve-order", action="store_true")
-    p.add_argument("--limit", type=int)
-    return p.parse_args()
+    parser = argparse.ArgumentParser(description="Build V2 evidence-aware LLM label job.")
+    parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
+    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
+    parser.add_argument("--coverage", type=Path, default=DEFAULT_COVERAGE)
+    parser.add_argument("--v1-samples", type=Path, default=DEFAULT_V1_SAMPLES)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    taxonomy = yaml.safe_load(args.taxonomy.read_text(encoding="utf-8"))
-    if not isinstance(taxonomy, dict) or not isinstance(taxonomy.get("genres"), list):
-        raise SystemExit(f"Invalid taxonomy: {args.taxonomy}")
-    records = load_jsonl(args.candidates)
-    if not args.preserve_order:
-        records = deterministic_mix(records, args.mix_seed)
-    if args.limit is not None:
-        if args.limit <= 0:
-            raise SystemExit("--limit must be positive")
-        records = records[:args.limit]
 
-    compact = [compact_candidate(r, args.top_tags, args.discoveries) for r in records]
-    rules = args.rules.read_text(encoding="utf-8").strip()
+    ordered, taxonomy = load_taxonomy(args.taxonomy)
+    children = children_map(taxonomy)
+    candidates = load_jsonl(args.candidates)
+    v1_samples = load_jsonl(args.v1_samples)
+    coverage = load_coverage(args.coverage)
 
-    lines = [
-        "# EDM Full Candidate Weak-Labeling Job",
-        "",
-        "This is one complete labeling job. Read the instructions and taxonomy first, then classify every candidate in the final section.",
-        "",
-        rules,
-        "",
-        output_contract(),
-        "",
-        taxonomy_summary(taxonomy),
-        "",
-        "## Candidate tracks",
-        "",
-        f"Total candidates: **{len(compact)}**",
-        "",
-        "Each following line is one candidate JSON object:",
-        "",
-        "```jsonl",
+    v1_support: Counter[str] = Counter()
+    for sample in v1_samples:
+        v1_support.update(direct_labels(sample))
+
+    strong, medium, weak = evidence_strength_counts(candidates, taxonomy)
+
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    label_input_path = args.output_dir / "label_input.jsonl"
+    viability_path = args.output_dir / "prelabel_class_viability.csv"
+    report_path = args.output_dir / "label_job_report.json"
+
+    job_rows = []
+
+    for candidate in candidates:
+        candidate_id = candidate.get("candidate_id")
+        artist = candidate.get("artist")
+        title = candidate.get("title")
+
+        if not all(isinstance(x, str) and x for x in (candidate_id, artist, title)):
+            continue
+
+        evidence = evidence_for_candidate(candidate, taxonomy)
+        if not evidence:
+            continue
+
+        job_rows.append(
+            {
+                "candidate_id": candidate_id,
+                "artist": artist,
+                "title": title,
+                "mbid": candidate.get("mbid"),
+                "top_tags": compact_top_tags(candidate.get("top_tags")),
+                "retrieval_evidence": evidence,
+                "label_options": relevant_options(evidence, taxonomy, children),
+            }
+        )
+
+    with label_input_path.open("w", encoding="utf-8") as handle:
+        for row in job_rows:
+            handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+    leaf_ids = [
+        row["id"]
+        for row in ordered
+        if not children.get(row["id"])
     ]
-    lines.extend(json.dumps(r, ensure_ascii=False, separators=(",", ":")) for r in compact)
-    lines.extend(["```", ""])
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text("\n".join(lines), encoding="utf-8")
+    fieldnames = [
+        "id",
+        "label",
+        "parent",
+        "v1_usable_direct_tracks",
+        "v2_strong_candidates",
+        "v2_medium_candidates",
+        "v2_weak_candidates",
+        "v1_plus_strong_medium",
+        "planned_assignments",
+        "final_candidate_assignments",
+        "remaining_collection_shortfall",
+        "prelabel_status",
+    ]
 
-    manifest = {
-        "taxonomy_version": (taxonomy.get("taxonomy") or {}).get("version"),
-        "candidate_source": str(args.candidates),
-        "candidate_count": len(compact),
-        "top_tags_per_track": args.top_tags,
-        "discoveries_per_track": args.discoveries,
-        "mixed": not args.preserve_order,
-        "mix_seed": None if args.preserve_order else args.mix_seed,
-        "candidate_ids": [r["candidate_id"] for r in compact],
+    viability_rows = []
+
+    for genre_id in leaf_ids:
+        row = taxonomy[genre_id]
+        cov = coverage.get(genre_id, {})
+
+        evidence_total = (
+            v1_support[genre_id]
+            + strong[genre_id]
+            + medium[genre_id]
+        )
+
+        # This is a diagnostic only, not a final keep/drop decision.
+        # Actual dropping occurs after LLM labels and downstream usable support
+        # are known.
+        if evidence_total >= 100:
+            status = "healthy"
+        elif evidence_total >= 50:
+            status = "borderline"
+        else:
+            status = "at_risk"
+
+        viability_rows.append(
+            {
+                "id": genre_id,
+                "label": row.get("label", genre_id),
+                "parent": row.get("parent") or "",
+                "v1_usable_direct_tracks": v1_support[genre_id],
+                "v2_strong_candidates": strong[genre_id],
+                "v2_medium_candidates": medium[genre_id],
+                "v2_weak_candidates": weak[genre_id],
+                "v1_plus_strong_medium": evidence_total,
+                "planned_assignments": cov.get("planned", 0),
+                "final_candidate_assignments": cov.get("final_selected_assignments", 0),
+                "remaining_collection_shortfall": cov.get("remaining_shortfall", 0),
+                "prelabel_status": status,
+            }
+        )
+
+    viability_rows.sort(
+        key=lambda row: (
+            {"at_risk": 0, "borderline": 1, "healthy": 2}[row["prelabel_status"]],
+            int(row["v1_plus_strong_medium"]),
+            str(row["id"]),
+        )
+    )
+
+    with viability_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(viability_rows)
+
+    evidence_hist = Counter()
+    for row in job_rows:
+        strengths = {
+            str(item.get("strength", "weak"))
+            for item in row["retrieval_evidence"]
+        }
+        if "strong" in strengths:
+            evidence_hist["has_strong"] += 1
+        elif "medium" in strengths:
+            evidence_hist["medium_only"] += 1
+        else:
+            evidence_hist["weak_only"] += 1
+
+    status_hist = Counter(row["prelabel_status"] for row in viability_rows)
+
+    report = {
+        "version": "v2",
+        "input_candidates": len(candidates),
+        "label_job_records": len(job_rows),
+        "leaf_classes": len(leaf_ids),
+        "candidate_evidence_profile": dict(evidence_hist),
+        "prelabel_class_status": dict(status_hist),
+        "labeling_policy": {
+            "max_labels_per_track": 2,
+            "exact_leaf_tag": "strong weak-supervision evidence",
+            "leaf_tag_artist": (
+                "medium evidence: the artist is associated with the leaf, "
+                "but the individual track must still be judged"
+            ),
+            "parent_fallback": (
+                "weak candidate sourcing only; it must never by itself justify "
+                "assigning the requested leaf"
+            ),
+            "similar_tag": "weak evidence",
+            "track_specific_model_knowledge": "allowed when confident",
+            "generic_artist_style_inference": "not sufficient by itself",
+        },
+        "future_drop_policy": {
+            "when": (
+                "after LLM validation and again after audio/embedding survival; "
+                "do not drop solely for missing the collection quota"
+            ),
+            "minimum_viable_leaf": {
+                "usable_tracks": 50,
+                "unique_artists": 30,
+            },
+            "preferred_strong_leaf": {
+                "usable_tracks": 100,
+                "unique_artists": 50,
+            },
+        },
+        "outputs": {
+            "label_input": str(label_input_path),
+            "prelabel_class_viability": str(viability_path),
+        },
     }
-    args.manifest.parent.mkdir(parents=True, exist_ok=True)
-    args.manifest.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    size_mb = args.output.stat().st_size / (1024 * 1024)
-    print(f"built single labeling job for {len(compact)} tracks")
-    print(f"job:      {args.output}")
-    print(f"manifest: {args.manifest}")
-    print(f"size:     {size_mb:.2f} MiB")
-    print("upload labeling_job.md to the LLM and ask it to follow the embedded instructions")
+    report_path.write_text(
+        json.dumps(report, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    print("V2 label job built")
+    print(f"  candidate input:        {len(candidates)}")
+    print(f"  label-job records:      {len(job_rows)}")
+    print(f"  leaf classes:           {len(leaf_ids)}")
+    print()
+    print("Candidate evidence:")
+    for key in ("has_strong", "medium_only", "weak_only"):
+        print(f"  {key:18s} {evidence_hist[key]}")
+    print()
+    print("Pre-label leaf status:")
+    for key in ("healthy", "borderline", "at_risk"):
+        print(f"  {key:18s} {status_hist[key]}")
+    print()
+    print(f"Input:     {label_input_path}")
+    print(f"Viability: {viability_path}")
+    print(f"Report:    {report_path}")
 
 
 if __name__ == "__main__":

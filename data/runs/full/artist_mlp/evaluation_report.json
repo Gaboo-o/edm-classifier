@@ -1,0 +1,199 @@
+{
+  "run_name": "artist_mlp",
+  "split": "artist",
+  "model": "mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 19,
+  "active_class_count": 145,
+  "active_ancestor_pairs": 126,
+  "validation_samples": 3952,
+  "test_samples": 4022,
+  "hierarchy_diagnostics_before_projection": {
+    "validation": {
+      "pair_violation_rate": 0.08388559539875329,
+      "sample_violation_rate": 1.0,
+      "mean_violation_magnitude": 0.010231859821120692
+    },
+    "test": {
+      "pair_violation_rate": 0.085138879022519,
+      "sample_violation_rate": 1.0,
+      "mean_violation_magnitude": 0.009782544132795423
+    }
+  },
+  "results": {
+    "raw": {
+      "threshold": 0.5,
+      "validation": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.3386243140492553,
+          "recall": 0.44902935700983976,
+          "f1": 0.3659644845456214
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.3386243140492553,
+          "recall": 0.44902935700983976,
+          "f1": 0.3659644845456214
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.49149342689181263,
+          "recall": 0.6382353084421186,
+          "f1": 0.550385000557233
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.31557262243013956,
+          "recall": 0.4204983008414803,
+          "f1": 0.33815504165498156
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.31557262243013956,
+          "recall": 0.4204983008414803,
+          "f1": 0.33815504165498156
+        },
+        "micro": {
+          "precision": 0.43209014758675707,
+          "recall": 0.5749734607218684,
+          "f1": 0.49339558187201094
+        },
+        "subset_accuracy": 0.13309716599190283,
+        "hamming_loss": 0.015527711852575737,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.3499613827981328,
+          "recall": 0.45843043949153484,
+          "f1": 0.37408140372070914
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.3499613827981328,
+          "recall": 0.45843043949153484,
+          "f1": 0.37408140372070914
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.4988642001679215,
+          "recall": 0.6427951004445499,
+          "f1": 0.5557962363943337
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.3275077833534822,
+          "recall": 0.43062941918909614,
+          "f1": 0.34667996069849594
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.3275077833534822,
+          "recall": 0.43062941918909614,
+          "f1": 0.34667996069849594
+        },
+        "micro": {
+          "precision": 0.44159240604416894,
+          "recall": 0.5933107756376887,
+          "f1": 0.5063305197689916
+        },
+        "subset_accuracy": 0.13326703132769765,
+        "hamming_loss": 0.015243745606063204,
+        "zero_support_classes": []
+      },
+      "outputs": {
+        "threshold_search": "data/runs/full/artist_mlp/threshold_search_raw.csv",
+        "test_per_class": "data/runs/full/artist_mlp/test_per_class_raw.csv"
+      }
+    },
+    "hierarchical": {
+      "threshold": 0.5,
+      "validation": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.3366619958177935,
+          "recall": 0.45156634989817607,
+          "f1": 0.3657771995804092
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.3366619958177935,
+          "recall": 0.45156634989817607,
+          "f1": 0.3657771995804092
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.47651784038855133,
+          "recall": 0.657596569958369,
+          "f1": 0.5489557205595613
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.31557262243013956,
+          "recall": 0.4204983008414803,
+          "f1": 0.33815504165498156
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.31557262243013956,
+          "recall": 0.4204983008414803,
+          "f1": 0.33815504165498156
+        },
+        "micro": {
+          "precision": 0.4261380040419594,
+          "recall": 0.5875796178343949,
+          "f1": 0.4940034584704635
+        },
+        "subset_accuracy": 0.13588056680161945,
+        "hamming_loss": 0.015829610498394528,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.3482027504679815,
+          "recall": 0.46140678712369215,
+          "f1": 0.3741926545262726
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.3482027504679815,
+          "recall": 0.46140678712369215,
+          "f1": 0.3741926545262726
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.4854430587009767,
+          "recall": 0.6655093323741728,
+          "f1": 0.55664525569995
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.3275077833534822,
+          "recall": 0.43062941918909614,
+          "f1": 0.34667996069849594
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.3275077833534822,
+          "recall": 0.43062941918909614,
+          "f1": 0.34667996069849594
+        },
+        "micro": {
+          "precision": 0.43706751449410886,
+          "recall": 0.6082769390942218,
+          "f1": 0.5086516487104147
+        },
+        "subset_accuracy": 0.13625062158130283,
+        "hamming_loss": 0.01548380459198546,
+        "zero_support_classes": []
+      },
+      "outputs": {
+        "threshold_search": "data/runs/full/artist_mlp/threshold_search_hierarchical.csv",
+        "test_per_class": "data/runs/full/artist_mlp/test_per_class_hierarchical.csv"
+      }
+    }
+  }
+}

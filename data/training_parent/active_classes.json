@@ -16,10 +16,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 963,
-      "artist_train_direct": 947,
-      "regular_train_expanded": 963,
-      "artist_train_expanded": 947
+      "regular_train_direct": 2769,
+      "artist_train_direct": 2436,
+      "regular_train_expanded": 2769,
+      "artist_train_expanded": 2436
     },
     {
       "index": 1,
@@ -28,10 +28,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 455,
-      "artist_train_direct": 421,
-      "regular_train_expanded": 455,
-      "artist_train_expanded": 421
+      "regular_train_direct": 1091,
+      "artist_train_direct": 1022,
+      "regular_train_expanded": 1091,
+      "artist_train_expanded": 1022
     },
     {
       "index": 2,
@@ -40,10 +40,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 252,
-      "artist_train_direct": 275,
-      "regular_train_expanded": 252,
-      "artist_train_expanded": 275
+      "regular_train_direct": 532,
+      "artist_train_direct": 571,
+      "regular_train_expanded": 532,
+      "artist_train_expanded": 571
     },
     {
       "index": 3,
@@ -52,10 +52,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 413,
-      "artist_train_direct": 454,
-      "regular_train_expanded": 413,
-      "artist_train_expanded": 454
+      "regular_train_direct": 1885,
+      "artist_train_direct": 1606,
+      "regular_train_expanded": 1885,
+      "artist_train_expanded": 1606
     },
     {
       "index": 4,
@@ -64,10 +64,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 546,
-      "artist_train_direct": 511,
-      "regular_train_expanded": 546,
-      "artist_train_expanded": 511
+      "regular_train_direct": 1257,
+      "artist_train_direct": 985,
+      "regular_train_expanded": 1257,
+      "artist_train_expanded": 985
     },
     {
       "index": 5,
@@ -76,10 +76,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 49,
-      "artist_train_direct": 59,
-      "regular_train_expanded": 49,
-      "artist_train_expanded": 59
+      "regular_train_direct": 89,
+      "artist_train_direct": 108,
+      "regular_train_expanded": 89,
+      "artist_train_expanded": 108
     },
     {
       "index": 6,
@@ -88,10 +88,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 405,
-      "artist_train_direct": 327,
-      "regular_train_expanded": 405,
-      "artist_train_expanded": 327
+      "regular_train_direct": 770,
+      "artist_train_direct": 673,
+      "regular_train_expanded": 770,
+      "artist_train_expanded": 673
     },
     {
       "index": 7,
@@ -100,10 +100,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 103,
-      "artist_train_direct": 86,
-      "regular_train_expanded": 103,
-      "artist_train_expanded": 86
+      "regular_train_direct": 143,
+      "artist_train_direct": 109,
+      "regular_train_expanded": 143,
+      "artist_train_expanded": 109
     },
     {
       "index": 8,
@@ -112,10 +112,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 206,
-      "artist_train_direct": 139,
-      "regular_train_expanded": 206,
-      "artist_train_expanded": 139
+      "regular_train_direct": 411,
+      "artist_train_direct": 297,
+      "regular_train_expanded": 411,
+      "artist_train_expanded": 297
     },
     {
       "index": 9,
@@ -124,10 +124,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 72,
-      "artist_train_direct": 88,
-      "regular_train_expanded": 72,
-      "artist_train_expanded": 88
+      "regular_train_direct": 268,
+      "artist_train_direct": 209,
+      "regular_train_expanded": 268,
+      "artist_train_expanded": 209
     },
     {
       "index": 10,
@@ -136,10 +136,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 111,
-      "artist_train_direct": 118,
-      "regular_train_expanded": 111,
-      "artist_train_expanded": 118
+      "regular_train_direct": 173,
+      "artist_train_direct": 144,
+      "regular_train_expanded": 173,
+      "artist_train_expanded": 144
     },
     {
       "index": 11,
@@ -148,10 +148,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 145,
-      "artist_train_direct": 150,
-      "regular_train_expanded": 145,
-      "artist_train_expanded": 150
+      "regular_train_direct": 419,
+      "artist_train_direct": 356,
+      "regular_train_expanded": 419,
+      "artist_train_expanded": 356
     },
     {
       "index": 12,
@@ -160,10 +160,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 151,
-      "artist_train_direct": 147,
-      "regular_train_expanded": 151,
-      "artist_train_expanded": 147
+      "regular_train_direct": 310,
+      "artist_train_direct": 349,
+      "regular_train_expanded": 310,
+      "artist_train_expanded": 349
     },
     {
       "index": 13,
@@ -172,10 +172,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 340,
-      "artist_train_direct": 302,
-      "regular_train_expanded": 340,
-      "artist_train_expanded": 302
+      "regular_train_direct": 771,
+      "artist_train_direct": 769,
+      "regular_train_expanded": 771,
+      "artist_train_expanded": 769
     },
     {
       "index": 14,
@@ -184,10 +184,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 159,
-      "artist_train_direct": 113,
-      "regular_train_expanded": 159,
-      "artist_train_expanded": 113
+      "regular_train_direct": 347,
+      "artist_train_direct": 285,
+      "regular_train_expanded": 347,
+      "artist_train_expanded": 285
     },
     {
       "index": 15,
@@ -196,10 +196,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 153,
-      "artist_train_direct": 111,
-      "regular_train_expanded": 153,
-      "artist_train_expanded": 111
+      "regular_train_direct": 296,
+      "artist_train_direct": 216,
+      "regular_train_expanded": 296,
+      "artist_train_expanded": 216
     },
     {
       "index": 16,
@@ -208,10 +208,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 123,
-      "artist_train_direct": 127,
-      "regular_train_expanded": 123,
-      "artist_train_expanded": 127
+      "regular_train_direct": 251,
+      "artist_train_direct": 256,
+      "regular_train_expanded": 251,
+      "artist_train_expanded": 256
     },
     {
       "index": 17,
@@ -220,10 +220,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 202,
-      "artist_train_direct": 217,
-      "regular_train_expanded": 202,
-      "artist_train_expanded": 217
+      "regular_train_direct": 718,
+      "artist_train_direct": 726,
+      "regular_train_expanded": 718,
+      "artist_train_expanded": 726
     },
     {
       "index": 18,
@@ -232,10 +232,10 @@
       "parent": null,
       "depth": 0,
       "is_leaf": false,
-      "regular_train_direct": 213,
-      "artist_train_direct": 170,
-      "regular_train_expanded": 213,
-      "artist_train_expanded": 170
+      "regular_train_direct": 336,
+      "artist_train_direct": 348,
+      "regular_train_expanded": 336,
+      "artist_train_expanded": 348
     }
   ]
 }

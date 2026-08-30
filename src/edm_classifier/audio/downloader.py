@@ -1,313 +1,406 @@
+"""V2 audio downloader that can follow a live resolver manifest.
+
+Consumes data/v2/audio_resolution/resolution_manifest.jsonl and downloads each
+resolved unique video_id once. The manifest is rescanned on every poll, so it
+is safe if the resolver appends to it and later compacts/rewrites it.
+"""
+
 from __future__ import annotations
 
 import argparse
 import json
-import random
+import re
+import signal
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
 import yt_dlp
-from yt_dlp.utils import DownloadError
 
-DEFAULT_INPUT = Path("data/audio_resolution/audio_manifest.jsonl")
-DEFAULT_OUTPUT_DIR = Path("data/audio")
+DEFAULT_RESOLUTION_MANIFEST = Path("data/v2/audio_resolution/resolution_manifest.jsonl")
+DEFAULT_OUTPUT_DIR = Path("data/v2/audio")
 
-RATE_LIMIT_MARKERS = (
-    "sign in to confirm you're not a bot",
-    "sign in to confirm you’re not a bot",
-    "confirm you're not a bot",
-    "confirm you’re not a bot",
+PARTIAL_SUFFIXES = (".part", ".ytdl", ".tmp", ".temp")
+
+TERMINAL_PATTERNS = (
+    ("age_restricted", re.compile(r"age[- ]?restricted|confirm your age|age restriction", re.I)),
+    ("private", re.compile(r"private video|video is private", re.I)),
+    ("members_only", re.compile(r"members[- ]only|members only", re.I)),
+    ("deleted", re.compile(r"video (?:has been )?removed|deleted video", re.I)),
+    ("region_blocked", re.compile(r"not available in your country|geo restriction", re.I)),
+    ("authentication_required", re.compile(r"sign in to view|authentication required|login required", re.I)),
+)
+
+GLOBAL_PATTERNS = (
+    re.compile(r"sign in to confirm you(?:'|’)re not a bot", re.I),
+    re.compile(r"this content isn(?:'|’)t available, try again later", re.I),
+    re.compile(r"http error 429|too many requests|rate limit", re.I),
+)
+
+TRANSIENT_PATTERNS = (
+    re.compile(r"http error 403", re.I),
+    re.compile(r"connection reset|connection aborted|connection refused", re.I),
+    re.compile(r"timed? out|timeout", re.I),
+    re.compile(r"fragment .* unavailable|fragment .* error", re.I),
+    re.compile(r"remote end closed connection", re.I),
+    re.compile(r"temporary failure|temporarily unavailable", re.I),
 )
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    records = []
-    with path.open("r", encoding="utf-8") as f:
-        for n, raw in enumerate(f, 1):
-            line = raw.strip()
-            if not line:
+def load_jsonl_tolerant(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    for i, raw in enumerate(lines):
+        line = raw.strip()
+        if not line:
+            continue
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError:
+            if i == len(lines) - 1:
                 continue
-            try:
-                obj = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"{path}:{n}: invalid JSON: {exc}") from exc
-            if not isinstance(obj, dict):
-                raise ValueError(f"{path}:{n}: expected JSON object")
-            records.append(obj)
-    return records
+            raise
+        if isinstance(value, dict):
+            rows.append(value)
+    return rows
 
 
-def extract_video_id(record: dict[str, Any]) -> str | None:
-    src = record.get("audio_source")
-    if not isinstance(src, dict):
+def append_jsonl(path: Path, row: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+        handle.flush()
+
+
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+
+def resolved_by_video(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    by_candidate: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        cid = row.get("candidate_id")
+        if isinstance(cid, str):
+            by_candidate[cid] = row
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in by_candidate.values():
+        if row.get("status") != "resolved":
+            continue
+        vid = row.get("video_id")
+        if isinstance(vid, str) and vid:
+            grouped[vid].append(row)
+    return grouped
+
+
+def physical_audio_file(files_dir: Path, video_id: str) -> Path | None:
+    found = []
+    for path in files_dir.glob(f"{video_id}.*"):
+        if not path.is_file():
+            continue
+        lower = path.name.casefold()
+        if any(lower.endswith(suffix) for suffix in PARTIAL_SUFFIXES):
+            continue
+        found.append(path)
+    if not found:
         return None
-    vid = src.get("video_id")
-    return vid if isinstance(vid, str) and vid else None
+    return max(found, key=lambda p: p.stat().st_size)
 
 
-def find_audio_file(files_dir: Path, video_id: str) -> Path | None:
-    excluded = {
-        ".json", ".part", ".ytdl", ".jpg", ".jpeg", ".png", ".webp",
-        ".description", ".vtt", ".srt", ".temp",
-    }
-    files = []
-    for p in files_dir.glob(f"{video_id}.*"):
-        if not p.is_file() or p.name.endswith(".info.json"):
-            continue
-        if p.suffix.lower() in excluded:
-            continue
-        files.append(p)
-    return max(files, key=lambda p: p.stat().st_size) if files else None
+def classify_error(message: str) -> tuple[str, str]:
+    for code, pattern in TERMINAL_PATTERNS:
+        if pattern.search(message):
+            return "terminal", code
+    for pattern in GLOBAL_PATTERNS:
+        if pattern.search(message):
+            return "global", "youtube_rate_limit"
+    for pattern in TRANSIENT_PATTERNS:
+        if pattern.search(message):
+            return "transient", "transient_download_error"
+    if re.search(r"video unavailable|this video is unavailable", message, re.I):
+        return "terminal", "unavailable"
+    return "transient", "unclassified_download_error"
 
 
-def is_rate_limit_error(exc: Exception) -> bool:
-    msg = str(exc).casefold()
-    return any(marker in msg for marker in RATE_LIMIT_MARKERS)
+def load_state(path: Path) -> dict[str, dict[str, Any]]:
+    state: dict[str, dict[str, Any]] = {}
+    for row in load_jsonl_tolerant(path):
+        vid = row.get("video_id")
+        if isinstance(vid, str):
+            state[vid] = row
+    return state
 
 
-def build_ydl_options(files_dir: Path, archive_path: Path, quiet: bool,
-                      http_retries: int, fragment_retries: int,
-                      extractor_retries: int) -> dict[str, Any]:
+def ydl_options(files_dir: Path, socket_timeout: int) -> dict[str, Any]:
     return {
         "format": "bestaudio/best",
         "outtmpl": str(files_dir / "%(id)s.%(ext)s"),
-        "writeinfojson": True,
-        "clean_infojson": True,
-        "download_archive": str(archive_path),
         "noplaylist": True,
         "continuedl": True,
-        "retries": http_retries,
-        "fragment_retries": fragment_retries,
-        "extractor_retries": extractor_retries,
-        "file_access_retries": 3,
-        "ignoreerrors": False,
-        "quiet": quiet,
-        "noprogress": quiet,
+        "overwrites": False,
+        "retries": 2,
+        "fragment_retries": 2,
+        "socket_timeout": socket_timeout,
+        "concurrent_fragment_downloads": 1,
+        "postprocessors": [],
     }
 
 
-def fresh_download_attempt(url: str, video_id: str, files_dir: Path,
-                           archive_path: Path, quiet: bool,
-                           http_retries: int, fragment_retries: int,
-                           extractor_retries: int) -> Path:
-    opts = build_ydl_options(
-        files_dir, archive_path, quiet,
-        http_retries, fragment_retries, extractor_retries,
-    )
-    with yt_dlp.YoutubeDL(opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-    if info is None:
-        raise DownloadError("yt-dlp returned no metadata")
-    audio_path = find_audio_file(files_dir, video_id)
-    if audio_path is None:
-        raise DownloadError("download completed but no local audio file was found")
-    return audio_path
+def download_once(video_id: str, files_dir: Path, socket_timeout: int) -> tuple[bool, str | None]:
+    url = f"https://www.youtube.com/watch?v={video_id}"
+    try:
+        with yt_dlp.YoutubeDL(ydl_options(files_dir, socket_timeout)) as ydl:
+            ydl.download([url])
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
+    if physical_audio_file(files_dir, video_id) is None:
+        return False, "yt-dlp returned without a completed audio file"
+    return True, None
+
+
+def union_labels(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    best: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        labels = row.get("labels")
+        if not isinstance(labels, list):
+            continue
+        for label in labels:
+            if not isinstance(label, dict) or not isinstance(label.get("id"), str):
+                continue
+            gid = label["id"]
+            old = best.get(gid)
+            if old is None:
+                best[gid] = dict(label)
+                continue
+            new_c = label.get("confidence")
+            old_c = old.get("confidence")
+            if isinstance(new_c, (int, float)) and (not isinstance(old_c, (int, float)) or new_c > old_c):
+                best[gid] = dict(label)
+    return [best[k] for k in sorted(best)]
+
+
+def rebuild_audio_manifest(
+    resolution_manifest: Path,
+    state: dict[str, dict[str, Any]],
+    files_dir: Path,
+    output_path: Path,
+) -> list[dict[str, Any]]:
+    grouped = resolved_by_video(load_jsonl_tolerant(resolution_manifest))
+    rows = []
+    for vid, resolution_rows in sorted(grouped.items()):
+        audio = physical_audio_file(files_dir, vid)
+        if audio is not None:
+            status = "downloaded"
+        else:
+            status = state.get(vid, {}).get("status", "pending")
+        rows.append({
+            "video_id": vid,
+            "status": status,
+            "audio_path": str(audio) if audio else None,
+            "candidate_ids": sorted({r["candidate_id"] for r in resolution_rows if isinstance(r.get("candidate_id"), str)}),
+            "labels": union_labels(resolution_rows),
+            "resolution_sources": sorted({str(r.get("resolution_source", "legacy_song")) for r in resolution_rows}),
+            "artists": sorted({r["artist"] for r in resolution_rows if isinstance(r.get("artist"), str)}),
+            "titles": sorted({r["title"] for r in resolution_rows if isinstance(r.get("title"), str)}),
+        })
+    write_jsonl(output_path, rows)
+    return rows
+
+
+def write_report(
+    report_path: Path,
+    resolution_rows: list[dict[str, Any]],
+    grouped: dict[str, list[dict[str, Any]]],
+    audio_rows: list[dict[str, Any]],
+    *,
+    successful: int,
+    attempts: int,
+    transient_retries: int,
+    global_cooldowns: int,
+    started: float,
+    args: argparse.Namespace,
+) -> None:
+    report = {
+        "resolution_manifest_records_seen": len(resolution_rows),
+        "unique_resolved_video_ids_seen": len(grouped),
+        "audio_manifest_records": len(audio_rows),
+        "audio_status_counts": dict(Counter(row.get("status", "unknown") for row in audio_rows)),
+        "this_run": {
+            "successful_downloads": successful,
+            "yt_dlp_attempts": attempts,
+            "transient_retries": transient_retries,
+            "global_cooldowns": global_cooldowns,
+            "elapsed_seconds": round(time.monotonic() - started, 2),
+        },
+        "configuration": {
+            "follow": args.follow,
+            "poll_seconds": args.poll_seconds,
+            "pacing_seconds": args.sleep,
+            "transient_retries": args.transient_retries,
+            "workers": 1,
+            "concurrent_fragments": 1,
+            "format": "bestaudio/best",
+            "transcode": False,
+        },
+    }
+    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser()
-    p.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    p = argparse.ArgumentParser(description="Download V2 audio while optionally following a live resolver.")
+    p.add_argument("--resolution-manifest", type=Path, default=DEFAULT_RESOLUTION_MANIFEST)
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    p.add_argument("--max-downloads", type=int)
-    p.add_argument("--quiet-yt-dlp", action="store_true")
-
-    p.add_argument("--fresh-attempts", type=int, default=3)
-    p.add_argument("--retry-delay", type=float, default=5.0)
-    p.add_argument("--http-retries", type=int, default=5)
-    p.add_argument("--fragment-retries", type=int, default=5)
-    p.add_argument("--extractor-retries", type=int, default=3)
-
-    p.add_argument("--sleep-min", type=float, default=5.0)
-    p.add_argument("--sleep-max", type=float, default=20.0)
-
-    p.add_argument("--rate-limit-cooldown", type=float, default=3960.0)
-    p.add_argument("--max-cooldowns", type=int, default=10)
+    p.add_argument("--follow", action="store_true", help="Poll for newly resolved IDs until Ctrl+C.")
+    p.add_argument("--poll-seconds", type=float, default=30.0)
+    p.add_argument("--sleep", type=float, default=12.0, help="Pacing between ordinary video attempts.")
+    p.add_argument("--transient-retries", type=int, default=2)
+    p.add_argument("--socket-timeout", type=int, default=30)
+    p.add_argument("--max-downloads", type=int, help="Smoke-test cap on successful downloads.")
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-
-    if args.sleep_min < 0 or args.sleep_max < args.sleep_min:
-        raise SystemExit("invalid sleep range")
-    if args.fresh_attempts < 1:
-        raise SystemExit("--fresh-attempts must be >= 1")
-
-    records = load_jsonl(args.input)
-    args.output_dir.mkdir(parents=True, exist_ok=True)
     files_dir = args.output_dir / "files"
+    state_path = args.output_dir / "download_state.jsonl"
+    errors_path = args.output_dir / "download_errors.jsonl"
+    audio_manifest_path = args.output_dir / "audio_manifest.jsonl"
+    report_path = args.output_dir / "download_report.json"
     files_dir.mkdir(parents=True, exist_ok=True)
 
-    archive_path = args.output_dir / "downloaded.txt"
-    manifest_path = args.output_dir / "download_manifest.jsonl"
-    errors_path = args.output_dir / "download_errors.jsonl"
-    report_path = args.output_dir / "download_report.json"
+    state = load_state(state_path)
+    stop = False
 
-    by_video: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for r in records:
-        vid = extract_video_id(r)
-        if vid:
-            by_video[vid].append(r)
+    def request_stop(signum: int, frame: Any) -> None:
+        nonlocal stop
+        stop = True
+        print("\nStop requested; finishing current operation...")
 
-    unique_ids = list(by_video)
-    already = {vid for vid in unique_ids if find_audio_file(files_dir, vid)}
-    pending = [vid for vid in unique_ids if vid not in already]
-    if args.max_downloads is not None:
-        pending = pending[:args.max_downloads]
+    signal.signal(signal.SIGINT, request_stop)
+    signal.signal(signal.SIGTERM, request_stop)
 
-    print(f"Resolved training records: {len(records)}")
-    print(f"Unique YouTube IDs:        {len(unique_ids)}")
-    print(f"Already on disk:           {len(already)}")
-    print(f"Attempting this run:       {len(pending)}")
-    print(f"Inter-video pacing:        {args.sleep_min:.1f}-{args.sleep_max:.1f}s")
-    print(f"Rate-limit cooldown:       {args.rate_limit_cooldown / 3600:.2f} h")
-    print()
-
-    counters = Counter()
-    cooldowns = 0
+    cooldown_sequence = (45, 20, 20, 20, 20, 20, 20, 20, 20, 20)
+    cooldown_stage = 0
+    successful = 0
+    attempts = 0
+    transient_retries = 0
+    global_cooldowns = 0
     started = time.monotonic()
-    stop_all = False
 
-    for i, vid in enumerate(pending, 1):
-        if stop_all:
-            break
+    print("V2 audio downloader")
+    print(f"  follow mode: {args.follow}")
+    print(f"  pacing:     {args.sleep:.1f}s")
+    print(f"  files:      {files_dir}")
 
-        url = f"https://www.youtube.com/watch?v={vid}"
+    while not stop:
+        resolution_rows = load_jsonl_tolerant(args.resolution_manifest)
+        grouped = resolved_by_video(resolution_rows)
+        pending = []
 
-        while True:
-            print(f"[{i}/{len(pending)}] {vid}")
-            errors = []
-            downloaded = None
-            rate_limited = False
+        for vid in grouped:
+            existing = physical_audio_file(files_dir, vid)
+            if existing is not None:
+                if state.get(vid, {}).get("status") != "downloaded":
+                    record = {"video_id": vid, "status": "downloaded", "reason": "physical_audio_exists", "audio_path": str(existing), "timestamp": time.time()}
+                    state[vid] = record
+                    append_jsonl(state_path, record)
+                continue
+            if state.get(vid, {}).get("status") == "terminal":
+                continue
+            pending.append(vid)
 
-            for attempt in range(1, args.fresh_attempts + 1):
-                if attempt > 1:
-                    delay = args.retry_delay * (2 ** (attempt - 2))
-                    print(f"  fresh retry {attempt}/{args.fresh_attempts} in {delay:.1f}s")
-                    time.sleep(delay)
+        if pending:
+            print(f"Resolved IDs available={len(grouped)}; pending={len(pending)}")
 
-                try:
-                    downloaded = fresh_download_attempt(
-                        url, vid, files_dir, archive_path, args.quiet_yt_dlp,
-                        args.http_retries, args.fragment_retries,
-                        args.extractor_retries,
-                    )
-                    counters["downloaded"] += 1
-                    if attempt > 1:
-                        counters["recovered_by_fresh_retry"] += 1
-                    print(f"  -> {downloaded.name}")
-                    break
-                except Exception as exc:
-                    if is_rate_limit_error(exc):
-                        rate_limited = True
-                        counters["rate_limit_events"] += 1
-                        print("  YouTube bot/rate-limit check detected.")
-                        break
-                    errors.append({
-                        "attempt": attempt,
-                        "error_type": type(exc).__name__,
-                        "error": str(exc),
-                    })
-                    print(f"  attempt {attempt}/{args.fresh_attempts} failed: {exc}")
-
-            if downloaded is not None:
+        for vid in pending:
+            if stop:
+                break
+            if args.max_downloads is not None and successful >= args.max_downloads:
+                stop = True
                 break
 
-            if rate_limited:
-                cooldowns += 1
-                if cooldowns > args.max_cooldowns:
-                    print(f"Exceeded --max-cooldowns={args.max_cooldowns}; stopping.")
-                    stop_all = True
+            per_video_attempt = 0
+            while not stop:
+                per_video_attempt += 1
+                attempts += 1
+                print(f"Downloading {vid} (attempt {per_video_attempt})")
+                ok, error = download_once(vid, files_dir, args.socket_timeout)
+
+                if ok:
+                    audio = physical_audio_file(files_dir, vid)
+                    record = {"video_id": vid, "status": "downloaded", "reason": "success", "audio_path": str(audio) if audio else None, "attempt": per_video_attempt, "timestamp": time.time()}
+                    state[vid] = record
+                    append_jsonl(state_path, record)
+                    successful += 1
+                    cooldown_stage = 0
+                    if args.sleep > 0:
+                        time.sleep(args.sleep)
                     break
-                print(
-                    f"  Cooling down {args.rate_limit_cooldown / 3600:.2f} h "
-                    f"({cooldowns}/{args.max_cooldowns}); retrying same video afterward."
-                )
-                time.sleep(args.rate_limit_cooldown)
-                counters["cooldowns_completed"] += 1
-                continue
 
-            counters["persistent_failures"] += 1
-            with errors_path.open("a", encoding="utf-8") as f:
-                f.write(json.dumps({
-                    "video_id": vid,
-                    "url": url,
-                    "candidate_ids": [
-                        r.get("candidate_id") for r in by_video[vid]
-                        if isinstance(r.get("candidate_id"), str)
-                    ],
-                    "attempts": errors,
-                }, ensure_ascii=False, separators=(",", ":")) + "\n")
+                text = error or "unknown yt-dlp error"
+                kind, reason = classify_error(text)
+
+                if kind == "terminal":
+                    record = {"video_id": vid, "status": "terminal", "reason": reason, "error": text, "attempt": per_video_attempt, "timestamp": time.time()}
+                    state[vid] = record
+                    append_jsonl(state_path, record)
+                    append_jsonl(errors_path, record)
+                    print(f"  terminal: {reason}; no retry")
+                    if args.sleep > 0:
+                        time.sleep(args.sleep)
+                    break
+
+                if kind == "global":
+                    wait_min = cooldown_sequence[min(cooldown_stage, len(cooldown_sequence) - 1)]
+                    cooldown_stage += 1
+                    global_cooldowns += 1
+                    print(f"GLOBAL YouTube rate limit: waiting {wait_min} minutes; same video will be the probe.")
+                    deadline = time.monotonic() + wait_min * 60
+                    while not stop and time.monotonic() < deadline:
+                        time.sleep(min(5.0, deadline - time.monotonic()))
+                    continue
+
+                if per_video_attempt <= args.transient_retries:
+                    transient_retries += 1
+                    print(f"  transient: {reason}; fresh retry")
+                    time.sleep(min(30.0, 5.0 * per_video_attempt))
+                    continue
+
+                record = {"video_id": vid, "status": "transient_exhausted", "reason": reason, "error": text, "attempt": per_video_attempt, "timestamp": time.time()}
+                state[vid] = record
+                append_jsonl(state_path, record)
+                append_jsonl(errors_path, record)
+                print("  transient retries exhausted; will retry next program run")
+                if args.sleep > 0:
+                    time.sleep(args.sleep)
+                break
+
+        audio_rows = rebuild_audio_manifest(args.resolution_manifest, state, files_dir, audio_manifest_path)
+        write_report(report_path, resolution_rows, grouped, audio_rows, successful=successful, attempts=attempts, transient_retries=transient_retries, global_cooldowns=global_cooldowns, started=started, args=args)
+
+        if not args.follow or stop:
             break
 
-        if stop_all:
-            break
+        print(f"Caught up. Polling resolver again in {args.poll_seconds:.0f}s...")
+        deadline = time.monotonic() + args.poll_seconds
+        while not stop and time.monotonic() < deadline:
+            time.sleep(min(1.0, deadline - time.monotonic()))
 
-        if i < len(pending) and args.sleep_max > 0:
-            delay = random.uniform(args.sleep_min, args.sleep_max)
-            print(f"  pacing: sleeping {delay:.1f}s")
-            time.sleep(delay)
+    resolution_rows = load_jsonl_tolerant(args.resolution_manifest)
+    grouped = resolved_by_video(resolution_rows)
+    audio_rows = rebuild_audio_manifest(args.resolution_manifest, state, files_dir, audio_manifest_path)
+    write_report(report_path, resolution_rows, grouped, audio_rows, successful=successful, attempts=attempts, transient_retries=transient_retries, global_cooldowns=global_cooldowns, started=started, args=args)
 
-    mapped = 0
-    with manifest_path.open("w", encoding="utf-8") as f:
-        for r in records:
-            vid = extract_video_id(r)
-            if not vid:
-                continue
-            audio = find_audio_file(files_dir, vid)
-            if not audio:
-                continue
-            out = dict(r)
-            out["local_audio"] = {
-                "video_id": vid,
-                "path": str(audio),
-                "filename": audio.name,
-                "extension": audio.suffix.lstrip("."),
-                "bytes": audio.stat().st_size,
-                "info_json": str(files_dir / f"{vid}.info.json"),
-            }
-            f.write(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
-            mapped += 1
-
-    present = {vid for vid in unique_ids if find_audio_file(files_dir, vid)}
-    elapsed = time.monotonic() - started
-
-    report = {
-        "input": str(args.input),
-        "resolved_training_records": len(records),
-        "unique_video_ids": len(unique_ids),
-        "already_present_before_run": len(already),
-        "requested_this_run": len(pending),
-        "downloaded_this_run": counters["downloaded"],
-        "recovered_by_fresh_retry": counters["recovered_by_fresh_retry"],
-        "persistent_failures_this_run": counters["persistent_failures"],
-        "rate_limit_events_this_run": counters["rate_limit_events"],
-        "cooldowns_completed_this_run": counters["cooldowns_completed"],
-        "unique_audio_files_present": len(present),
-        "candidate_records_with_audio": mapped,
-        "candidate_records_without_audio": len(records) - mapped,
-        "elapsed_seconds_this_run": round(elapsed, 2),
-        "settings": {
-            "sleep_min": args.sleep_min,
-            "sleep_max": args.sleep_max,
-            "rate_limit_cooldown": args.rate_limit_cooldown,
-            "max_cooldowns": args.max_cooldowns,
-            "fresh_attempts": args.fresh_attempts,
-        },
-    }
-    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-
-    print()
-    print("Download pass complete")
-    print(f"  downloaded this run:      {counters['downloaded']}")
-    print(f"  persistent failures:      {counters['persistent_failures']}")
-    print(f"  rate-limit events:        {counters['rate_limit_events']}")
-    print(f"  cooldowns completed:      {counters['cooldowns_completed']}")
-    print(f"  unique audio files:       {len(present)} / {len(unique_ids)}")
-    print(f"  training records w/audio: {mapped} / {len(records)}")
-    print(f"  elapsed:                  {elapsed / 3600:.2f} h")
+    print("\nDownloader stopped")
+    print(f"  resolved IDs seen:   {len(grouped)}")
+    print(f"  downloaded this run: {successful}")
+    print(f"  status counts:       {dict(Counter(r.get('status', 'unknown') for r in audio_rows))}")
+    print(f"  report:              {report_path}")
 
 
 if __name__ == "__main__":

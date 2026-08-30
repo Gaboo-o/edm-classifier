@@ -1,4 +1,4 @@
-"""Select the shared active class set for model v1.
+"""Select the shared active class set for the model.
 
 The same active classes are used for BOTH the regular and artist-separated
 experiments so their metrics are directly comparable.
@@ -20,7 +20,7 @@ Inputs:
     data/splits/artist/train.jsonl
 
 Outputs:
-    data/training_v1/
+    data/training/
       active_classes.json
       class_selection.csv
       class_selection_report.json
@@ -40,7 +40,7 @@ import yaml
 
 DEFAULT_TAXONOMY = Path("config/taxonomy.yaml")
 DEFAULT_SPLITS_DIR = Path("data/splits")
-DEFAULT_OUTPUT_DIR = Path("data/training_v1")
+DEFAULT_OUTPUT_DIR = Path("data/training")
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -355,7 +355,7 @@ def main() -> None:
                     regular_expanded[genre_id],
                     artist_expanded[genre_id],
                 ),
-                "active_v1": active,
+                "active": active,
             }
         )
 
@@ -425,7 +425,7 @@ def main() -> None:
 
     print("Class selection complete")
     print(f"  taxonomy classes:       {len(taxonomy)}")
-    print(f"  active v1 classes:      {len(active_ordered)}")
+    print(f"  active classes:      {len(active_ordered)}")
     print(f"    leaf classes:         {len(active_leaf_ids)}")
     print(f"    parent classes:       {len(active_parent_ids)}")
     print(f"  dropped classes:        {len(dropped_ids)}")

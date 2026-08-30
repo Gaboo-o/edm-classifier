@@ -1,0 +1,199 @@
+{
+  "run_name": "regular_mlp",
+  "split": "regular",
+  "model": "mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 17,
+  "active_class_count": 19,
+  "active_ancestor_pairs": 0,
+  "validation_samples": 3278,
+  "test_samples": 3212,
+  "hierarchy_diagnostics_before_projection": {
+    "validation": {
+      "pair_violation_rate": 0.0,
+      "sample_violation_rate": 0.0,
+      "mean_violation_magnitude": 0.0
+    },
+    "test": {
+      "pair_violation_rate": 0.0,
+      "sample_violation_rate": 0.0,
+      "mean_violation_magnitude": 0.0
+    }
+  },
+  "results": {
+    "raw": {
+      "threshold": 0.51,
+      "validation": {
+        "macro_all": {
+          "class_count": 19,
+          "precision": 0.578358403525796,
+          "recall": 0.6178381997799375,
+          "f1": 0.5893264309313981
+        },
+        "macro_supported": {
+          "class_count": 19,
+          "precision": 0.578358403525796,
+          "recall": 0.6178381997799375,
+          "f1": 0.5893264309313981
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.578358403525796,
+          "recall": 0.6178381997799375,
+          "f1": 0.5893264309313981
+        },
+        "macro_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "macro_supported_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "micro": {
+          "precision": 0.6251553566989808,
+          "recall": 0.6795460686300999,
+          "f1": 0.6512169860176074
+        },
+        "subset_accuracy": 0.4963392312385601,
+        "hamming_loss": 0.04325487299701358,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 19,
+          "precision": 0.5299310473695606,
+          "recall": 0.6521663478353171,
+          "f1": 0.574339866988478
+        },
+        "macro_supported": {
+          "class_count": 19,
+          "precision": 0.5299310473695606,
+          "recall": 0.6521663478353171,
+          "f1": 0.574339866988478
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5299310473695606,
+          "recall": 0.6521663478353171,
+          "f1": 0.574339866988478
+        },
+        "macro_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "macro_supported_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "micro": {
+          "precision": 0.5827029752899647,
+          "recall": 0.7143740340030912,
+          "f1": 0.6418552978752952
+        },
+        "subset_accuracy": 0.5121419676214197,
+        "hamming_loss": 0.04225929081732975,
+        "zero_support_classes": []
+      },
+      "outputs": {
+        "threshold_search": "data/runs/parent/regular_mlp/threshold_search_raw.csv",
+        "test_per_class": "data/runs/parent/regular_mlp/test_per_class_raw.csv"
+      }
+    },
+    "hierarchical": {
+      "threshold": 0.51,
+      "validation": {
+        "macro_all": {
+          "class_count": 19,
+          "precision": 0.578358403525796,
+          "recall": 0.6178381997799375,
+          "f1": 0.5893264309313981
+        },
+        "macro_supported": {
+          "class_count": 19,
+          "precision": 0.578358403525796,
+          "recall": 0.6178381997799375,
+          "f1": 0.5893264309313981
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.578358403525796,
+          "recall": 0.6178381997799375,
+          "f1": 0.5893264309313981
+        },
+        "macro_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "macro_supported_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "micro": {
+          "precision": 0.6251553566989808,
+          "recall": 0.6795460686300999,
+          "f1": 0.6512169860176074
+        },
+        "subset_accuracy": 0.4963392312385601,
+        "hamming_loss": 0.04325487299701358,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 19,
+          "precision": 0.5299310473695606,
+          "recall": 0.6521663478353171,
+          "f1": 0.574339866988478
+        },
+        "macro_supported": {
+          "class_count": 19,
+          "precision": 0.5299310473695606,
+          "recall": 0.6521663478353171,
+          "f1": 0.574339866988478
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5299310473695606,
+          "recall": 0.6521663478353171,
+          "f1": 0.574339866988478
+        },
+        "macro_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "macro_supported_leaf": {
+          "class_count": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        },
+        "micro": {
+          "precision": 0.5827029752899647,
+          "recall": 0.7143740340030912,
+          "f1": 0.6418552978752952
+        },
+        "subset_accuracy": 0.5121419676214197,
+        "hamming_loss": 0.04225929081732975,
+        "zero_support_classes": []
+      },
+      "outputs": {
+        "threshold_search": "data/runs/parent/regular_mlp/threshold_search_hierarchical.csv",
+        "test_per_class": "data/runs/parent/regular_mlp/test_per_class_hierarchical.csv"
+      }
+    }
+  }
+}

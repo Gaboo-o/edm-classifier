@@ -1,0 +1,24 @@
+{
+  "run_name": "artist_mlp",
+  "split": "artist",
+  "model": "mlp",
+  "device": "cpu",
+  "seed": 1337,
+  "input_dimension": 1280,
+  "active_class_count": 145,
+  "parent_class_count": 19,
+  "leaf_class_count": 126,
+  "hierarchy_edges": 126,
+  "hierarchy_lambda": 0.0,
+  "train_samples": 11349,
+  "validation_samples": 3952,
+  "best_epoch": 19,
+  "best_validation_macro_f1_at_0_5": 0.36596447229385376,
+  "epochs_completed": 31,
+  "elapsed_seconds": 18.718,
+  "outputs": {
+    "checkpoint": "data/runs/full/artist_mlp/model.pt",
+    "normalization": "data/runs/full/artist_mlp/normalization.npz",
+    "history": "data/runs/full/artist_mlp/history.csv"
+  }
+}

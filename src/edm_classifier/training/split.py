@@ -425,7 +425,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train", type=float, default=0.80)
     parser.add_argument("--validation", type=float, default=0.10)
     parser.add_argument("--test", type=float, default=0.10)
-    parser.add_argument("--seed", default="edm-classifier-split-v1")
+    parser.add_argument("--seed", default="edm-classifier-split")
     return parser.parse_args()
 
 

@@ -1,62 +1,52 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/edm-classifier/batch-label-output.schema.json",
-  "title": "EDM candidate batch label record",
+  "title": "EDM V2 weak label output",
   "type": "object",
   "additionalProperties": false,
-  "required": ["candidate_id", "status", "labels", "candidates", "reason"],
+  "required": [
+    "candidate_id",
+    "status",
+    "labels",
+    "reason"
+  ],
   "properties": {
     "candidate_id": {
       "type": "string",
       "minLength": 1
     },
     "status": {
-      "enum": ["labeled", "uncertain", "out_of_scope"]
+      "type": "string",
+      "enum": [
+        "labeled",
+        "uncertain",
+        "reject"
+      ]
     },
     "labels": {
       "type": "array",
       "maxItems": 2,
       "items": {
-        "$ref": "#/$defs/acceptedLabel"
-      }
-    },
-    "candidates": {
-      "type": "array",
-      "maxItems": 3,
-      "items": {
-        "$ref": "#/$defs/candidateLabel"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "confidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        }
       }
     },
     "reason": {
-      "enum": [
-        "exact_tag_support",
-        "cross_tag_support",
-        "broad_family_only",
-        "boundary_ambiguous",
-        "conflicting_evidence",
-        "insufficient_evidence",
-        "out_of_scope"
-      ]
-    }
-  },
-  "$defs": {
-    "acceptedLabel": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "confidence"],
-      "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "confidence": {"type": "number", "minimum": 0.85, "maximum": 1.0}
-      }
-    },
-    "candidateLabel": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "confidence"],
-      "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "confidence": {"type": "number", "minimum": 0.5, "maximum": 0.84}
-      }
+      "type": "string"
     }
   }
 }

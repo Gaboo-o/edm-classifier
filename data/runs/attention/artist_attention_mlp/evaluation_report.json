@@ -1,0 +1,201 @@
+{
+  "run_name": "artist_attention_mlp",
+  "split": "artist",
+  "model": "attention_mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 23,
+  "active_class_count": 145,
+  "active_ancestor_pairs": 126,
+  "validation_samples": 3952,
+  "test_samples": 4022,
+  "max_patches": 256,
+  "confidence_policy": "min_075",
+  "hierarchy_diagnostics_before_projection": {
+    "validation": {
+      "pair_violation_rate": 0.047359986504723346,
+      "sample_violation_rate": 0.9954453441295547,
+      "mean_violation_magnitude": 0.013656369410455227
+    },
+    "test": {
+      "pair_violation_rate": 0.04756379594768456,
+      "sample_violation_rate": 0.9982595723520636,
+      "mean_violation_magnitude": 0.011958693154156208
+    }
+  },
+  "results": {
+    "raw": {
+      "threshold": 0.4999999999999998,
+      "validation": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.34908055199462884,
+          "recall": 0.42195379826582763,
+          "f1": 0.3548146031739124
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.34908055199462884,
+          "recall": 0.42195379826582763,
+          "f1": 0.3548146031739124
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5026138318892341,
+          "recall": 0.5976866378679473,
+          "f1": 0.5397494043223221
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.32592870820099784,
+          "recall": 0.395454401817889,
+          "f1": 0.3269276093499459
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.32592870820099784,
+          "recall": 0.395454401817889,
+          "f1": 0.3269276093499459
+        },
+        "micro": {
+          "precision": 0.4348510281158204,
+          "recall": 0.5500265392781316,
+          "f1": 0.48570424185610495
+        },
+        "subset_accuracy": 0.14195344129554655,
+        "hamming_loss": 0.015318302387267904,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.33966640972970247,
+          "recall": 0.4276171684768021,
+          "f1": 0.35982265261018953
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.33966640972970247,
+          "recall": 0.4276171684768021,
+          "f1": 0.35982265261018953
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5103548523849326,
+          "recall": 0.618532334854389,
+          "f1": 0.5520166111363859
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.3139276763134376,
+          "recall": 0.3988283735468485,
+          "f1": 0.330841023943541
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.3139276763134376,
+          "recall": 0.3988283735468485,
+          "f1": 0.330841023943541
+        },
+        "micro": {
+          "precision": 0.4446024169797908,
+          "recall": 0.5697553357626236,
+          "f1": 0.4994581027893446
+        },
+        "subset_accuracy": 0.15440079562406764,
+        "hamming_loss": 0.015046554296198495,
+        "zero_support_classes": []
+      },
+      "outputs": {
+        "threshold_search": "data/runs/attention/artist_attention_mlp/threshold_search_raw.csv",
+        "test_per_class": "data/runs/attention/artist_attention_mlp/test_per_class_raw.csv"
+      }
+    },
+    "hierarchical": {
+      "threshold": 0.44999999999999984,
+      "validation": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.3379735585705526,
+          "recall": 0.43549434252704283,
+          "f1": 0.3545443491421082
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.3379735585705526,
+          "recall": 0.43549434252704283,
+          "f1": 0.3545443491421082
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.47762483366061564,
+          "recall": 0.6203748080514269,
+          "f1": 0.5344821343554742
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.31691503296173357,
+          "recall": 0.40761554217019125,
+          "f1": 0.32741087359406096
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.31691503296173357,
+          "recall": 0.40761554217019125,
+          "f1": 0.32741087359406096
+        },
+        "micro": {
+          "precision": 0.41855710252166295,
+          "recall": 0.5704617834394905,
+          "f1": 0.482843825461897
+        },
+        "subset_accuracy": 0.13638663967611336,
+        "hamming_loss": 0.016070431383498535,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.32790435195803935,
+          "recall": 0.4398775022813772,
+          "f1": 0.3579681508048811
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.32790435195803935,
+          "recall": 0.4398775022813772,
+          "f1": 0.3579681508048811
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.4852498617923569,
+          "recall": 0.644357350509407,
+          "f1": 0.5477473498550195
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.30417764809413433,
+          "recall": 0.40904323945334087,
+          "f1": 0.3293506525354158
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.30417764809413433,
+          "recall": 0.40904323945334087,
+          "f1": 0.3293506525354158
+        },
+        "micro": {
+          "precision": 0.4275321239606954,
+          "recall": 0.5888859968766268,
+          "f1": 0.4954017954893803
+        },
+        "subset_accuracy": 0.1484336151168573,
+        "hamming_loss": 0.0158061695159382,
+        "zero_support_classes": []
+      },
+      "outputs": {
+        "threshold_search": "data/runs/attention/artist_attention_mlp/threshold_search_hierarchical.csv",
+        "test_per_class": "data/runs/attention/artist_attention_mlp/test_per_class_hierarchical.csv"
+      }
+    }
+  }
+}

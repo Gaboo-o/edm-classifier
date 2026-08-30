@@ -1,0 +1,45 @@
+{
+  "taxonomy_version": "0.1.0",
+  "parent_class_count": 19,
+  "parent_class_ids": [
+    "house",
+    "techno",
+    "electro",
+    "trance",
+    "drum_and_bass",
+    "footwork",
+    "dubstep",
+    "future_bass",
+    "trap_edm",
+    "phonk",
+    "midtempo",
+    "breakbeat",
+    "uk_garage",
+    "hardcore",
+    "hardstyle",
+    "moombahton",
+    "amapiano",
+    "nu_disco",
+    "synthwave"
+  ],
+  "sample_counts": {
+    "regular_train": 5061,
+    "regular_validation": 1276,
+    "regular_test": 1313,
+    "artist_train": 4657,
+    "artist_validation": 1526,
+    "artist_test": 1467
+  },
+  "zero_support_parent_classes": {
+    "regular_train": [],
+    "regular_validation": [],
+    "regular_test": [],
+    "artist_train": [],
+    "artist_validation": [],
+    "artist_test": []
+  },
+  "outputs": {
+    "active_classes": "data/training_parent/active_classes.json",
+    "class_distribution": "data/training_parent/class_distribution.csv"
+  }
+}

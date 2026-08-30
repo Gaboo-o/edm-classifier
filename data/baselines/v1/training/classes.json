@@ -1,0 +1,1415 @@
+{
+  "taxonomy_version": "0.1.0",
+  "class_count": 176,
+  "min_label_tracks": 1,
+  "classes": [
+    {
+      "index": 0,
+      "id": "house",
+      "label": "House",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 312
+    },
+    {
+      "index": 1,
+      "id": "chicago_house",
+      "label": "Chicago House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 2,
+      "id": "deep_house",
+      "label": "Deep House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 75
+    },
+    {
+      "index": 3,
+      "id": "tech_house",
+      "label": "Tech House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 69
+    },
+    {
+      "index": 4,
+      "id": "progressive_house",
+      "label": "Progressive House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 73
+    },
+    {
+      "index": 5,
+      "id": "acid_house",
+      "label": "Acid House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 6,
+      "id": "electro_house",
+      "label": "Electro House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 7,
+      "id": "funky_house",
+      "label": "Funky House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 69
+    },
+    {
+      "index": 8,
+      "id": "french_house",
+      "label": "French House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 74
+    },
+    {
+      "index": 9,
+      "id": "disco_house",
+      "label": "Disco House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 10,
+      "id": "soulful_house",
+      "label": "Soulful House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 11,
+      "id": "garage_house",
+      "label": "Garage House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 68
+    },
+    {
+      "index": 12,
+      "id": "future_house",
+      "label": "Future House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 68
+    },
+    {
+      "index": 13,
+      "id": "bass_house",
+      "label": "Bass House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 68
+    },
+    {
+      "index": 14,
+      "id": "g_house",
+      "label": "G-House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 15,
+      "id": "big_room_house",
+      "label": "Big Room House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 16,
+      "id": "tropical_house",
+      "label": "Tropical House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 17,
+      "id": "slap_house",
+      "label": "Slap House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 18,
+      "id": "brazilian_bass",
+      "label": "Brazilian Bass",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 19,
+      "id": "microhouse",
+      "label": "Microhouse",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 71
+    },
+    {
+      "index": 20,
+      "id": "hard_house",
+      "label": "Hard House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 71
+    },
+    {
+      "index": 21,
+      "id": "italo_house",
+      "label": "Italo House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 71
+    },
+    {
+      "index": 22,
+      "id": "latin_house",
+      "label": "Latin House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 23,
+      "id": "ghetto_house",
+      "label": "Ghetto House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 70
+    },
+    {
+      "index": 24,
+      "id": "jackin_house",
+      "label": "Jackin' House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 4
+    },
+    {
+      "index": 25,
+      "id": "outsider_house",
+      "label": "Outsider House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 71
+    },
+    {
+      "index": 26,
+      "id": "lo_fi_house",
+      "label": "Lo-Fi House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 27,
+      "id": "afro_house",
+      "label": "Afro House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 71
+    },
+    {
+      "index": 28,
+      "id": "afro_tech",
+      "label": "Afro-Tech",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 7
+    },
+    {
+      "index": 29,
+      "id": "organic_house",
+      "label": "Organic House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 71
+    },
+    {
+      "index": 30,
+      "id": "melodic_house",
+      "label": "Melodic House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 69
+    },
+    {
+      "index": 31,
+      "id": "tribal_house",
+      "label": "Tribal House",
+      "role": "subgenre",
+      "parent": "house",
+      "training_tracks": 72
+    },
+    {
+      "index": 32,
+      "id": "techno",
+      "label": "Techno",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 185
+    },
+    {
+      "index": 33,
+      "id": "detroit_techno",
+      "label": "Detroit Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 72
+    },
+    {
+      "index": 34,
+      "id": "minimal_techno",
+      "label": "Minimal Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 69
+    },
+    {
+      "index": 35,
+      "id": "industrial_techno",
+      "label": "Industrial Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 70
+    },
+    {
+      "index": 36,
+      "id": "acid_techno",
+      "label": "Acid Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 71
+    },
+    {
+      "index": 37,
+      "id": "dub_techno",
+      "label": "Dub Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 70
+    },
+    {
+      "index": 38,
+      "id": "hard_techno",
+      "label": "Hard Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 70
+    },
+    {
+      "index": 39,
+      "id": "schranz",
+      "label": "Schranz",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 70
+    },
+    {
+      "index": 40,
+      "id": "birmingham_techno",
+      "label": "Birmingham Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 13
+    },
+    {
+      "index": 41,
+      "id": "peak_time_techno",
+      "label": "Peak Time Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 75
+    },
+    {
+      "index": 42,
+      "id": "raw_techno",
+      "label": "Raw Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 35
+    },
+    {
+      "index": 43,
+      "id": "hypnotic_techno",
+      "label": "Hypnotic Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 74
+    },
+    {
+      "index": 44,
+      "id": "bleep_techno",
+      "label": "Bleep Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 4
+    },
+    {
+      "index": 45,
+      "id": "tribal_techno",
+      "label": "Tribal Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 71
+    },
+    {
+      "index": 46,
+      "id": "ambient_techno",
+      "label": "Ambient Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 71
+    },
+    {
+      "index": 47,
+      "id": "broken_techno",
+      "label": "Broken Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 35
+    },
+    {
+      "index": 48,
+      "id": "melodic_techno",
+      "label": "Melodic Techno",
+      "role": "subgenre",
+      "parent": "techno",
+      "training_tracks": 72
+    },
+    {
+      "index": 49,
+      "id": "electro",
+      "label": "Electro",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 129
+    },
+    {
+      "index": 50,
+      "id": "electrofunk",
+      "label": "Electrofunk",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 71
+    },
+    {
+      "index": 51,
+      "id": "detroit_electro",
+      "label": "Detroit Electro",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 71
+    },
+    {
+      "index": 52,
+      "id": "miami_bass",
+      "label": "Miami Bass",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 71
+    },
+    {
+      "index": 53,
+      "id": "electroclash",
+      "label": "Electroclash",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 72
+    },
+    {
+      "index": 54,
+      "id": "baile_funk",
+      "label": "Baile Funk",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 71
+    },
+    {
+      "index": 55,
+      "id": "kuduro",
+      "label": "Kuduro",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 71
+    },
+    {
+      "index": 56,
+      "id": "skweee",
+      "label": "Skweee",
+      "role": "subgenre",
+      "parent": "electro",
+      "training_tracks": 71
+    },
+    {
+      "index": 57,
+      "id": "trance",
+      "label": "Trance",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 202
+    },
+    {
+      "index": 58,
+      "id": "uplifting_trance",
+      "label": "Uplifting Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 72
+    },
+    {
+      "index": 59,
+      "id": "progressive_trance",
+      "label": "Progressive Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 76
+    },
+    {
+      "index": 60,
+      "id": "vocal_trance",
+      "label": "Vocal Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 74
+    },
+    {
+      "index": 61,
+      "id": "tech_trance",
+      "label": "Tech Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 69
+    },
+    {
+      "index": 62,
+      "id": "hard_trance",
+      "label": "Hard Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 69
+    },
+    {
+      "index": 63,
+      "id": "acid_trance",
+      "label": "Acid Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 71
+    },
+    {
+      "index": 64,
+      "id": "dream_trance",
+      "label": "Dream Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 70
+    },
+    {
+      "index": 65,
+      "id": "balearic_trance",
+      "label": "Balearic Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 70
+    },
+    {
+      "index": 66,
+      "id": "psytrance",
+      "label": "Psytrance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 73
+    },
+    {
+      "index": 67,
+      "id": "goa_trance",
+      "label": "Goa Trance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 72
+    },
+    {
+      "index": 68,
+      "id": "full_on_psytrance",
+      "label": "Full-On Psytrance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 72
+    },
+    {
+      "index": 69,
+      "id": "forest_dark_psytrance",
+      "label": "Forest/Dark Psytrance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 70
+    },
+    {
+      "index": 70,
+      "id": "hi_tech_psytrance",
+      "label": "Hi-Tech Psytrance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 18
+    },
+    {
+      "index": 71,
+      "id": "twilight_psytrance",
+      "label": "Twilight Psytrance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 16
+    },
+    {
+      "index": 72,
+      "id": "darkpsy",
+      "label": "Darkpsy",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 72
+    },
+    {
+      "index": 73,
+      "id": "progressive_psytrance",
+      "label": "Progressive Psytrance",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 71
+    },
+    {
+      "index": 74,
+      "id": "zenonesque",
+      "label": "Zenonesque",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 23
+    },
+    {
+      "index": 75,
+      "id": "nitzhonot",
+      "label": "Nitzhonot",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 29
+    },
+    {
+      "index": 76,
+      "id": "suomisaundi",
+      "label": "Suomisaundi",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 71
+    },
+    {
+      "index": 77,
+      "id": "psybreaks",
+      "label": "Psybreaks",
+      "role": "subgenre",
+      "parent": "trance",
+      "training_tracks": 73
+    },
+    {
+      "index": 78,
+      "id": "drum_and_bass",
+      "label": "Drum & Bass",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 215
+    },
+    {
+      "index": 79,
+      "id": "jungle",
+      "label": "Jungle",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 71
+    },
+    {
+      "index": 80,
+      "id": "liquid_dnb",
+      "label": "Liquid D&B",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 70
+    },
+    {
+      "index": 81,
+      "id": "atmospheric_dnb",
+      "label": "Atmospheric D&B",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 70
+    },
+    {
+      "index": 82,
+      "id": "neurofunk",
+      "label": "Neurofunk",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 74
+    },
+    {
+      "index": 83,
+      "id": "techstep",
+      "label": "Techstep",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 72
+    },
+    {
+      "index": 84,
+      "id": "jump_up",
+      "label": "Jump Up",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 73
+    },
+    {
+      "index": 85,
+      "id": "darkstep",
+      "label": "Darkstep",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 72
+    },
+    {
+      "index": 86,
+      "id": "crossbreed",
+      "label": "Crossbreed",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 70
+    },
+    {
+      "index": 87,
+      "id": "halftime",
+      "label": "Halftime",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 72
+    },
+    {
+      "index": 88,
+      "id": "drumfunk",
+      "label": "Drumfunk",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 70
+    },
+    {
+      "index": 89,
+      "id": "ragga_jungle",
+      "label": "Ragga Jungle",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 70
+    },
+    {
+      "index": 90,
+      "id": "drumstep",
+      "label": "Drumstep",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 71
+    },
+    {
+      "index": 91,
+      "id": "deep_dnb",
+      "label": "Deep DnB",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 84
+    },
+    {
+      "index": 92,
+      "id": "autonomic",
+      "label": "Autonomic",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 64
+    },
+    {
+      "index": 93,
+      "id": "sambass",
+      "label": "Sambass",
+      "role": "subgenre",
+      "parent": "drum_and_bass",
+      "training_tracks": 36
+    },
+    {
+      "index": 94,
+      "id": "footwork",
+      "label": "Footwork",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 66
+    },
+    {
+      "index": 95,
+      "id": "juke",
+      "label": "Juke",
+      "role": "subgenre",
+      "parent": "footwork",
+      "training_tracks": 73
+    },
+    {
+      "index": 96,
+      "id": "dubstep",
+      "label": "Dubstep",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 157
+    },
+    {
+      "index": 97,
+      "id": "deep_dubstep",
+      "label": "Deep Dubstep",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 70
+    },
+    {
+      "index": 98,
+      "id": "brostep",
+      "label": "Brostep",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 73
+    },
+    {
+      "index": 99,
+      "id": "riddim",
+      "label": "Riddim",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 71
+    },
+    {
+      "index": 100,
+      "id": "melodic_dubstep",
+      "label": "Melodic Dubstep",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 70
+    },
+    {
+      "index": 101,
+      "id": "tearout_dubstep",
+      "label": "Tearout Dubstep",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 19
+    },
+    {
+      "index": 102,
+      "id": "future_garage",
+      "label": "Future Garage",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 71
+    },
+    {
+      "index": 103,
+      "id": "post_dubstep",
+      "label": "Post-Dubstep",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 69
+    },
+    {
+      "index": 104,
+      "id": "wonky",
+      "label": "Wonky",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 73
+    },
+    {
+      "index": 105,
+      "id": "chillstep",
+      "label": "Chillstep",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 69
+    },
+    {
+      "index": 106,
+      "id": "grime",
+      "label": "Grime",
+      "role": "subgenre",
+      "parent": "dubstep",
+      "training_tracks": 72
+    },
+    {
+      "index": 107,
+      "id": "future_bass",
+      "label": "Future Bass",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 88
+    },
+    {
+      "index": 108,
+      "id": "kawaii_future_bass",
+      "label": "Kawaii Future Bass",
+      "role": "subgenre",
+      "parent": "future_bass",
+      "training_tracks": 70
+    },
+    {
+      "index": 109,
+      "id": "color_bass",
+      "label": "Color Bass",
+      "role": "subgenre",
+      "parent": "future_bass",
+      "training_tracks": 33
+    },
+    {
+      "index": 110,
+      "id": "glitch_hop",
+      "label": "Glitch Hop",
+      "role": "subgenre",
+      "parent": "future_bass",
+      "training_tracks": 73
+    },
+    {
+      "index": 111,
+      "id": "trap_edm",
+      "label": "Trap (EDM)",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 100
+    },
+    {
+      "index": 112,
+      "id": "hard_trap",
+      "label": "Hard Trap",
+      "role": "subgenre",
+      "parent": "trap_edm",
+      "training_tracks": 58
+    },
+    {
+      "index": 113,
+      "id": "festival_trap",
+      "label": "Festival Trap",
+      "role": "subgenre",
+      "parent": "trap_edm",
+      "training_tracks": 23
+    },
+    {
+      "index": 114,
+      "id": "hybrid_trap",
+      "label": "Hybrid Trap",
+      "role": "subgenre",
+      "parent": "trap_edm",
+      "training_tracks": 75
+    },
+    {
+      "index": 115,
+      "id": "hyperpop",
+      "label": "Hyperpop",
+      "role": "subgenre",
+      "parent": "trap_edm",
+      "training_tracks": 67
+    },
+    {
+      "index": 116,
+      "id": "digicore",
+      "label": "Digicore",
+      "role": "subgenre",
+      "parent": "trap_edm",
+      "training_tracks": 73
+    },
+    {
+      "index": 117,
+      "id": "trapwave",
+      "label": "Trapwave",
+      "role": "subgenre",
+      "parent": "trap_edm",
+      "training_tracks": 16
+    },
+    {
+      "index": 118,
+      "id": "phonk",
+      "label": "Phonk",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 66
+    },
+    {
+      "index": 119,
+      "id": "drift_phonk",
+      "label": "Drift Phonk",
+      "role": "subgenre",
+      "parent": "phonk",
+      "training_tracks": 70
+    },
+    {
+      "index": 120,
+      "id": "memphis_phonk",
+      "label": "Memphis Phonk",
+      "role": "subgenre",
+      "parent": "phonk",
+      "training_tracks": 6
+    },
+    {
+      "index": 121,
+      "id": "house_phonk",
+      "label": "House Phonk",
+      "role": "subgenre",
+      "parent": "phonk",
+      "training_tracks": 2
+    },
+    {
+      "index": 122,
+      "id": "brazilian_phonk",
+      "label": "Brazilian Phonk",
+      "role": "subgenre",
+      "parent": "phonk",
+      "training_tracks": 35
+    },
+    {
+      "index": 123,
+      "id": "midtempo",
+      "label": "Midtempo",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 90
+    },
+    {
+      "index": 124,
+      "id": "midtempo_bass",
+      "label": "Midtempo Bass",
+      "role": "subgenre",
+      "parent": "midtempo",
+      "training_tracks": 69
+    },
+    {
+      "index": 125,
+      "id": "wave",
+      "label": "Wave",
+      "role": "subgenre",
+      "parent": "midtempo",
+      "training_tracks": 71
+    },
+    {
+      "index": 126,
+      "id": "breakbeat",
+      "label": "Breakbeat",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 102
+    },
+    {
+      "index": 127,
+      "id": "big_beat",
+      "label": "Big Beat",
+      "role": "subgenre",
+      "parent": "breakbeat",
+      "training_tracks": 74
+    },
+    {
+      "index": 128,
+      "id": "florida_breaks",
+      "label": "Florida Breaks",
+      "role": "subgenre",
+      "parent": "breakbeat",
+      "training_tracks": 15
+    },
+    {
+      "index": 129,
+      "id": "nu_skool_breaks",
+      "label": "Nu-Skool Breaks",
+      "role": "subgenre",
+      "parent": "breakbeat",
+      "training_tracks": 85
+    },
+    {
+      "index": 130,
+      "id": "dariacore",
+      "label": "Dariacore",
+      "role": "subgenre",
+      "parent": "breakbeat",
+      "training_tracks": 72
+    },
+    {
+      "index": 131,
+      "id": "progressive_breaks",
+      "label": "Progressive Breaks",
+      "role": "subgenre",
+      "parent": "breakbeat",
+      "training_tracks": 71
+    },
+    {
+      "index": 132,
+      "id": "uk_garage",
+      "label": "UK Garage",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 93
+    },
+    {
+      "index": 133,
+      "id": "2_step_garage",
+      "label": "2-Step Garage",
+      "role": "subgenre",
+      "parent": "uk_garage",
+      "training_tracks": 70
+    },
+    {
+      "index": 134,
+      "id": "speed_garage",
+      "label": "Speed Garage",
+      "role": "subgenre",
+      "parent": "uk_garage",
+      "training_tracks": 71
+    },
+    {
+      "index": 135,
+      "id": "bassline_niche",
+      "label": "Bassline / Niche",
+      "role": "subgenre",
+      "parent": "uk_garage",
+      "training_tracks": 69
+    },
+    {
+      "index": 136,
+      "id": "uk_funky",
+      "label": "UK Funky",
+      "role": "subgenre",
+      "parent": "uk_garage",
+      "training_tracks": 73
+    },
+    {
+      "index": 137,
+      "id": "hardcore",
+      "label": "Hardcore",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 182
+    },
+    {
+      "index": 138,
+      "id": "gabber",
+      "label": "Gabber",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 71
+    },
+    {
+      "index": 139,
+      "id": "early_hardcore",
+      "label": "Early Hardcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 71
+    },
+    {
+      "index": 140,
+      "id": "happy_hardcore",
+      "label": "Happy Hardcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 73
+    },
+    {
+      "index": 141,
+      "id": "uk_hardcore",
+      "label": "UK Hardcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 70
+    },
+    {
+      "index": 142,
+      "id": "frenchcore",
+      "label": "Frenchcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 72
+    },
+    {
+      "index": 143,
+      "id": "speedcore",
+      "label": "Speedcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 71
+    },
+    {
+      "index": 144,
+      "id": "terrorcore",
+      "label": "Terrorcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 70
+    },
+    {
+      "index": 145,
+      "id": "breakcore",
+      "label": "Breakcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 74
+    },
+    {
+      "index": 146,
+      "id": "industrial_hardcore",
+      "label": "Industrial Hardcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 71
+    },
+    {
+      "index": 147,
+      "id": "mainstream_hardcore",
+      "label": "Mainstream Hardcore",
+      "role": "subgenre",
+      "parent": "hardcore",
+      "training_tracks": 70
+    },
+    {
+      "index": 148,
+      "id": "hardstyle",
+      "label": "Hardstyle",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 105
+    },
+    {
+      "index": 149,
+      "id": "euphoric_hardstyle",
+      "label": "Euphoric Hardstyle",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 71
+    },
+    {
+      "index": 150,
+      "id": "rawstyle",
+      "label": "Rawstyle",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 71
+    },
+    {
+      "index": 151,
+      "id": "xtra_raw",
+      "label": "Xtra Raw",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 18
+    },
+    {
+      "index": 152,
+      "id": "reverse_bass",
+      "label": "Reverse Bass",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 18
+    },
+    {
+      "index": 153,
+      "id": "dubstyle",
+      "label": "Dubstyle",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 35
+    },
+    {
+      "index": 154,
+      "id": "psystyle",
+      "label": "Psystyle",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 24
+    },
+    {
+      "index": 155,
+      "id": "uptempo_hardcore",
+      "label": "Uptempo Hardcore",
+      "role": "subgenre",
+      "parent": "hardstyle",
+      "training_tracks": 71
+    },
+    {
+      "index": 156,
+      "id": "moombahton",
+      "label": "Moombahton",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 100
+    },
+    {
+      "index": 157,
+      "id": "reggaeton",
+      "label": "Reggaeton",
+      "role": "subgenre",
+      "parent": "moombahton",
+      "training_tracks": 72
+    },
+    {
+      "index": 158,
+      "id": "dembow",
+      "label": "Dembow",
+      "role": "subgenre",
+      "parent": "moombahton",
+      "training_tracks": 70
+    },
+    {
+      "index": 159,
+      "id": "moombahcore",
+      "label": "Moombahcore",
+      "role": "subgenre",
+      "parent": "moombahton",
+      "training_tracks": 69
+    },
+    {
+      "index": 160,
+      "id": "amapiano",
+      "label": "Amapiano",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 91
+    },
+    {
+      "index": 161,
+      "id": "afrobeats",
+      "label": "Afrobeats",
+      "role": "subgenre",
+      "parent": "amapiano",
+      "training_tracks": 73
+    },
+    {
+      "index": 162,
+      "id": "kwaito",
+      "label": "Kwaito",
+      "role": "subgenre",
+      "parent": "amapiano",
+      "training_tracks": 71
+    },
+    {
+      "index": 163,
+      "id": "gqom",
+      "label": "Gqom",
+      "role": "subgenre",
+      "parent": "amapiano",
+      "training_tracks": 72
+    },
+    {
+      "index": 164,
+      "id": "nu_disco",
+      "label": "Nu-Disco",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 120
+    },
+    {
+      "index": 165,
+      "id": "italo_disco",
+      "label": "Italo Disco",
+      "role": "subgenre",
+      "parent": "nu_disco",
+      "training_tracks": 70
+    },
+    {
+      "index": 166,
+      "id": "hi_nrg",
+      "label": "Hi-NRG",
+      "role": "subgenre",
+      "parent": "nu_disco",
+      "training_tracks": 71
+    },
+    {
+      "index": 167,
+      "id": "disco",
+      "label": "Disco",
+      "role": "subgenre",
+      "parent": "nu_disco",
+      "training_tracks": 71
+    },
+    {
+      "index": 168,
+      "id": "eurodance",
+      "label": "Eurodance",
+      "role": "subgenre",
+      "parent": "nu_disco",
+      "training_tracks": 71
+    },
+    {
+      "index": 169,
+      "id": "boogie",
+      "label": "Boogie",
+      "role": "subgenre",
+      "parent": "nu_disco",
+      "training_tracks": 70
+    },
+    {
+      "index": 170,
+      "id": "future_funk",
+      "label": "Future Funk",
+      "role": "subgenre",
+      "parent": "nu_disco",
+      "training_tracks": 71
+    },
+    {
+      "index": 171,
+      "id": "synthwave",
+      "label": "Synthwave",
+      "role": "root",
+      "parent": null,
+      "training_tracks": 100
+    },
+    {
+      "index": 172,
+      "id": "outrun",
+      "label": "Outrun",
+      "role": "subgenre",
+      "parent": "synthwave",
+      "training_tracks": 72
+    },
+    {
+      "index": 173,
+      "id": "darksynth",
+      "label": "Darksynth",
+      "role": "subgenre",
+      "parent": "synthwave",
+      "training_tracks": 72
+    },
+    {
+      "index": 174,
+      "id": "vaporwave",
+      "label": "Vaporwave",
+      "role": "subgenre",
+      "parent": "synthwave",
+      "training_tracks": 71
+    },
+    {
+      "index": 175,
+      "id": "chillwave",
+      "label": "Chillwave",
+      "role": "subgenre",
+      "parent": "synthwave",
+      "training_tracks": 73
+    }
+  ]
+}

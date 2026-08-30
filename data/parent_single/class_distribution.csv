@@ -1,0 +1,121 @@
+strategy,split,index,id,label,support,total_samples,fraction
+regular,train,0,house,House,2766,12833,0.21553806592379024
+regular,train,1,techno,Techno,1091,12833,0.08501519519987533
+regular,train,2,electro,Electro,530,12833,0.041299774020104416
+regular,train,3,trance,Trance,1884,12833,0.1468090080261825
+regular,train,4,drum_and_bass,Drum & Bass,1257,12833,0.09795059611937973
+regular,train,5,footwork,Footwork,89,12833,0.006935245071300554
+regular,train,6,dubstep,Dubstep,770,12833,0.060001558482038496
+regular,train,7,future_bass,Future Bass,143,12833,0.01114314657523572
+regular,train,8,trap_edm,Trap (EDM),411,12833,0.032026805891062105
+regular,train,9,phonk,Phonk,268,12833,0.020883659315826385
+regular,train,10,midtempo,Midtempo,173,12833,0.01348086963297748
+regular,train,11,breakbeat,Breakbeat,419,12833,0.03265019870645991
+regular,train,12,uk_garage,UK Garage,310,12833,0.02415647159666485
+regular,train,13,hardcore,Hardcore,771,12833,0.06007948258396322
+regular,train,14,hardstyle,Hardstyle,347,12833,0.027039663367879684
+regular,train,15,moombahton,Moombahton,296,12833,0.023065534169718693
+regular,train,16,amapiano,Amapiano,251,12833,0.019558949583106056
+regular,train,17,nu_disco,Nu-Disco,718,12833,0.055949505181952776
+regular,train,18,synthwave,Synthwave,336,12833,0.02618249824670771
+regular,train,19,other,Other,3,12833,0.00023377230577417596
+regular,validation,0,house,House,482,3278,0.14704087858450274
+regular,validation,1,techno,Techno,234,3278,0.0713849908480781
+regular,validation,2,electro,Electro,169,3278,0.05155582672361196
+regular,validation,3,trance,Trance,345,3278,0.10524710189139719
+regular,validation,4,drum_and_bass,Drum & Bass,298,3278,0.09090909090909091
+regular,validation,5,footwork,Footwork,26,3278,0.007931665649786455
+regular,validation,6,dubstep,Dubstep,197,3278,0.060097620500305066
+regular,validation,7,future_bass,Future Bass,31,3278,0.009456985967053081
+regular,validation,8,trap_edm,Trap (EDM),80,3278,0.024405125076266018
+regular,validation,9,phonk,Phonk,27,3278,0.00823672971323978
+regular,validation,10,midtempo,Midtempo,67,3278,0.02043929225137279
+regular,validation,11,breakbeat,Breakbeat,98,3278,0.02989627821842587
+regular,validation,12,uk_garage,UK Garage,86,3278,0.026235509456985967
+regular,validation,13,hardcore,Hardcore,214,3278,0.0652837095790116
+regular,validation,14,hardstyle,Hardstyle,66,3278,0.020134228187919462
+regular,validation,15,moombahton,Moombahton,86,3278,0.026235509456985967
+regular,validation,16,amapiano,Amapiano,79,3278,0.02410006101281269
+regular,validation,17,nu_disco,Nu-Disco,151,3278,0.0460646735814521
+regular,validation,18,synthwave,Synthwave,119,3278,0.0363026235509457
+regular,validation,19,other,Other,423,3278,0.12904209884075657
+regular,test,0,house,House,593,3212,0.18462017434620173
+regular,test,1,techno,Techno,274,3212,0.08530510585305105
+regular,test,2,electro,Electro,218,3212,0.06787048567870485
+regular,test,3,trance,Trance,244,3212,0.0759651307596513
+regular,test,4,drum_and_bass,Drum & Bass,324,3212,0.10087173100871731
+regular,test,5,footwork,Footwork,38,3212,0.011830635118306352
+regular,test,6,dubstep,Dubstep,284,3212,0.08841843088418432
+regular,test,7,future_bass,Future Bass,47,3212,0.014632627646326276
+regular,test,8,trap_edm,Trap (EDM),98,3212,0.030510585305105854
+regular,test,9,phonk,Phonk,26,3212,0.00809464508094645
+regular,test,10,midtempo,Midtempo,74,3212,0.02303860523038605
+regular,test,11,breakbeat,Breakbeat,78,3212,0.024283935242839352
+regular,test,12,uk_garage,UK Garage,137,3212,0.042652552926525526
+regular,test,13,hardcore,Hardcore,288,3212,0.0896637608966376
+regular,test,14,hardstyle,Hardstyle,84,3212,0.026151930261519303
+regular,test,15,moombahton,Moombahton,74,3212,0.02303860523038605
+regular,test,16,amapiano,Amapiano,91,3212,0.028331257783312577
+regular,test,17,nu_disco,Nu-Disco,78,3212,0.024283935242839352
+regular,test,18,synthwave,Synthwave,139,3212,0.04327521793275218
+regular,test,19,other,Other,23,3212,0.007160647571606476
+artist,train,0,house,House,2384,11349,0.2100625605780245
+artist,train,1,techno,Techno,988,11349,0.08705612829324169
+artist,train,2,electro,Electro,564,11349,0.049696008458895054
+artist,train,3,trance,Trance,1589,11349,0.14001233588862455
+artist,train,4,drum_and_bass,Drum & Bass,968,11349,0.08529385848973478
+artist,train,5,footwork,Footwork,106,11349,0.00934002995858666
+artist,train,6,dubstep,Dubstep,653,11349,0.057538109084500834
+artist,train,7,future_bass,Future Bass,104,11349,0.009163802978235968
+artist,train,8,trap_edm,Trap (EDM),292,11349,0.025729139131200986
+artist,train,9,phonk,Phonk,209,11349,0.018415719446647282
+artist,train,10,midtempo,Midtempo,142,11349,0.01251211560489911
+artist,train,11,breakbeat,Breakbeat,348,11349,0.030663494581020353
+artist,train,12,uk_garage,UK Garage,345,11349,0.030399154110494316
+artist,train,13,hardcore,Hardcore,747,11349,0.06582077716098335
+artist,train,14,hardstyle,Hardstyle,268,11349,0.023614415366992686
+artist,train,15,moombahton,Moombahton,212,11349,0.01868005991717332
+artist,train,16,amapiano,Amapiano,254,11349,0.022380826504537845
+artist,train,17,nu_disco,Nu-Disco,715,11349,0.06300114547537228
+artist,train,18,synthwave,Synthwave,345,11349,0.030399154110494316
+artist,train,19,other,Other,116,11349,0.010221164860340118
+artist,validation,0,house,House,729,3952,0.18446356275303644
+artist,validation,1,techno,Techno,314,3952,0.07945344129554656
+artist,validation,2,electro,Electro,177,3952,0.04478744939271255
+artist,validation,3,trance,Trance,444,3952,0.11234817813765183
+artist,validation,4,drum_and_bass,Drum & Bass,422,3952,0.10678137651821862
+artist,validation,5,footwork,Footwork,25,3952,0.006325910931174089
+artist,validation,6,dubstep,Dubstep,302,3952,0.076417004048583
+artist,validation,7,future_bass,Future Bass,63,3952,0.015941295546558706
+artist,validation,8,trap_edm,Trap (EDM),152,3952,0.038461538461538464
+artist,validation,9,phonk,Phonk,61,3952,0.015435222672064777
+artist,validation,10,midtempo,Midtempo,71,3952,0.017965587044534412
+artist,validation,11,breakbeat,Breakbeat,138,3952,0.034919028340080975
+artist,validation,12,uk_garage,UK Garage,98,3952,0.02479757085020243
+artist,validation,13,hardcore,Hardcore,259,3952,0.06553643724696356
+artist,validation,14,hardstyle,Hardstyle,117,3952,0.029605263157894735
+artist,validation,15,moombahton,Moombahton,87,3952,0.02201417004048583
+artist,validation,16,amapiano,Amapiano,86,3952,0.021761133603238867
+artist,validation,17,nu_disco,Nu-Disco,112,3952,0.02834008097165992
+artist,validation,18,synthwave,Synthwave,123,3952,0.031123481781376517
+artist,validation,19,other,Other,172,3952,0.043522267206477734
+artist,test,0,house,House,728,4022,0.18100447538538042
+artist,test,1,techno,Techno,297,4022,0.073843858776728
+artist,test,2,electro,Electro,176,4022,0.04375932371954252
+artist,test,3,trance,Trance,440,4022,0.10939830929885629
+artist,test,4,drum_and_bass,Drum & Bass,489,4022,0.12158130283441074
+artist,test,5,footwork,Footwork,22,4022,0.005469915464942815
+artist,test,6,dubstep,Dubstep,296,4022,0.07359522625559423
+artist,test,7,future_bass,Future Bass,54,4022,0.013426156141223273
+artist,test,8,trap_edm,Trap (EDM),145,4022,0.03605171556439582
+artist,test,9,phonk,Phonk,51,4022,0.01268025857782198
+artist,test,10,midtempo,Midtempo,101,4022,0.025111884634510195
+artist,test,11,breakbeat,Breakbeat,109,4022,0.02710094480358031
+artist,test,12,uk_garage,UK Garage,90,4022,0.022376926902038786
+artist,test,13,hardcore,Hardcore,267,4022,0.06638488314271507
+artist,test,14,hardstyle,Hardstyle,112,4022,0.0278468423669816
+artist,test,15,moombahton,Moombahton,157,4022,0.03903530581800099
+artist,test,16,amapiano,Amapiano,81,4022,0.02013923421183491
+artist,test,17,nu_disco,Nu-Disco,120,4022,0.029835902536051714
+artist,test,18,synthwave,Synthwave,126,4022,0.0313276976628543
+artist,test,19,other,Other,161,4022,0.04002983590253605

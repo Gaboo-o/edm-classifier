@@ -1,0 +1,235 @@
+{
+  "run_name": "regular_mlp",
+  "split": "regular",
+  "model": "mlp",
+  "device": "cpu",
+  "checkpoint_epoch": 12,
+  "active_class_count": 145,
+  "active_ancestor_pairs": 126,
+  "validation_samples": 3278,
+  "test_samples": 3212,
+  "hierarchy_diagnostics_before_projection": {
+    "validation": {
+      "pair_violation_rate": 0.061141133288784295,
+      "sample_violation_rate": 0.9996949359365467,
+      "mean_violation_magnitude": 0.014898056415300363
+    },
+    "test": {
+      "pair_violation_rate": 0.06012670738698136,
+      "sample_violation_rate": 0.9996886674968867,
+      "mean_violation_magnitude": 0.013738485621870635
+    }
+  },
+  "results": {
+    "raw": {
+      "threshold": 0.6,
+      "validation": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.4251350372503192,
+          "recall": 0.4906835308220201,
+          "f1": 0.4376517658875939
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.4251350372503192,
+          "recall": 0.4906835308220201,
+          "f1": 0.4376517658875939
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5301668049776381,
+          "recall": 0.6676469281814142,
+          "f1": 0.5862135154883898
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.4092969135454061,
+          "recall": 0.46399857407734957,
+          "f1": 0.4152495972969978
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.4092969135454061,
+          "recall": 0.46399857407734957,
+          "f1": 0.4152495972969978
+        },
+        "micro": {
+          "precision": 0.4753494419763788,
+          "recall": 0.6006297918948521,
+          "f1": 0.5306961833907942
+        },
+        "subset_accuracy": 0.12995729103111653,
+        "hamming_loss": 0.01632408322989207,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.36370097342825575,
+          "recall": 0.44237000251601877,
+          "f1": 0.3773283967940781
+        },
+        "macro_supported": {
+          "class_count": 128,
+          "precision": 0.4120050089616959,
+          "recall": 0.5011222684751775,
+          "f1": 0.4274423244932916
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.4869868111998123,
+          "recall": 0.680436187591743,
+          "f1": 0.5588826489592736
+        },
+        "macro_leaf": {
+          "class_count": 109,
+          "precision": 0.39893478655321696,
+          "recall": 0.46986571376678526,
+          "f1": 0.4045307083019736
+        },
+        "macro_supported_leaf": {
+          "class_count": 109,
+          "precision": 0.39893478655321696,
+          "recall": 0.46986571376678526,
+          "f1": 0.4045307083019736
+        },
+        "micro": {
+          "precision": 0.430421076334159,
+          "recall": 0.6216260162601626,
+          "f1": 0.5086482171367749
+        },
+        "subset_accuracy": 0.12484433374844334,
+        "hamming_loss": 0.01585863357237944,
+        "zero_support_classes": [
+          "deep_house",
+          "uplifting_trance",
+          "progressive_trance",
+          "vocal_trance",
+          "tech_trance",
+          "psytrance",
+          "goa_trance",
+          "progressive_psytrance",
+          "liquid_dnb",
+          "drumstep",
+          "big_beat",
+          "happy_hardcore",
+          "reggaeton",
+          "italo_disco",
+          "disco",
+          "eurodance",
+          "boogie"
+        ]
+      },
+      "outputs": {
+        "threshold_search": "data/runs/full/regular_mlp/threshold_search_raw.csv",
+        "test_per_class": "data/runs/full/regular_mlp/test_per_class_raw.csv"
+      }
+    },
+    "hierarchical": {
+      "threshold": 0.6,
+      "validation": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.42359819453986075,
+          "recall": 0.49347507112569433,
+          "f1": 0.4378086815718709
+        },
+        "macro_supported": {
+          "class_count": 145,
+          "precision": 0.42359819453986075,
+          "recall": 0.49347507112569433,
+          "f1": 0.4378086815718709
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.5184382685030867,
+          "recall": 0.6889507883936647,
+          "f1": 0.5874110299210302
+        },
+        "macro_leaf": {
+          "class_count": 126,
+          "precision": 0.4092969135454061,
+          "recall": 0.46399857407734957,
+          "f1": 0.4152495972969978
+        },
+        "macro_supported_leaf": {
+          "class_count": 126,
+          "precision": 0.4092969135454061,
+          "recall": 0.46399857407734957,
+          "f1": 0.4152495972969978
+        },
+        "micro": {
+          "precision": 0.4708539019010608,
+          "recall": 0.6137732749178533,
+          "f1": 0.5328974739970282
+        },
+        "subset_accuracy": 0.13361805979255645,
+        "hamming_loss": 0.016534472239170227,
+        "zero_support_classes": []
+      },
+      "test": {
+        "macro_all": {
+          "class_count": 145,
+          "precision": 0.3623233277669494,
+          "recall": 0.44453817996000705,
+          "f1": 0.37720150654926954
+        },
+        "macro_supported": {
+          "class_count": 128,
+          "precision": 0.4104443947359973,
+          "recall": 0.5035784069859456,
+          "f1": 0.42729858163784445
+        },
+        "macro_parent": {
+          "class_count": 19,
+          "precision": 0.4764731995740532,
+          "recall": 0.6969828049274441,
+          "f1": 0.5579142760383664
+        },
+        "macro_leaf": {
+          "class_count": 109,
+          "precision": 0.39893478655321696,
+          "recall": 0.46986571376678526,
+          "f1": 0.4045307083019736
+        },
+        "macro_supported_leaf": {
+          "class_count": 109,
+          "precision": 0.39893478655321696,
+          "recall": 0.46986571376678526,
+          "f1": 0.4045307083019736
+        },
+        "micro": {
+          "precision": 0.42478651193343553,
+          "recall": 0.6308943089430894,
+          "f1": 0.5077204920177963
+        },
+        "subset_accuracy": 0.12577833125778332,
+        "hamming_loss": 0.01615493623051488,
+        "zero_support_classes": [
+          "deep_house",
+          "uplifting_trance",
+          "progressive_trance",
+          "vocal_trance",
+          "tech_trance",
+          "psytrance",
+          "goa_trance",
+          "progressive_psytrance",
+          "liquid_dnb",
+          "drumstep",
+          "big_beat",
+          "happy_hardcore",
+          "reggaeton",
+          "italo_disco",
+          "disco",
+          "eurodance",
+          "boogie"
+        ]
+      },
+      "outputs": {
+        "threshold_search": "data/runs/full/regular_mlp/threshold_search_hierarchical.csv",
+        "test_per_class": "data/runs/full/regular_mlp/test_per_class_hierarchical.csv"
+      }
+    }
+  }
+}

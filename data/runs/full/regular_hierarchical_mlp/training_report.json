@@ -1,0 +1,24 @@
+{
+  "run_name": "regular_hierarchical_mlp",
+  "split": "regular",
+  "model": "hierarchical_mlp",
+  "device": "cpu",
+  "seed": 1337,
+  "input_dimension": 1280,
+  "active_class_count": 145,
+  "parent_class_count": 19,
+  "leaf_class_count": 126,
+  "hierarchy_edges": 126,
+  "hierarchy_lambda": 0.1,
+  "train_samples": 12833,
+  "validation_samples": 3278,
+  "best_epoch": 12,
+  "best_validation_macro_f1_at_0_5": 0.4318684935569763,
+  "epochs_completed": 24,
+  "elapsed_seconds": 23.737,
+  "outputs": {
+    "checkpoint": "data/runs/full/regular_hierarchical_mlp/model.pt",
+    "normalization": "data/runs/full/regular_hierarchical_mlp/normalization.npz",
+    "history": "data/runs/full/regular_hierarchical_mlp/history.csv"
+  }
+}

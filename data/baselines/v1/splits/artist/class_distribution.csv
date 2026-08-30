@@ -1,0 +1,177 @@
+index,id,label,tracks,train,validation,test
+0,house,House,204,136,39,29
+1,chicago_house,Chicago House,33,17,7,9
+2,deep_house,Deep House,51,25,11,15
+3,tech_house,Tech House,51,35,9,7
+4,progressive_house,Progressive House,49,34,8,7
+5,acid_house,Acid House,36,26,4,6
+6,electro_house,Electro House,52,22,14,16
+7,funky_house,Funky House,45,25,9,11
+8,french_house,French House,48,39,4,5
+9,disco_house,Disco House,49,40,4,5
+10,soulful_house,Soulful House,35,28,3,4
+11,garage_house,Garage House,56,34,13,9
+12,future_house,Future House,60,33,17,10
+13,bass_house,Bass House,54,21,18,15
+14,g_house,G-House,47,25,6,16
+15,big_room_house,Big Room House,49,24,19,6
+16,tropical_house,Tropical House,48,22,10,16
+17,slap_house,Slap House,59,35,9,15
+18,brazilian_bass,Brazilian Bass,56,29,8,19
+19,microhouse,Microhouse,44,30,8,6
+20,hard_house,Hard House,36,26,5,5
+21,italo_house,Italo House,40,26,6,8
+22,latin_house,Latin House,51,24,21,6
+23,ghetto_house,Ghetto House,36,24,6,6
+24,jackin_house,Jackin' House,4,0,2,2
+25,outsider_house,Outsider House,62,38,11,13
+26,lo_fi_house,Lo-Fi House,53,40,4,9
+27,afro_house,Afro House,50,37,8,5
+28,afro_tech,Afro-Tech,6,3,1,2
+29,organic_house,Organic House,49,35,6,8
+30,melodic_house,Melodic House,57,33,13,11
+31,tribal_house,Tribal House,36,26,4,6
+32,techno,Techno,116,77,16,23
+33,detroit_techno,Detroit Techno,43,32,4,7
+34,minimal_techno,Minimal Techno,46,28,9,9
+35,industrial_techno,Industrial Techno,58,21,17,20
+36,acid_techno,Acid Techno,50,34,5,11
+37,dub_techno,Dub Techno,53,32,11,10
+38,hard_techno,Hard Techno,60,32,14,14
+39,schranz,Schranz,35,20,7,8
+40,birmingham_techno,Birmingham Techno,4,0,2,2
+41,peak_time_techno,Peak Time Techno,43,19,11,13
+42,raw_techno,Raw Techno,22,12,5,5
+43,hypnotic_techno,Hypnotic Techno,19,13,3,3
+44,bleep_techno,Bleep Techno,2,0,1,1
+45,tribal_techno,Tribal Techno,37,27,6,4
+46,ambient_techno,Ambient Techno,61,33,12,16
+47,broken_techno,Broken Techno,25,16,4,5
+48,melodic_techno,Melodic Techno,60,38,10,12
+49,electro,Electro,79,54,12,13
+50,electrofunk,Electrofunk,45,33,4,8
+51,detroit_electro,Detroit Electro,58,57,1,0
+52,miami_bass,Miami Bass,57,29,15,13
+53,electroclash,Electroclash,55,26,13,16
+54,baile_funk,Baile Funk,51,38,7,6
+55,kuduro,Kuduro,33,20,5,8
+56,skweee,Skweee,27,18,4,5
+57,trance,Trance,102,72,14,16
+58,uplifting_trance,Uplifting Trance,28,18,5,5
+59,progressive_trance,Progressive Trance,33,20,6,7
+60,vocal_trance,Vocal Trance,36,19,7,10
+61,tech_trance,Tech Trance,44,28,8,8
+62,hard_trance,Hard Trance,34,23,5,6
+63,acid_trance,Acid Trance,35,26,4,5
+64,dream_trance,Dream Trance,32,21,5,6
+65,balearic_trance,Balearic Trance,28,19,5,4
+66,psytrance,Psytrance,45,27,9,9
+67,goa_trance,Goa Trance,41,29,8,4
+68,full_on_psytrance,Full-On Psytrance,52,41,3,8
+69,forest_dark_psytrance,Forest/Dark Psytrance,35,24,6,5
+70,hi_tech_psytrance,Hi-Tech Psytrance,6,2,2,2
+71,twilight_psytrance,Twilight Psytrance,8,4,2,2
+72,darkpsy,Darkpsy,28,20,3,5
+73,progressive_psytrance,Progressive Psytrance,42,27,7,8
+74,zenonesque,Zenonesque,9,7,1,1
+75,nitzhonot,Nitzhonot,17,10,3,4
+76,suomisaundi,Suomisaundi,21,16,2,3
+77,psybreaks,Psybreaks,14,10,2,2
+78,drum_and_bass,Drum & Bass,135,89,17,29
+79,jungle,Jungle,54,33,12,9
+80,liquid_dnb,Liquid D&B,47,32,8,7
+81,atmospheric_dnb,Atmospheric D&B,55,31,12,12
+82,neurofunk,Neurofunk,56,15,38,3
+83,techstep,Techstep,55,32,11,12
+84,jump_up,Jump Up,54,44,1,9
+85,darkstep,Darkstep,52,36,14,2
+86,crossbreed,Crossbreed,38,21,7,10
+87,halftime,Halftime,64,26,20,18
+88,drumfunk,Drumfunk,45,41,1,3
+89,ragga_jungle,Ragga Jungle,32,19,3,10
+90,drumstep,Drumstep,50,25,14,11
+91,deep_dnb,Deep DnB,47,37,5,5
+92,autonomic,Autonomic,47,31,8,8
+93,sambass,Sambass,16,11,3,2
+94,footwork,Footwork,47,28,5,14
+95,juke,Juke,46,31,8,7
+96,dubstep,Dubstep,115,68,25,22
+97,deep_dubstep,Deep Dubstep,49,36,4,9
+98,brostep,Brostep,54,26,15,13
+99,riddim,Riddim,58,38,11,9
+100,melodic_dubstep,Melodic Dubstep,45,22,8,15
+101,tearout_dubstep,Tearout Dubstep,11,5,3,3
+102,future_garage,Future Garage,60,29,17,14
+103,post_dubstep,Post-Dubstep,62,31,15,16
+104,wonky,Wonky,63,23,22,18
+105,chillstep,Chillstep,51,24,20,7
+106,grime,Grime,57,29,9,19
+107,future_bass,Future Bass,57,25,16,16
+108,kawaii_future_bass,Kawaii Future Bass,46,29,5,12
+109,color_bass,Color Bass,17,10,3,4
+110,glitch_hop,Glitch Hop,59,22,29,8
+111,trap_edm,Trap (EDM),78,42,18,18
+112,hard_trap,Hard Trap,35,25,5,5
+113,festival_trap,Festival Trap,10,5,3,2
+114,hybrid_trap,Hybrid Trap,58,27,18,13
+115,hyperpop,Hyperpop,59,15,25,19
+116,digicore,Digicore,69,24,33,12
+117,trapwave,Trapwave,8,5,1,2
+118,phonk,Phonk,47,35,6,6
+119,drift_phonk,Drift Phonk,54,32,10,12
+120,memphis_phonk,Memphis Phonk,1,0,1,0
+121,house_phonk,House Phonk,1,0,1,0
+122,brazilian_phonk,Brazilian Phonk,27,22,1,4
+123,midtempo,Midtempo,60,42,12,6
+124,midtempo_bass,Midtempo Bass,65,49,5,11
+125,wave,Wave,54,27,12,15
+126,breakbeat,Breakbeat,74,35,14,25
+127,big_beat,Big Beat,41,24,8,9
+128,florida_breaks,Florida Breaks,4,1,2,1
+129,nu_skool_breaks,Nu-Skool Breaks,40,28,6,6
+130,dariacore,Dariacore,46,31,8,7
+131,progressive_breaks,Progressive Breaks,48,31,9,8
+132,uk_garage,UK Garage,64,35,12,17
+133,2_step_garage,2-Step Garage,50,29,11,10
+134,speed_garage,Speed Garage,53,35,11,7
+135,bassline_niche,Bassline / Niche,50,27,11,12
+136,uk_funky,UK Funky,47,22,9,16
+137,hardcore,Hardcore,110,81,15,14
+138,gabber,Gabber,40,22,9,9
+139,early_hardcore,Early Hardcore,27,18,4,5
+140,happy_hardcore,Happy Hardcore,37,27,6,4
+141,uk_hardcore,UK Hardcore,52,26,18,8
+142,frenchcore,Frenchcore,49,32,7,10
+143,speedcore,Speedcore,47,22,7,18
+144,terrorcore,Terrorcore,17,11,3,3
+145,breakcore,Breakcore,69,27,27,15
+146,industrial_hardcore,Industrial Hardcore,38,23,6,9
+147,mainstream_hardcore,Mainstream Hardcore,54,24,23,7
+148,hardstyle,Hardstyle,68,36,18,14
+149,euphoric_hardstyle,Euphoric Hardstyle,38,20,13,5
+150,rawstyle,Rawstyle,56,20,18,18
+151,xtra_raw,Xtra Raw,11,7,1,3
+152,reverse_bass,Reverse Bass,8,3,3,2
+153,dubstyle,Dubstyle,11,8,1,2
+154,psystyle,Psystyle,15,6,4,5
+155,uptempo_hardcore,Uptempo Hardcore,54,14,23,17
+156,moombahton,Moombahton,65,39,18,8
+157,reggaeton,Reggaeton,44,18,15,11
+158,dembow,Dembow,61,22,27,12
+159,moombahcore,Moombahcore,50,32,9,9
+160,amapiano,Amapiano,61,38,11,12
+161,afrobeats,Afrobeats,58,31,7,20
+162,kwaito,Kwaito,43,32,6,5
+163,gqom,Gqom,48,27,11,10
+164,nu_disco,Nu-Disco,90,60,18,12
+165,italo_disco,Italo Disco,29,19,5,5
+166,hi_nrg,Hi-NRG,46,31,7,8
+167,disco,Disco,27,17,5,5
+168,eurodance,Eurodance,43,34,4,5
+169,boogie,Boogie,46,29,6,11
+170,future_funk,Future Funk,48,27,10,11
+171,synthwave,Synthwave,83,41,21,21
+172,outrun,Outrun,52,40,8,4
+173,darksynth,Darksynth,65,32,20,13
+174,vaporwave,Vaporwave,50,25,13,12
+175,chillwave,Chillwave,56,34,12,10

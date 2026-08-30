@@ -1,0 +1,134 @@
+{
+  "task": "single_label_parent_genre",
+  "loss": "cross_entropy",
+  "prediction": "softmax_argmax",
+  "class_count": 20,
+  "classes": [
+    {
+      "index": 0,
+      "id": "house",
+      "label": "House",
+      "source": "retained_parent"
+    },
+    {
+      "index": 1,
+      "id": "techno",
+      "label": "Techno",
+      "source": "retained_parent"
+    },
+    {
+      "index": 2,
+      "id": "electro",
+      "label": "Electro",
+      "source": "retained_parent"
+    },
+    {
+      "index": 3,
+      "id": "trance",
+      "label": "Trance",
+      "source": "retained_parent"
+    },
+    {
+      "index": 4,
+      "id": "drum_and_bass",
+      "label": "Drum & Bass",
+      "source": "retained_parent"
+    },
+    {
+      "index": 5,
+      "id": "footwork",
+      "label": "Footwork",
+      "source": "retained_parent"
+    },
+    {
+      "index": 6,
+      "id": "dubstep",
+      "label": "Dubstep",
+      "source": "retained_parent"
+    },
+    {
+      "index": 7,
+      "id": "future_bass",
+      "label": "Future Bass",
+      "source": "retained_parent"
+    },
+    {
+      "index": 8,
+      "id": "trap_edm",
+      "label": "Trap (EDM)",
+      "source": "retained_parent"
+    },
+    {
+      "index": 9,
+      "id": "phonk",
+      "label": "Phonk",
+      "source": "retained_parent"
+    },
+    {
+      "index": 10,
+      "id": "midtempo",
+      "label": "Midtempo",
+      "source": "retained_parent"
+    },
+    {
+      "index": 11,
+      "id": "breakbeat",
+      "label": "Breakbeat",
+      "source": "retained_parent"
+    },
+    {
+      "index": 12,
+      "id": "uk_garage",
+      "label": "UK Garage",
+      "source": "retained_parent"
+    },
+    {
+      "index": 13,
+      "id": "hardcore",
+      "label": "Hardcore",
+      "source": "retained_parent"
+    },
+    {
+      "index": 14,
+      "id": "hardstyle",
+      "label": "Hardstyle",
+      "source": "retained_parent"
+    },
+    {
+      "index": 15,
+      "id": "moombahton",
+      "label": "Moombahton",
+      "source": "retained_parent"
+    },
+    {
+      "index": 16,
+      "id": "amapiano",
+      "label": "Amapiano",
+      "source": "retained_parent"
+    },
+    {
+      "index": 17,
+      "id": "nu_disco",
+      "label": "Nu-Disco",
+      "source": "retained_parent"
+    },
+    {
+      "index": 18,
+      "id": "synthwave",
+      "label": "Synthwave",
+      "source": "retained_parent"
+    },
+    {
+      "index": 19,
+      "id": "other",
+      "label": "Other",
+      "source": "catch_all"
+    }
+  ],
+  "selection_file": "data/runs/parent_analysis/retention_selection.json",
+  "policies": {
+    "ambiguous": "other",
+    "excluded_parent": "other",
+    "zero_parent": "other"
+  }
+}

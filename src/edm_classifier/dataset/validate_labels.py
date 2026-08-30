@@ -1,20 +1,31 @@
-"""Validate weak labels and report taxonomy coverage.
+"""Validate, deduplicate, and select provisional V2 classes after LLM labeling.
 
-Checks:
-- expected candidate IDs are present exactly once
-- no unexpected/duplicate candidate IDs
-- statuses, reasons, labels, candidates, and confidence ranges are valid
-- label IDs exist in taxonomy.yaml
-- status semantics are consistent
-- parent+child labels are not redundantly assigned
-- class coverage and confidence distributions
-- uncertain candidate-label counts
-- optional artist concentration diagnostics using candidate_tracks.jsonl
+Inputs:
+    config/taxonomy.yaml
+    data/v2/label_job/label_input_active.jsonl
+    data/v2/label_job/labeled_tracks.jsonl
+    data/v2/candidates/candidate_tracks.jsonl
+
+V1 dedup/support inputs:
+    data/splits/samples.jsonl
+    data/candidates/candidate_tracks.jsonl
 
 Outputs:
-- label_report.json
-- class_coverage.csv
-- issues.jsonl
+    data/v2/validation/
+      accepted_candidates.jsonl
+      non_labeled_candidates.jsonl
+      duplicate_records.jsonl
+      class_support.csv
+      provisional_active_classes.json
+      validation_report.json
+
+Important:
+- Only status=labeled records enter accepted_candidates.jsonl.
+- Uncertain/reject records are preserved separately.
+- Duplicate V2/V1 recordings are excluded from accepted_candidates.
+- A provisionally dropped leaf does NOT cause its tracks to be discarded.
+  The original leaf label is preserved so the track can still contribute to
+  its active taxonomy ancestors during training.
 """
 
 from __future__ import annotations
@@ -22,6 +33,10 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
+import re
+import statistics
+import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -29,639 +44,706 @@ from typing import Any
 import yaml
 
 
-DEFAULT_RESULTS = Path("data/label_job/results/labeled_tracks.jsonl")
-DEFAULT_MANIFEST = Path("data/label_job/manifest.json")
 DEFAULT_TAXONOMY = Path("config/taxonomy.yaml")
-DEFAULT_CANDIDATES = Path("data/candidates/candidate_tracks.jsonl")
-DEFAULT_OUTPUT_DIR = Path("data/validation")
-
-VALID_STATUSES = {"labeled", "uncertain", "out_of_scope"}
-VALID_REASONS = {
-    "exact_tag_support",
-    "cross_tag_support",
-    "broad_family_only",
-    "boundary_ambiguous",
-    "conflicting_evidence",
-    "insufficient_evidence",
-    "out_of_scope",
-}
+DEFAULT_LABEL_INPUT = Path("data/v2/label_job/label_input_active.jsonl")
+DEFAULT_LABELS = Path("data/v2/label_job/labeled_tracks.jsonl")
+DEFAULT_CANDIDATES = Path("data/v2/candidates/candidate_tracks.jsonl")
+DEFAULT_V1_SAMPLES = Path("data/splits/samples.jsonl")
+DEFAULT_V1_CANDIDATES = Path("data/candidates/candidate_tracks.jsonl")
+DEFAULT_OUTPUT_DIR = Path("data/v2/validation")
 
 
-def load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
 
-
-def load_jsonl(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    records: list[dict[str, Any]] = []
-    parse_issues: list[dict[str, Any]] = []
-
+    rows: list[dict[str, Any]] = []
     with path.open("r", encoding="utf-8") as handle:
-        for line_number, raw in enumerate(handle, start=1):
+        for line_number, raw in enumerate(handle, 1):
             line = raw.strip()
             if not line:
                 continue
             try:
                 value = json.loads(line)
             except json.JSONDecodeError as exc:
-                parse_issues.append(
-                    {
-                        "type": "invalid_json",
-                        "line": line_number,
-                        "message": str(exc),
-                    }
-                )
-                continue
-
+                raise ValueError(f"{path}:{line_number}: invalid JSON: {exc}") from exc
             if not isinstance(value, dict):
-                parse_issues.append(
-                    {
-                        "type": "not_object",
-                        "line": line_number,
-                        "message": "JSONL record must be an object",
-                    }
-                )
-                continue
-
-            value["_line_number"] = line_number
-            records.append(value)
-
-    return records, parse_issues
+                raise ValueError(f"{path}:{line_number}: expected JSON object")
+            rows.append(value)
+    return rows
 
 
-def load_taxonomy(path: Path) -> tuple[dict[str, dict[str, Any]], str | None]:
-    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
-    if not isinstance(raw, dict) or not isinstance(raw.get("genres"), list):
-        raise ValueError(f"Invalid taxonomy structure: {path}")
-
-    genres: dict[str, dict[str, Any]] = {}
-    for item in raw["genres"]:
-        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
-            raise ValueError(f"Invalid genre entry in {path}: {item!r}")
-        genre_id = item["id"]
-        if genre_id in genres:
-            raise ValueError(f"Duplicate taxonomy ID: {genre_id}")
-        genres[genre_id] = item
-
-    version = (raw.get("taxonomy") or {}).get("version")
-    return genres, version
-
-
-def load_candidate_artists(path: Path | None) -> dict[str, str]:
-    if path is None or not path.exists():
-        return {}
-
-    result: dict[str, str] = {}
-    records, _ = load_jsonl(path)
-    for record in records:
-        cid = record.get("candidate_id")
-        artist = record.get("artist")
-        if isinstance(cid, str) and isinstance(artist, str):
-            result[cid] = artist.strip()
-    return result
-
-
-def ancestors(label_id: str, taxonomy: dict[str, dict[str, Any]]) -> set[str]:
-    result: set[str] = set()
-    current = taxonomy.get(label_id)
-    seen: set[str] = set()
-
-    while current:
-        parent = current.get("parent")
-        if not isinstance(parent, str) or not parent or parent in seen:
-            break
-        seen.add(parent)
-        result.add(parent)
-        current = taxonomy.get(parent)
-
-    return result
-
-
-def issue(
-    issues: list[dict[str, Any]],
-    issue_type: str,
-    *,
-    candidate_id: str | None = None,
-    line: int | None = None,
-    message: str,
-    severity: str = "error",
-) -> None:
-    item: dict[str, Any] = {
-        "severity": severity,
-        "type": issue_type,
-        "message": message,
-    }
-    if candidate_id is not None:
-        item["candidate_id"] = candidate_id
-    if line is not None:
-        item["line"] = line
-    issues.append(item)
-
-
-def validate_record(
-    record: dict[str, Any],
-    taxonomy: dict[str, dict[str, Any]],
-    issues: list[dict[str, Any]],
-) -> None:
-    cid = record.get("candidate_id")
-    line = record.get("_line_number")
-    if not isinstance(cid, str) or not cid.strip():
-        issue(
-            issues,
-            "invalid_candidate_id",
-            line=line,
-            message="candidate_id must be a non-empty string",
-        )
-        return
-
-    status = record.get("status")
-    labels = record.get("labels")
-    candidates = record.get("candidates")
-    reason = record.get("reason")
-
-    if status not in VALID_STATUSES:
-        issue(
-            issues,
-            "invalid_status",
-            candidate_id=cid,
-            line=line,
-            message=f"Invalid status: {status!r}",
-        )
-
-    if reason not in VALID_REASONS:
-        issue(
-            issues,
-            "invalid_reason",
-            candidate_id=cid,
-            line=line,
-            message=f"Invalid reason: {reason!r}",
-        )
-
-    if not isinstance(labels, list):
-        issue(
-            issues,
-            "invalid_labels",
-            candidate_id=cid,
-            line=line,
-            message="labels must be an array",
-        )
-        labels = []
-
-    if not isinstance(candidates, list):
-        issue(
-            issues,
-            "invalid_candidates",
-            candidate_id=cid,
-            line=line,
-            message="candidates must be an array",
-        )
-        candidates = []
-
-    if len(labels) > 2:
-        issue(
-            issues,
-            "too_many_labels",
-            candidate_id=cid,
-            line=line,
-            message=f"labels has {len(labels)} entries; maximum is 2",
-        )
-
-    if len(candidates) > 3:
-        issue(
-            issues,
-            "too_many_candidates",
-            candidate_id=cid,
-            line=line,
-            message=f"candidates has {len(candidates)} entries; maximum is 3",
-        )
-
-    if status == "labeled" and not labels:
-        issue(
-            issues,
-            "labeled_without_labels",
-            candidate_id=cid,
-            line=line,
-            message="status=labeled requires at least one accepted label",
-        )
-
-    if status in {"uncertain", "out_of_scope"} and labels:
-        issue(
-            issues,
-            "non_labeled_status_has_labels",
-            candidate_id=cid,
-            line=line,
-            message=f"status={status} must have an empty labels array",
-        )
-
-    if status == "out_of_scope" and reason != "out_of_scope":
-        issue(
-            issues,
-            "out_of_scope_reason_mismatch",
-            candidate_id=cid,
-            line=line,
-            message="status=out_of_scope should use reason=out_of_scope",
-        )
-
-    accepted_ids: list[str] = []
-    candidate_ids: list[str] = []
-
-    for kind, items, low, high, sink in (
-        ("label", labels, 0.85, 1.0, accepted_ids),
-        ("candidate", candidates, 0.50, 0.84, candidate_ids),
-    ):
-        seen: set[str] = set()
-        for index, item in enumerate(items):
-            if not isinstance(item, dict):
-                issue(
-                    issues,
-                    f"invalid_{kind}_entry",
-                    candidate_id=cid,
-                    line=line,
-                    message=f"{kind}[{index}] must be an object",
-                )
-                continue
-
-            label_id = item.get("id")
-            confidence = item.get("confidence")
-
-            if not isinstance(label_id, str) or not label_id:
-                issue(
-                    issues,
-                    f"invalid_{kind}_id",
-                    candidate_id=cid,
-                    line=line,
-                    message=f"{kind}[{index}].id must be a non-empty string",
-                )
-                continue
-
-            sink.append(label_id)
-
-            if label_id not in taxonomy:
-                issue(
-                    issues,
-                    "unknown_taxonomy_label",
-                    candidate_id=cid,
-                    line=line,
-                    message=f"Unknown taxonomy label: {label_id}",
-                )
-
-            if label_id in seen:
-                issue(
-                    issues,
-                    f"duplicate_{kind}",
-                    candidate_id=cid,
-                    line=line,
-                    message=f"Duplicate {kind} ID: {label_id}",
-                )
-            seen.add(label_id)
-
-            if not isinstance(confidence, (int, float)) or isinstance(confidence, bool):
-                issue(
-                    issues,
-                    f"invalid_{kind}_confidence",
-                    candidate_id=cid,
-                    line=line,
-                    message=f"{kind} {label_id}: confidence must be numeric",
-                )
-            elif not (low <= float(confidence) <= high):
-                issue(
-                    issues,
-                    f"{kind}_confidence_out_of_range",
-                    candidate_id=cid,
-                    line=line,
-                    message=(
-                        f"{kind} {label_id}: confidence {confidence} "
-                        f"outside [{low:.2f}, {high:.2f}]"
-                    ),
-                )
-
-    overlap = set(accepted_ids) & set(candidate_ids)
-    for label_id in sorted(overlap):
-        issue(
-            issues,
-            "accepted_candidate_overlap",
-            candidate_id=cid,
-            line=line,
-            message=f"{label_id} appears in both labels and candidates",
-        )
-
-    # Parent + child should not be emitted together as accepted labels.
-    accepted_set = set(accepted_ids)
-    for label_id in accepted_ids:
-        redundant_parents = ancestors(label_id, taxonomy) & accepted_set
-        for parent in sorted(redundant_parents):
-            issue(
-                issues,
-                "redundant_parent_child",
-                candidate_id=cid,
-                line=line,
-                message=f"Accepted labels contain child {label_id} and parent {parent}",
+def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(
+                json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n"
             )
 
 
-def confidence_bin(value: float) -> str:
-    if value >= 0.95:
-        return "0.95-1.00"
-    if value >= 0.90:
-        return "0.90-0.94"
-    return "0.85-0.89"
+def normalize_text(value: str) -> str:
+    text = unicodedata.normalize("NFKD", value)
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    text = text.casefold()
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def normalize_artist(value: str) -> str:
+    return normalize_text(value)
+
+
+def load_taxonomy(
+    path: Path,
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, set[str]]]:
+    raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    genres = raw.get("genres") if isinstance(raw, dict) else None
+    if not isinstance(genres, list):
+        raise ValueError(f"{path}: expected genres list")
+
+    ordered: list[dict[str, Any]] = []
+    by_id: dict[str, dict[str, Any]] = {}
+    children: dict[str, set[str]] = defaultdict(set)
+
+    for position, item in enumerate(genres):
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+            raise ValueError(f"{path}: invalid genre at position {position}")
+        copy = dict(item)
+        copy["_position"] = position
+        ordered.append(copy)
+        by_id[copy["id"]] = copy
+
+    for genre_id, item in by_id.items():
+        parent = item.get("parent")
+        if isinstance(parent, str) and parent:
+            if parent not in by_id:
+                raise ValueError(f"{genre_id!r}: unknown parent {parent!r}")
+            children[parent].add(genre_id)
+
+    return ordered, by_id, children
+
+
+def ancestor_ids(
+    genre_id: str,
+    taxonomy: dict[str, dict[str, Any]],
+) -> set[str]:
+    result: set[str] = set()
+    current = genre_id
+    seen: set[str] = set()
+
+    while True:
+        if current in seen:
+            raise ValueError(f"taxonomy cycle involving {genre_id!r}")
+        seen.add(current)
+
+        parent = taxonomy[current].get("parent")
+        if not isinstance(parent, str) or not parent:
+            return result
+
+        result.add(parent)
+        current = parent
+
+
+def extract_labels(row: dict[str, Any]) -> list[dict[str, Any]]:
+    value = row.get("labels")
+    return value if isinstance(value, list) else []
+
+
+def direct_label_ids(row: dict[str, Any]) -> set[str]:
+    result = set()
+    for item in extract_labels(row):
+        if isinstance(item, str):
+            result.add(item)
+        elif isinstance(item, dict) and isinstance(item.get("id"), str):
+            result.add(item["id"])
+    return result
+
+
+def sample_label_ids(row: dict[str, Any]) -> set[str]:
+    raw = row.get("labels")
+    if not isinstance(raw, list):
+        return set()
+
+    result = set()
+    for item in raw:
+        if isinstance(item, str):
+            result.add(item)
+        elif isinstance(item, dict) and isinstance(item.get("id"), str):
+            result.add(item["id"])
+    return result
+
+
+def artist_keys(row: dict[str, Any]) -> set[str]:
+    values: list[str] = []
+
+    for key in ("artist_keys", "artists"):
+        raw = row.get(key)
+        if isinstance(raw, list):
+            values.extend(x for x in raw if isinstance(x, str))
+
+    for key in ("artist", "original_artist"):
+        value = row.get(key)
+        if isinstance(value, str):
+            values.append(value)
+
+    return {
+        normalize_artist(value)
+        for value in values
+        if value.strip() and normalize_artist(value)
+    }
+
+
+def identity_keys(row: dict[str, Any]) -> set[str]:
+    keys: set[str] = set()
+
+    mbid = row.get("mbid")
+    if isinstance(mbid, str) and mbid.strip():
+        keys.add("mbid:" + mbid.strip().casefold())
+
+    artist = row.get("artist")
+    if not isinstance(artist, str):
+        artist = row.get("original_artist")
+
+    title = row.get("title")
+
+    if isinstance(artist, str) and isinstance(title, str):
+        keys.add(
+            "text:"
+            + normalize_text(artist)
+            + "\0"
+            + normalize_text(title)
+        )
+
+    return keys
+
+
+def max_confidence(row: dict[str, Any]) -> float:
+    values = []
+    for item in extract_labels(row):
+        if isinstance(item, dict) and isinstance(item.get("confidence"), (int, float)):
+            values.append(float(item["confidence"]))
+    return max(values, default=0.0)
+
+
+def mean_confidence_for_label(
+    rows: list[dict[str, Any]],
+) -> dict[str, float]:
+    values: dict[str, list[float]] = defaultdict(list)
+
+    for row in rows:
+        for item in extract_labels(row):
+            if (
+                isinstance(item, dict)
+                and isinstance(item.get("id"), str)
+                and isinstance(item.get("confidence"), (int, float))
+            ):
+                values[item["id"]].append(float(item["confidence"]))
+
+    return {
+        genre_id: statistics.mean(scores)
+        for genre_id, scores in values.items()
+        if scores
+    }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Validate/deduplicate V2 labels and compute class support."
+    )
+    parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
+    parser.add_argument("--label-input", type=Path, default=DEFAULT_LABEL_INPUT)
+    parser.add_argument("--labels", type=Path, default=DEFAULT_LABELS)
+    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
+    parser.add_argument("--v1-samples", type=Path, default=DEFAULT_V1_SAMPLES)
+    parser.add_argument("--v1-candidates", type=Path, default=DEFAULT_V1_CANDIDATES)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument(
+        "--min-leaf-tracks",
+        type=int,
+        default=50,
+        help="Minimum combined direct labeled tracks for a provisional leaf.",
+    )
+    parser.add_argument(
+        "--min-leaf-artists",
+        type=int,
+        default=30,
+        help="Minimum combined unique artists for a provisional leaf.",
+    )
+    parser.add_argument(
+        "--strong-leaf-tracks",
+        type=int,
+        default=100,
+    )
+    parser.add_argument(
+        "--strong-leaf-artists",
+        type=int,
+        default=50,
+    )
+    return parser.parse_args()
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate full weak-label dataset.")
-    parser.add_argument("--results", type=Path, default=DEFAULT_RESULTS)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
-    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    args = parser.parse_args()
+    args = parse_args()
 
-    taxonomy, taxonomy_version = load_taxonomy(args.taxonomy)
-    manifest = load_json(args.manifest)
-
-    expected_ids_raw = manifest.get("candidate_ids")
-    if not isinstance(expected_ids_raw, list) or not all(
-        isinstance(item, str) for item in expected_ids_raw
-    ):
-        raise SystemExit(f"Invalid candidate_ids in manifest: {args.manifest}")
-
-    expected_ids = expected_ids_raw
-    expected_set = set(expected_ids)
-    if len(expected_set) != len(expected_ids):
-        raise SystemExit("Manifest itself contains duplicate candidate IDs")
-
-    records, parse_issues = load_jsonl(args.results)
-    issues: list[dict[str, Any]] = list(parse_issues)
-
-    seen_counts: Counter[str] = Counter()
-    valid_record_by_id: dict[str, dict[str, Any]] = {}
-
-    for record in records:
-        cid = record.get("candidate_id")
-        if isinstance(cid, str):
-            seen_counts[cid] += 1
-            if seen_counts[cid] == 1:
-                valid_record_by_id[cid] = record
-
-        validate_record(record, taxonomy, issues)
-
-    returned_ids = set(seen_counts)
-    missing_ids = sorted(expected_set - returned_ids)
-    unexpected_ids = sorted(returned_ids - expected_set)
-    duplicate_ids = sorted(cid for cid, count in seen_counts.items() if count > 1)
-
-    for cid in missing_ids:
-        issue(
-            issues,
-            "missing_candidate",
-            candidate_id=cid,
-            message="Candidate is present in manifest but absent from results",
-        )
-
-    for cid in unexpected_ids:
-        issue(
-            issues,
-            "unexpected_candidate",
-            candidate_id=cid,
-            message="Candidate appears in results but not in manifest",
-        )
-
-    for cid in duplicate_ids:
-        issue(
-            issues,
-            "duplicate_candidate",
-            candidate_id=cid,
-            message=f"Candidate appears {seen_counts[cid]} times in results",
-        )
-
-    # Aggregate only expected IDs with exactly one result record.
-    aggregate_records: list[dict[str, Any]] = []
-    for cid in expected_ids:
-        if seen_counts[cid] == 1:
-            aggregate_records.append(valid_record_by_id[cid])
-
-    status_counts: Counter[str] = Counter()
-    reason_counts: Counter[str] = Counter()
-    label_track_counts: Counter[str] = Counter()
-    label_assignment_counts: Counter[str] = Counter()
-    uncertain_candidate_counts: Counter[str] = Counter()
-    confidence_bins: Counter[str] = Counter()
-    label_confidences: defaultdict[str, list[float]] = defaultdict(list)
-    label_tracks: defaultdict[str, set[str]] = defaultdict(set)
-
-    candidate_artists = load_candidate_artists(args.candidates)
-    label_artist_counts: defaultdict[str, Counter[str]] = defaultdict(Counter)
-
-    total_assignments = 0
-
-    for record in aggregate_records:
-        cid = record["candidate_id"]
-        status = record.get("status")
-        reason = record.get("reason")
-
-        if isinstance(status, str):
-            status_counts[status] += 1
-        if isinstance(reason, str):
-            reason_counts[reason] += 1
-
-        labels = record.get("labels") if isinstance(record.get("labels"), list) else []
-        seen_on_track: set[str] = set()
-
-        for item in labels:
-            if not isinstance(item, dict):
-                continue
-            label_id = item.get("id")
-            confidence = item.get("confidence")
-            if label_id not in taxonomy:
-                continue
-
-            label_assignment_counts[label_id] += 1
-            total_assignments += 1
-
-            if label_id not in seen_on_track:
-                label_track_counts[label_id] += 1
-                label_tracks[label_id].add(cid)
-                seen_on_track.add(label_id)
-
-            if isinstance(confidence, (int, float)) and not isinstance(confidence, bool):
-                value = float(confidence)
-                if 0.85 <= value <= 1.0:
-                    confidence_bins[confidence_bin(value)] += 1
-                    label_confidences[label_id].append(value)
-
-            artist = candidate_artists.get(cid)
-            if artist:
-                label_artist_counts[label_id][artist] += 1
-
-        candidates = (
-            record.get("candidates")
-            if isinstance(record.get("candidates"), list)
-            else []
-        )
-        if status == "uncertain":
-            for item in candidates:
-                if isinstance(item, dict):
-                    label_id = item.get("id")
-                    if label_id in taxonomy:
-                        uncertain_candidate_counts[label_id] += 1
-
-    coverage_rows: list[dict[str, Any]] = []
-
-    for genre in sorted(taxonomy.values(), key=lambda g: int(g.get("order", 999999))):
-        label_id = genre["id"]
-        count = label_track_counts[label_id]
-        confidences = label_confidences[label_id]
-
-        artist_counter = label_artist_counts[label_id]
-        top_artist = ""
-        top_artist_count = 0
-        top_artist_share = 0.0
-        unique_artists = len(artist_counter)
-
-        if artist_counter:
-            top_artist, top_artist_count = artist_counter.most_common(1)[0]
-            if count:
-                top_artist_share = top_artist_count / count
-
-        coverage_rows.append(
-            {
-                "id": label_id,
-                "label": genre.get("label", label_id),
-                "role": genre.get("role", ""),
-                "parent": genre.get("parent") or "",
-                "tracks": count,
-                "uncertain_mentions": uncertain_candidate_counts[label_id],
-                "mean_confidence": (
-                    round(sum(confidences) / len(confidences), 4)
-                    if confidences
-                    else ""
-                ),
-                "unique_artists": unique_artists,
-                "top_artist": top_artist,
-                "top_artist_tracks": top_artist_count,
-                "top_artist_share": round(top_artist_share, 4) if artist_counter else "",
-                "coverage_band": (
-                    "0"
-                    if count == 0
-                    else "<10"
-                    if count < 10
-                    else "10-19"
-                    if count < 20
-                    else "20-29"
-                    if count < 30
-                    else "30+"
-                ),
-            }
-        )
-
-    coverage_band_counts = Counter(row["coverage_band"] for row in coverage_rows)
-    zero_labels = [row["id"] for row in coverage_rows if row["tracks"] == 0]
-    under_10 = [row["id"] for row in coverage_rows if row["tracks"] < 10]
-    under_20 = [row["id"] for row in coverage_rows if row["tracks"] < 20]
-    under_30 = [row["id"] for row in coverage_rows if row["tracks"] < 30]
-
-    error_count = sum(1 for x in issues if x.get("severity") == "error")
-    warning_count = sum(1 for x in issues if x.get("severity") == "warning")
-
-    report = {
-        "taxonomy_version": taxonomy_version,
-        "expected_records": len(expected_ids),
-        "parsed_result_records": len(records),
-        "unique_returned_ids": len(returned_ids),
-        "complete": not missing_ids and not unexpected_ids and not duplicate_ids,
-        "missing_count": len(missing_ids),
-        "unexpected_count": len(unexpected_ids),
-        "duplicate_id_count": len(duplicate_ids),
-        "status_counts": dict(sorted(status_counts.items())),
-        "reason_counts": dict(sorted(reason_counts.items())),
-        "accepted_label_assignments": total_assignments,
-        "taxonomy_label_count": len(taxonomy),
-        "labels_with_at_least_one_track": len(taxonomy) - len(zero_labels),
-        "coverage_bands": {
-            "0": coverage_band_counts["0"],
-            "<10": coverage_band_counts["<10"],
-            "10-19": coverage_band_counts["10-19"],
-            "20-29": coverage_band_counts["20-29"],
-            "30+": coverage_band_counts["30+"],
-        },
-        "labels_with_zero_tracks": zero_labels,
-        "labels_under_10_tracks": under_10,
-        "labels_under_20_tracks": under_20,
-        "labels_under_30_tracks": under_30,
-        "accepted_confidence_distribution": {
-            "0.85-0.89": confidence_bins["0.85-0.89"],
-            "0.90-0.94": confidence_bins["0.90-0.94"],
-            "0.95-1.00": confidence_bins["0.95-1.00"],
-        },
-        "issue_counts": {
-            "errors": error_count,
-            "warnings": warning_count,
-            "total": len(issues),
-        },
-        "missing_candidate_ids": missing_ids,
-        "unexpected_candidate_ids": unexpected_ids,
-        "duplicate_candidate_ids": duplicate_ids,
-    }
+    ordered_taxonomy, taxonomy, children = load_taxonomy(args.taxonomy)
+    label_input = load_jsonl(args.label_input)
+    outputs = load_jsonl(args.labels)
+    candidates = load_jsonl(args.candidates)
+    v1_samples = load_jsonl(args.v1_samples)
+    v1_candidates = load_jsonl(args.v1_candidates)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    report_path = args.output_dir / "label_report.json"
-    coverage_path = args.output_dir / "class_coverage.csv"
-    issues_path = args.output_dir / "issues.jsonl"
+    input_by_id = {
+        row.get("candidate_id"): row
+        for row in label_input
+        if isinstance(row.get("candidate_id"), str)
+    }
+    candidate_by_id = {
+        row.get("candidate_id"): row
+        for row in candidates
+        if isinstance(row.get("candidate_id"), str)
+    }
 
+    issues: list[dict[str, Any]] = []
+    output_ids: list[str] = []
+    seen_output_ids: set[str] = set()
+
+    invalid_status = 0
+    invalid_labels = 0
+    invalid_confidence = 0
+    too_many_labels = 0
+    labeled_without_labels = 0
+    redundant_pairs = 0
+    missing_input_ids = 0
+    missing_candidate_metadata = 0
+    low_confidence_labeled = 0
+
+    valid_statuses = {"labeled", "uncertain", "reject"}
+
+    joined: list[dict[str, Any]] = []
+
+    for position, output in enumerate(outputs):
+        cid = output.get("candidate_id")
+        if not isinstance(cid, str):
+            issues.append({"position": position, "issue": "missing_candidate_id"})
+            continue
+
+        output_ids.append(cid)
+
+        if cid in seen_output_ids:
+            issues.append({"candidate_id": cid, "issue": "duplicate_output_candidate_id"})
+        seen_output_ids.add(cid)
+
+        input_row = input_by_id.get(cid)
+        if input_row is None:
+            missing_input_ids += 1
+            issues.append({"candidate_id": cid, "issue": "candidate_id_not_in_label_input"})
+            continue
+
+        status = output.get("status")
+        if status not in valid_statuses:
+            invalid_status += 1
+            issues.append({"candidate_id": cid, "issue": "invalid_status", "value": status})
+
+        labels = extract_labels(output)
+        if len(labels) > 2:
+            too_many_labels += 1
+            issues.append({"candidate_id": cid, "issue": "too_many_labels"})
+
+        if status == "labeled" and not labels:
+            labeled_without_labels += 1
+            issues.append({"candidate_id": cid, "issue": "labeled_without_labels"})
+
+        options = input_row.get("label_options")
+        allowed = {
+            item["id"]
+            for item in options
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        } if isinstance(options, list) else set()
+
+        assigned_ids: list[str] = []
+
+        for label in labels:
+            if not isinstance(label, dict):
+                invalid_labels += 1
+                issues.append({"candidate_id": cid, "issue": "label_not_object"})
+                continue
+
+            genre_id = label.get("id")
+            confidence = label.get("confidence")
+
+            if not isinstance(genre_id, str) or genre_id not in allowed or genre_id not in taxonomy:
+                invalid_labels += 1
+                issues.append(
+                    {
+                        "candidate_id": cid,
+                        "issue": "invalid_label_id",
+                        "value": genre_id,
+                    }
+                )
+            else:
+                assigned_ids.append(genre_id)
+
+            if (
+                not isinstance(confidence, (int, float))
+                or isinstance(confidence, bool)
+                or not 0.0 <= float(confidence) <= 1.0
+            ):
+                invalid_confidence += 1
+                issues.append(
+                    {
+                        "candidate_id": cid,
+                        "issue": "invalid_confidence",
+                        "value": confidence,
+                    }
+                )
+
+        if status == "labeled" and labels and max_confidence(output) < 0.60:
+            low_confidence_labeled += 1
+
+        redundant = False
+        assigned_set = set(assigned_ids)
+        for genre_id in assigned_ids:
+            if ancestor_ids(genre_id, taxonomy) & assigned_set:
+                redundant = True
+                break
+
+        if redundant:
+            redundant_pairs += 1
+            issues.append({"candidate_id": cid, "issue": "redundant_parent_child"})
+
+        metadata = candidate_by_id.get(cid)
+        if metadata is None:
+            # label_input contains enough metadata for a safe fallback.
+            metadata = input_row
+            missing_candidate_metadata += 1
+
+        merged = dict(metadata)
+        merged["candidate_id"] = cid
+        merged["status"] = status
+        merged["labels"] = labels
+        merged["reason"] = output.get("reason", "")
+        merged["label_input_position"] = position
+        joined.append(merged)
+
+    input_ids = [
+        row.get("candidate_id")
+        for row in label_input
+        if isinstance(row.get("candidate_id"), str)
+    ]
+
+    line_count_matches = len(outputs) == len(label_input)
+    id_set_matches = set(output_ids) == set(input_ids)
+    order_matches = output_ids == input_ids
+
+    # Build V1 identity index using both the usable sample set and the complete
+    # raw candidate set, matching the Stage-1 exclusion policy.
+    v1_identity: set[str] = set()
+    for row in v1_samples + v1_candidates:
+        v1_identity.update(identity_keys(row))
+
+    duplicate_rows: list[dict[str, Any]] = []
+    accepted: list[dict[str, Any]] = []
+    non_labeled: list[dict[str, Any]] = []
+
+    seen_v2_identity: dict[str, str] = {}
+
+    cross_v1_duplicates = 0
+    within_v2_duplicates = 0
+
+    for row in joined:
+        cid = row["candidate_id"]
+        status = row.get("status")
+
+        if status != "labeled":
+            non_labeled.append(row)
+            continue
+
+        keys = identity_keys(row)
+
+        matching_v1 = sorted(keys & v1_identity)
+        if matching_v1:
+            cross_v1_duplicates += 1
+            duplicate_rows.append(
+                {
+                    "candidate_id": cid,
+                    "duplicate_type": "v1_overlap",
+                    "matched_identity_keys": matching_v1,
+                    "artist": row.get("artist"),
+                    "title": row.get("title"),
+                }
+            )
+            continue
+
+        prior_ids = {
+            seen_v2_identity[key]
+            for key in keys
+            if key in seen_v2_identity
+        }
+
+        if prior_ids:
+            within_v2_duplicates += 1
+            duplicate_rows.append(
+                {
+                    "candidate_id": cid,
+                    "duplicate_type": "within_v2",
+                    "duplicate_of": sorted(prior_ids),
+                    "matched_identity_keys": sorted(
+                        key for key in keys if key in seen_v2_identity
+                    ),
+                    "artist": row.get("artist"),
+                    "title": row.get("title"),
+                }
+            )
+            continue
+
+        for key in keys:
+            seen_v2_identity[key] = cid
+
+        accepted.append(row)
+
+    # Direct class support. V1 samples are already unique usable audio samples.
+    v1_tracks: Counter[str] = Counter()
+    v2_tracks: Counter[str] = Counter()
+
+    v1_artists: dict[str, set[str]] = defaultdict(set)
+    v2_artists: dict[str, set[str]] = defaultdict(set)
+
+    for row in v1_samples:
+        row_artists = artist_keys(row)
+        for genre_id in sample_label_ids(row):
+            if genre_id in taxonomy:
+                v1_tracks[genre_id] += 1
+                v1_artists[genre_id].update(row_artists)
+
+    for row in accepted:
+        row_artists = artist_keys(row)
+        for genre_id in direct_label_ids(row):
+            if genre_id in taxonomy:
+                v2_tracks[genre_id] += 1
+                v2_artists[genre_id].update(row_artists)
+
+    v2_mean_confidence = mean_confidence_for_label(accepted)
+
+    class_rows: list[dict[str, Any]] = []
+    provisional_active_ids: set[str] = set()
+
+    for item in ordered_taxonomy:
+        genre_id = item["id"]
+        parent = item.get("parent")
+        is_leaf = not children.get(genre_id)
+
+        combined_artists = v1_artists[genre_id] | v2_artists[genre_id]
+        combined_tracks = v1_tracks[genre_id] + v2_tracks[genre_id]
+
+        if not parent:
+            status = "parent_kept"
+            provisional_active = True
+        elif not is_leaf:
+            status = "internal_parent_kept"
+            provisional_active = True
+        elif (
+            combined_tracks >= args.strong_leaf_tracks
+            and len(combined_artists) >= args.strong_leaf_artists
+        ):
+            status = "strong_leaf"
+            provisional_active = True
+        elif (
+            combined_tracks >= args.min_leaf_tracks
+            and len(combined_artists) >= args.min_leaf_artists
+        ):
+            status = "viable_leaf"
+            provisional_active = True
+        else:
+            status = "drop_leaf"
+            provisional_active = False
+
+        if provisional_active:
+            provisional_active_ids.add(genre_id)
+
+        class_rows.append(
+            {
+                "id": genre_id,
+                "label": item.get("label", genre_id),
+                "parent": parent or "",
+                "role": (
+                    "leaf"
+                    if is_leaf
+                    else ("root" if not parent else "internal")
+                ),
+                "v1_direct_tracks": v1_tracks[genre_id],
+                "v2_direct_tracks": v2_tracks[genre_id],
+                "combined_direct_tracks": combined_tracks,
+                "v1_unique_artists": len(v1_artists[genre_id]),
+                "v2_unique_artists": len(v2_artists[genre_id]),
+                "combined_unique_artists": len(combined_artists),
+                "v2_mean_confidence": (
+                    round(v2_mean_confidence[genre_id], 6)
+                    if genre_id in v2_mean_confidence
+                    else ""
+                ),
+                "provisional_status": status,
+                "provisional_active": provisional_active,
+            }
+        )
+
+    support_path = args.output_dir / "class_support.csv"
+    fieldnames = list(class_rows[0]) if class_rows else []
+
+    with support_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(class_rows)
+
+    active_classes = [
+        {
+            "index": index,
+            "id": item["id"],
+            "label": item.get("label", item["id"]),
+            "parent": item.get("parent"),
+            "is_leaf": not children.get(item["id"]),
+            "combined_direct_tracks": next(
+                row["combined_direct_tracks"]
+                for row in class_rows
+                if row["id"] == item["id"]
+            ),
+            "combined_unique_artists": next(
+                row["combined_unique_artists"]
+                for row in class_rows
+                if row["id"] == item["id"]
+            ),
+        }
+        for index, item in enumerate(
+            x for x in ordered_taxonomy if x["id"] in provisional_active_ids
+        )
+    ]
+
+    active_path = args.output_dir / "provisional_active_classes.json"
+    active_path.write_text(
+        json.dumps(
+            {
+                "selection_stage": "post_label_pre_audio",
+                "policy": {
+                    "parents": "always retained",
+                    "minimum_leaf_tracks": args.min_leaf_tracks,
+                    "minimum_leaf_unique_artists": args.min_leaf_artists,
+                    "strong_leaf_tracks": args.strong_leaf_tracks,
+                    "strong_leaf_unique_artists": args.strong_leaf_artists,
+                    "final_selection_repeated_after_audio_embeddings": True,
+                },
+                "class_count": len(active_classes),
+                "classes": active_classes,
+            },
+            indent=2,
+            ensure_ascii=False,
+        ) + "\n",
+        encoding="utf-8",
+    )
+
+    accepted_path = args.output_dir / "accepted_candidates.jsonl"
+    non_labeled_path = args.output_dir / "non_labeled_candidates.jsonl"
+    duplicates_path = args.output_dir / "duplicate_records.jsonl"
+    issues_path = args.output_dir / "validation_issues.jsonl"
+
+    write_jsonl(accepted_path, accepted)
+    write_jsonl(non_labeled_path, non_labeled)
+    write_jsonl(duplicates_path, duplicate_rows)
+    write_jsonl(issues_path, issues)
+
+    leaf_rows = [row for row in class_rows if row["role"] == "leaf"]
+    status_counts = Counter(row["provisional_status"] for row in leaf_rows)
+
+    report = {
+        "input": {
+            "label_job_records": len(label_input),
+            "label_output_records": len(outputs),
+            "candidate_metadata_records": len(candidates),
+        },
+        "llm_status_counts": dict(Counter(row.get("status") for row in joined)),
+        "validation": {
+            "line_count_matches": line_count_matches,
+            "candidate_id_set_matches": id_set_matches,
+            "candidate_order_matches": order_matches,
+            "duplicate_output_candidate_ids": len(output_ids) - len(set(output_ids)),
+            "missing_input_candidate_ids": missing_input_ids,
+            "missing_candidate_metadata": missing_candidate_metadata,
+            "invalid_status_records": invalid_status,
+            "invalid_label_records": invalid_labels,
+            "invalid_confidence_records": invalid_confidence,
+            "too_many_labels_records": too_many_labels,
+            "labeled_without_labels_records": labeled_without_labels,
+            "redundant_parent_child_records": redundant_pairs,
+            "labeled_records_below_0_60_max_confidence": low_confidence_labeled,
+            "issue_count": len(issues),
+        },
+        "deduplication": {
+            "status_labeled_before_dedup": sum(
+                row.get("status") == "labeled" for row in joined
+            ),
+            "within_v2_duplicates_removed": within_v2_duplicates,
+            "v1_overlap_duplicates_removed": cross_v1_duplicates,
+            "accepted_unique_v2_labeled_tracks": len(accepted),
+            "non_labeled_preserved": len(non_labeled),
+        },
+        "post_label_class_selection": {
+            "taxonomy_class_count": len(ordered_taxonomy),
+            "provisional_active_class_count": len(active_classes),
+            "root_or_parent_classes_retained": sum(
+                row["role"] != "leaf" and row["provisional_active"]
+                for row in class_rows
+            ),
+            "leaf_status_counts": dict(status_counts),
+            "minimum_leaf_policy": {
+                "tracks": args.min_leaf_tracks,
+                "unique_artists": args.min_leaf_artists,
+            },
+            "strong_leaf_policy": {
+                "tracks": args.strong_leaf_tracks,
+                "unique_artists": args.strong_leaf_artists,
+            },
+            "note": (
+                "This is provisional. Repeat class selection after YTM "
+                "resolution/download/embedding survival."
+            ),
+        },
+        "outputs": {
+            "accepted_candidates": str(accepted_path),
+            "non_labeled_candidates": str(non_labeled_path),
+            "duplicates": str(duplicates_path),
+            "class_support": str(support_path),
+            "provisional_active_classes": str(active_path),
+            "validation_issues": str(issues_path),
+        },
+    }
+
+    report_path = args.output_dir / "validation_report.json"
     report_path.write_text(
         json.dumps(report, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
 
-    fieldnames = [
-        "id",
-        "label",
-        "role",
-        "parent",
-        "tracks",
-        "uncertain_mentions",
-        "mean_confidence",
-        "unique_artists",
-        "top_artist",
-        "top_artist_tracks",
-        "top_artist_share",
-        "coverage_band",
-    ]
-
-    with coverage_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(coverage_rows)
-
-    with issues_path.open("w", encoding="utf-8") as handle:
-        for item in issues:
-            handle.write(json.dumps(item, ensure_ascii=False) + "\n")
-
-    print("Validation complete")
-    print(f"  expected:       {len(expected_ids)}")
-    print(f"  returned IDs:   {len(returned_ids)}")
-    print(f"  labeled:        {status_counts['labeled']}")
-    print(f"  uncertain:      {status_counts['uncertain']}")
-    print(f"  out_of_scope:   {status_counts['out_of_scope']}")
-    print(f"  assignments:    {total_assignments}")
-    print(f"  missing:        {len(missing_ids)}")
-    print(f"  unexpected:     {len(unexpected_ids)}")
-    print(f"  duplicate IDs:  {len(duplicate_ids)}")
-    print(f"  errors:         {error_count}")
+    print("V2 validation + deduplication complete")
     print()
-    print("Class coverage")
-    print(f"  30+ tracks:     {coverage_band_counts['30+']}")
-    print(f"  20-29 tracks:   {coverage_band_counts['20-29']}")
-    print(f"  10-19 tracks:   {coverage_band_counts['10-19']}")
-    print(f"  <10 tracks:     {coverage_band_counts['<10']}")
-    print(f"  zero tracks:    {coverage_band_counts['0']}")
+    print("LLM output:")
+    for status in ("labeled", "uncertain", "reject"):
+        print(f"  {status:10s} {report['llm_status_counts'].get(status, 0)}")
     print()
-    print(f"Report:   {report_path}")
-    print(f"Coverage: {coverage_path}")
-    print(f"Issues:   {issues_path}")
-
-    if error_count:
-        raise SystemExit(1)
+    print("Deduplication:")
+    print(f"  labeled before dedup: {report['deduplication']['status_labeled_before_dedup']}")
+    print(f"  within-V2 removed:    {within_v2_duplicates}")
+    print(f"  V1 overlaps removed:  {cross_v1_duplicates}")
+    print(f"  accepted unique V2:   {len(accepted)}")
+    print()
+    print("Provisional leaf classes:")
+    for status in ("strong_leaf", "viable_leaf", "drop_leaf"):
+        print(f"  {status:12s} {status_counts[status]}")
+    print()
+    print(f"Active classes: {len(active_classes)}")
+    print(f"Report:         {report_path}")
+    print(f"Class support:  {support_path}")
+    print(f"Accepted:       {accepted_path}")
 
 
 if __name__ == "__main__":

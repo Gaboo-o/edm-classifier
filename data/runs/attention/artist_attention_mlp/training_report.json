@@ -1,0 +1,38 @@
+{
+  "run_name": "artist_attention_mlp",
+  "model": "attention_mlp",
+  "split": "artist",
+  "device": "cpu",
+  "active_class_count": 145,
+  "train_samples": 11349,
+  "validation_samples": 3952,
+  "best_epoch": 23,
+  "best_validation_macro_f1_at_0_5": 0.3548146188259125,
+  "elapsed_seconds": 4680.61,
+  "architecture": {
+    "embedding_dim": 1280,
+    "attention_dim": 256,
+    "hidden_dim": 512,
+    "dropout": 0.2,
+    "max_patches": 256,
+    "patch_normalization": "LayerNorm(1280)",
+    "pooling": "learned_scalar_attention"
+  },
+  "optimization": {
+    "learning_rate": 0.0005,
+    "weight_decay": 0.0001,
+    "max_pos_weight": 20.0,
+    "batch_size": 16,
+    "patience": 10,
+    "seed": 1337
+  },
+  "inputs": {
+    "splits_dir": "data/splits",
+    "active_classes": "data/training/active_classes.json",
+    "patches_dir": "data/embeddings/patches"
+  },
+  "outputs": {
+    "checkpoint": "data/runs/attention/artist_attention_mlp/model.pt",
+    "history": "data/runs/attention/artist_attention_mlp/history.csv"
+  }
+}

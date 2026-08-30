@@ -27,7 +27,7 @@ from torch.utils.data import DataLoader, TensorDataset
 import yaml
 
 DEFAULT_SPLITS_DIR = Path("data/splits")
-DEFAULT_ACTIVE_CLASSES = Path("data/training_v1/active_classes.json")
+DEFAULT_ACTIVE_CLASSES = Path("data/training/active_classes.json")
 DEFAULT_TAXONOMY = Path("config/taxonomy.yaml")
 DEFAULT_RUNS_DIR = Path("data/runs")
 
