@@ -4,3 +4,7 @@ PyYAML>=6.0
 ytmusicapi==1.12.2
 rapidfuzz>=3.0
 yt-dlp>=2026.07.04
+numpy>=1.24
+huggingface_hub>=0.23
+transformers>=4.38,<5
+muq==0.1.0

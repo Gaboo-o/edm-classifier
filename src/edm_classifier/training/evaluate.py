@@ -1,4 +1,4 @@
-"""Evaluate a single-label parent-genre classifier.
+"""Evaluate a single-label parent-genre classifier across embedding encoders.
 
 Reports accuracy, macro/weighted F1, per-class metrics, confusion matrices,
 top confusions, and a confidence summary. Predictions are softmax argmax.
@@ -17,10 +17,12 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from edm_classifier.training.train_single_label import (
+from edm_classifier.training.train import (
     DEFAULT_DATA_DIR,
     DEFAULT_RUNS_DIR,
+    DEFAULT_EMBEDDING_DIRS,
     EmbeddingDataset,
+    EmbeddingResolver,
     build_model,
     choose_device,
     load_classes,
@@ -264,6 +266,17 @@ def parse_args() -> argparse.Namespace:
         default="mlp",
     )
     parser.add_argument(
+        "--encoder",
+        choices=sorted(DEFAULT_EMBEDDING_DIRS),
+        default="discogs",
+    )
+    parser.add_argument(
+        "--embeddings-dir",
+        type=Path,
+        default=None,
+        help="Override pooled embedding directory; resolved by video_id.",
+    )
+    parser.add_argument(
         "--data-dir",
         type=Path,
         default=DEFAULT_DATA_DIR,
@@ -286,7 +299,7 @@ def main() -> None:
     classes = load_classes(args.data_dir / "classes.json")
     class_count = len(classes)
 
-    run_dir = args.runs_dir / f"{args.split}_{args.model}"
+    run_dir = args.runs_dir / f"{args.encoder}_{args.split}_{args.model}"
     checkpoint_path = run_dir / "model.pt"
     normalization_path = run_dir / "normalization.npz"
 
@@ -302,6 +315,13 @@ def main() -> None:
         map_location=device,
         weights_only=False,
     )
+
+    checkpoint_encoder = checkpoint.get("encoder", "discogs")
+    if checkpoint_encoder != args.encoder:
+        raise ValueError(
+            f"checkpoint encoder is {checkpoint_encoder!r}, "
+            f"but --encoder is {args.encoder!r}"
+        )
 
     expected_ids = [item["id"] for item in classes]
     if checkpoint.get("class_ids") != expected_ids:
@@ -322,6 +342,16 @@ def main() -> None:
     ).to(device)
     model.load_state_dict(checkpoint["state_dict"])
 
+    checkpoint_source = checkpoint.get("embedding_source")
+    checkpoint_dir = None
+    if isinstance(checkpoint_source, dict):
+        value = checkpoint_source.get("pooled_dir")
+        if isinstance(value, str) and value:
+            checkpoint_dir = Path(value)
+    resolver = EmbeddingResolver(
+        args.encoder,
+        args.embeddings_dir or checkpoint_dir,
+    )
     test_rows = load_jsonl(
         args.data_dir / args.split / "test.jsonl"
     )
@@ -330,6 +360,7 @@ def main() -> None:
         mean=mean,
         std=std,
         class_count=class_count,
+        resolver=resolver,
     )
     loader = DataLoader(
         dataset,
@@ -379,9 +410,11 @@ def main() -> None:
     }
 
     report = {
-        "run_name": f"{args.split}_{args.model}",
+        "run_name": f"{args.encoder}_{args.split}_{args.model}",
         "task": "single_label_parent_genre",
         "encoder": checkpoint.get("encoder"),
+        "encoder_model": checkpoint.get("encoder_model"),
+        "embedding_source": resolver.describe(),
         "pooling": checkpoint.get("pooling"),
         "split": args.split,
         "model": args.model,
@@ -410,6 +443,8 @@ def main() -> None:
     print("Single-label evaluation")
     print(f"  split:                  {args.split}")
     print(f"  model:                  {args.model}")
+    print(f"  encoder:                {args.encoder}")
+    print(f"  embeddings:             {resolver.root}")
     print(f"  samples:                {aggregate['samples']}")
     print(f"  accuracy:               {aggregate['accuracy']:.4f}")
     print(f"  macro F1:               {aggregate['macro_f1']:.4f}")

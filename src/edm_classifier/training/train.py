@@ -1,7 +1,8 @@
-"""Train a single-label parent-genre classifier on cached embeddings.
+"""Train a single-label parent-genre classifier on pooled embeddings.
 
-Primary use:
-    Discogs-EffNet pooled [1280] embeddings + artist-separated split.
+The split files define sample membership and labels. Embedding selection is
+independent: ``--encoder`` resolves each pooled vector from the row video_id,
+so Discogs, MERT-95M, and MuQ can share the exact same splits.
 
 Task:
     one target_index per sample
@@ -32,7 +33,89 @@ from torch.utils.data import DataLoader, Dataset
 
 
 DEFAULT_DATA_DIR = Path("data/parent_single")
-DEFAULT_RUNS_DIR = Path("data/runs/single_label/discogs")
+DEFAULT_RUNS_DIR = Path("data/runs/single_label")
+
+ENCODER_MODEL_NAMES = {
+    "discogs": "discogs-effnet-bs64-1",
+    "mert95m": "m-a-p/MERT-v1-95M",
+    "muq": "OpenMuQ/MuQ-large-msd-iter",
+}
+DEFAULT_EMBEDDING_DIRS = {
+    "discogs": Path("data/embeddings/discogs/pooled"),
+    "mert95m": Path("data/embeddings/mert95m/pooled"),
+    "muq": Path("data/embeddings/muq/pooled"),
+}
+
+
+class EmbeddingResolver:
+    """Resolve one pooled embedding without encoder-specific split copies.
+
+    Resolution order when --embeddings-dir is not explicitly supplied:
+      1. row["embedding_paths"][encoder], if present
+      2. legacy row["embedding_path"] / row["embedding"] for Discogs
+      3. default encoder directory + <video_id>.npy
+
+    An explicit --embeddings-dir always wins and derives the filename from
+    video_id. This makes moving embeddings to cloud/local storage trivial.
+    """
+
+    def __init__(
+        self,
+        encoder: str,
+        embeddings_dir: Path | None = None,
+    ) -> None:
+        if encoder not in DEFAULT_EMBEDDING_DIRS:
+            raise ValueError(f"unknown encoder {encoder!r}")
+        self.encoder = encoder
+        self.explicit_dir = embeddings_dir is not None
+        self.root = embeddings_dir or DEFAULT_EMBEDDING_DIRS[encoder]
+
+    @staticmethod
+    def _video_id(row: dict[str, Any]) -> str:
+        value = row.get("video_id") or row.get("sample_id")
+        if not isinstance(value, str) or not value:
+            raise ValueError("sample has no video_id/sample_id")
+        return value
+
+    def path(self, row: dict[str, Any]) -> Path:
+        video_id = self._video_id(row)
+
+        if self.explicit_dir:
+            return self.root / f"{video_id}.npy"
+
+        paths = row.get("embedding_paths")
+        if isinstance(paths, dict):
+            value = paths.get(self.encoder)
+            if isinstance(value, str) and value:
+                return Path(value)
+
+        embedding = row.get("embedding")
+        if isinstance(embedding, dict):
+            pooled_paths = embedding.get("pooled_paths")
+            if isinstance(pooled_paths, dict):
+                value = pooled_paths.get(self.encoder)
+                if isinstance(value, str) and value:
+                    return Path(value)
+
+        if self.encoder == "discogs":
+            value = row.get("embedding_path")
+            if isinstance(value, str) and value:
+                return Path(value)
+            if isinstance(embedding, dict):
+                value = embedding.get("pooled_path") or embedding.get("embedding_path")
+                if isinstance(value, str) and value:
+                    return Path(value)
+
+        return self.root / f"{video_id}.npy"
+
+    def describe(self) -> dict[str, Any]:
+        return {
+            "encoder": self.encoder,
+            "model": ENCODER_MODEL_NAMES[self.encoder],
+            "pooled_dir": str(self.root),
+            "explicit_dir": self.explicit_dir,
+        }
+
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -72,22 +155,6 @@ def load_classes(path: Path) -> list[dict[str, Any]]:
     return result
 
 
-def embedding_path(row: dict[str, Any]) -> Path:
-    value = row.get("embedding_path")
-    if isinstance(value, str) and value:
-        return Path(value)
-
-    embedding = row.get("embedding")
-    if isinstance(embedding, dict):
-        value = embedding.get("pooled_path") or embedding.get("embedding_path")
-        if isinstance(value, str) and value:
-            return Path(value)
-
-    raise ValueError(
-        f"sample {row.get('video_id') or row.get('sample_id')!r} "
-        "has no embedding path"
-    )
-
 
 def target_index(row: dict[str, Any]) -> int:
     value = row.get("target_index")
@@ -99,9 +166,12 @@ def target_index(row: dict[str, Any]) -> int:
     )
 
 
-def infer_embedding_dim(rows: list[dict[str, Any]]) -> int:
+def infer_embedding_dim(
+    rows: list[dict[str, Any]],
+    resolver: EmbeddingResolver,
+) -> int:
     for row in rows:
-        path = embedding_path(row)
+        path = resolver.path(row)
         if not path.is_file():
             continue
         array = np.load(path, mmap_mode="r", allow_pickle=False)
@@ -114,13 +184,14 @@ def infer_embedding_dim(rows: list[dict[str, Any]]) -> int:
 def compute_normalization(
     rows: list[dict[str, Any]],
     embedding_dim: int,
+    resolver: EmbeddingResolver,
 ) -> tuple[np.ndarray, np.ndarray]:
     total = np.zeros(embedding_dim, dtype=np.float64)
     total_sq = np.zeros(embedding_dim, dtype=np.float64)
     count = 0
 
     for row in rows:
-        path = embedding_path(row)
+        path = resolver.path(row)
         array = np.load(path, mmap_mode="r", allow_pickle=False)
         vector = np.asarray(array, dtype=np.float64)
 
@@ -151,6 +222,7 @@ class EmbeddingDataset(Dataset):
         mean: np.ndarray,
         std: np.ndarray,
         class_count: int,
+        resolver: EmbeddingResolver,
     ):
         self.items: list[tuple[Path, int]] = []
         self.mean = mean
@@ -160,7 +232,7 @@ class EmbeddingDataset(Dataset):
         missing = []
 
         for row in rows:
-            path = embedding_path(row)
+            path = resolver.path(row)
             target = target_index(row)
 
             if not 0 <= target < class_count:
@@ -388,6 +460,21 @@ def parse_args() -> argparse.Namespace:
         default="mlp",
     )
     parser.add_argument(
+        "--encoder",
+        choices=sorted(DEFAULT_EMBEDDING_DIRS),
+        default="discogs",
+        help="Embedding encoder; all encoders reuse the same split rows.",
+    )
+    parser.add_argument(
+        "--embeddings-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Override the pooled embedding directory. Files are resolved as "
+            "<dir>/<video_id>.npy. Useful for cloud-mounted storage."
+        ),
+    )
+    parser.add_argument(
         "--data-dir",
         type=Path,
         default=DEFAULT_DATA_DIR,
@@ -439,8 +526,9 @@ def main() -> None:
     train_rows = load_jsonl(split_dir / "train.jsonl")
     val_rows = load_jsonl(split_dir / "validation.jsonl")
 
-    embedding_dim = infer_embedding_dim(train_rows)
-    mean, std = compute_normalization(train_rows, embedding_dim)
+    resolver = EmbeddingResolver(args.encoder, args.embeddings_dir)
+    embedding_dim = infer_embedding_dim(train_rows, resolver)
+    mean, std = compute_normalization(train_rows, embedding_dim, resolver)
 
     train_targets = np.asarray(
         [target_index(row) for row in train_rows],
@@ -457,12 +545,14 @@ def main() -> None:
         mean=mean,
         std=std,
         class_count=class_count,
+        resolver=resolver,
     )
     val_dataset = EmbeddingDataset(
         val_rows,
         mean=mean,
         std=std,
         class_count=class_count,
+        resolver=resolver,
     )
 
     generator = torch.Generator()
@@ -502,7 +592,7 @@ def main() -> None:
         weight_decay=args.weight_decay,
     )
 
-    run_name = f"{args.split}_{args.model}"
+    run_name = f"{args.encoder}_{args.split}_{args.model}"
     run_dir = args.runs_dir / run_name
     run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -521,6 +611,8 @@ def main() -> None:
     print(f"Run:             {run_name}")
     print(f"Device:          {device}")
     print(f"Model:           {args.model}")
+    print(f"Encoder:         {args.encoder}")
+    print(f"Embeddings:      {resolver.root}")
     print(f"Classes:         {class_count}")
     print(f"Embedding dim:   {embedding_dim}")
     print(f"Train samples:   {len(train_dataset)}")
@@ -594,7 +686,9 @@ def main() -> None:
                     "seed": args.seed,
                     "epoch": epoch,
                     "best_validation_macro_f1_excluding_other": best_score,
-                    "encoder": "discogs-effnet-bs64-1",
+                    "encoder": args.encoder,
+                    "encoder_model": ENCODER_MODEL_NAMES[args.encoder],
+                    "embedding_source": resolver.describe(),
                     "pooling": "mean",
                 },
                 run_dir / "model.pt",
@@ -628,7 +722,9 @@ def main() -> None:
     report = {
         "run_name": run_name,
         "task": "single_label_parent_genre",
-        "encoder": "discogs-effnet-bs64-1",
+        "encoder": args.encoder,
+        "encoder_model": ENCODER_MODEL_NAMES[args.encoder],
+        "embedding_source": resolver.describe(),
         "pooling": "mean",
         "split": args.split,
         "model": args.model,
