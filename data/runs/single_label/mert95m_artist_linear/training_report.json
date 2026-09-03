@@ -1,0 +1,41 @@
+{
+  "run_name": "mert95m_artist_linear",
+  "task": "single_label_parent_genre",
+  "encoder": "mert95m",
+  "encoder_model": "m-a-p/MERT-v1-95M",
+  "embedding_source": {
+    "encoder": "mert95m",
+    "model": "m-a-p/MERT-v1-95M",
+    "representation": "pooled",
+    "directory": "data/embeddings/mert95m/pooled",
+    "explicit_dir": false
+  },
+  "representation": "pooled",
+  "pooling": "mean",
+  "split": "artist",
+  "model": "linear",
+  "device": "cuda",
+  "class_count": 19,
+  "other_index": null,
+  "embedding_dim": 768,
+  "train_samples": 11233,
+  "validation_samples": 3780,
+  "best_epoch": 19,
+  "best_validation_macro_f1_excluding_other": 0.4533810885758804,
+  "elapsed_seconds": 122.19,
+  "optimization": {
+    "loss": "CrossEntropyLoss",
+    "class_weight": "sqrt_balanced",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 128,
+    "hidden_dim": null,
+    "dropout": null,
+    "seed": 1337
+  },
+  "outputs": {
+    "checkpoint": "data/runs/single_label/mert95m_artist_linear/model.pt",
+    "normalization": "data/runs/single_label/mert95m_artist_linear/normalization.npz",
+    "history": "data/runs/single_label/mert95m_artist_linear/history.csv"
+  }
+}

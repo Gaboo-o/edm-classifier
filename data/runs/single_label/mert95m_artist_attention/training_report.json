@@ -1,0 +1,41 @@
+{
+  "run_name": "mert95m_artist_attention",
+  "task": "single_label_parent_genre",
+  "encoder": "mert95m",
+  "encoder_model": "m-a-p/MERT-v1-95M",
+  "embedding_source": {
+    "encoder": "mert95m",
+    "model": "m-a-p/MERT-v1-95M",
+    "representation": "sequence",
+    "directory": "data/embeddings/mert95m/windows",
+    "explicit_dir": false
+  },
+  "representation": "sequence",
+  "pooling": "learned_attention",
+  "split": "artist",
+  "model": "attention",
+  "device": "cuda",
+  "class_count": 19,
+  "other_index": null,
+  "embedding_dim": 768,
+  "train_samples": 11233,
+  "validation_samples": 3780,
+  "best_epoch": 8,
+  "best_validation_macro_f1_excluding_other": 0.44435921134765755,
+  "elapsed_seconds": 220.03,
+  "optimization": {
+    "loss": "CrossEntropyLoss",
+    "class_weight": "sqrt_balanced",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 16,
+    "hidden_dim": 512,
+    "dropout": 0.2,
+    "seed": 1337
+  },
+  "outputs": {
+    "checkpoint": "data/runs/single_label/mert95m_artist_attention/model.pt",
+    "normalization": "data/runs/single_label/mert95m_artist_attention/normalization.npz",
+    "history": "data/runs/single_label/mert95m_artist_attention/history.csv"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "run_name": "mert95m_artist_linear",
+  "task": "single_label_parent_genre",
+  "encoder": "mert95m",
+  "encoder_model": "m-a-p/MERT-v1-95M",
+  "embedding_source": {
+    "encoder": "mert95m",
+    "model": "m-a-p/MERT-v1-95M",
+    "representation": "pooled",
+    "directory": "data/embeddings/mert95m/pooled",
+    "explicit_dir": true
+  },
+  "representation": "pooled",
+  "pooling": "mean",
+  "split": "artist",
+  "model": "linear",
+  "checkpoint_epoch": 19,
+  "class_weight_mode": "sqrt_balanced",
+  "class_count": 19,
+  "test": {
+    "accuracy": 0.5687645687645687,
+    "macro_f1": 0.46688594806176087,
+    "macro_f1_excluding_other": 0.46688594806176087,
+    "weighted_f1": 0.568515237317347,
+    "samples": 3861,
+    "correct": 2196,
+    "supported_classes": 19,
+    "retained_supported_classes": 19
+  },
+  "confidence": {
+    "mean_max_probability": 0.5312474966049194,
+    "median_max_probability": 0.4850234091281891,
+    "correct_mean_max_probability": 0.6257264614105225,
+    "incorrect_mean_max_probability": 0.4066372513771057
+  },
+  "outputs": {
+    "per_class": "data/runs/single_label/mert95m_artist_linear/test_per_class.csv",
+    "confusion_counts": "data/runs/single_label/mert95m_artist_linear/confusion_counts.csv",
+    "confusion_normalized": "data/runs/single_label/mert95m_artist_linear/confusion_row_normalized.csv",
+    "top_confusions": "data/runs/single_label/mert95m_artist_linear/top_confusions.csv",
+    "heatmap": "data/runs/single_label/mert95m_artist_linear/confusion_heatmap.png"
+  }
+}
