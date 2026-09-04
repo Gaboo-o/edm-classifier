@@ -18,7 +18,7 @@ venv/
 !.env.example
 
 # Downloaded audio
-data/audio/
+data/audio/files/
 *.webm
 *.m4a
 *.mp3
