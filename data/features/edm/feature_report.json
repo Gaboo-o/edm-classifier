@@ -1,0 +1,27 @@
+{
+  "extractor_version": "edm-rhythm-sections-v1",
+  "eligible_tracks": 10,
+  "complete_feature_tracks": 10,
+  "status_counts": {
+    "extracted": 10
+  },
+  "elapsed_seconds": 19.55,
+  "configuration": {
+    "audio_manifest": "data/audio/audio_manifest.jsonl",
+    "audio_files_dir": "data/audio/files",
+    "mert_windows_dir": "data/embeddings/mert95m/windows",
+    "output_dir": "data/features/edm",
+    "sample_rate": 11025,
+    "window_seconds": 5.0,
+    "energy_seconds": 20.0,
+    "tempo_bins": 24,
+    "workers": 2
+  },
+  "outputs": {
+    "rhythm_dir": "data/features/edm/rhythm",
+    "sections_dir": "data/features/edm/sections",
+    "manifest": "data/features/edm/feature_manifest.jsonl",
+    "diagnostics": "data/features/edm/section_diagnostics.csv",
+    "feature_info": "data/features/edm/feature_info.json"
+  }
+}
